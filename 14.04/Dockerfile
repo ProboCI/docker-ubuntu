@@ -7,8 +7,6 @@
 
 FROM ubuntu:14.04
 
-ENV DEBIAN_FRONTEND noninteractive
-
 ENV NODE_VERSION 6.x
 ENV WORKDIR /root
 
@@ -38,8 +36,9 @@ RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION | sudo -E bash - \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/penelope \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/penelope-control \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/penelope-format \
-  && mkdir $WORKDIR/.ssh \
-  && chmod 700 $WORKDIR/.ssh \
   && rm -rf /var/lib/apt/lists/* /tmp/*
+
+RUN mkdir $WORKDIR/.ssh \
+  && chmod 700 $WORKDIR/.ssh \
 
 WORKDIR $WORKDIR
