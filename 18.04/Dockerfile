@@ -117,10 +117,10 @@ COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-hos
 # Start and configure our MySQL Server
 COPY files/my.cnf.j2 /root/.my.cnf
 COPY files/mysql-setup.sql /mysql-setup.sql
-RUN systemctl start mysql
-RUN chmod 600 /root/.my.cnf \
-  && mysql -uroot < /mysql-setup.sql
-RUN systemctl stop mysql
+RUN service mysql start \
+  && chmod 600 /root/.my.cnf \
+  && mysql -uroot < /mysql-setup.sql \
+  && service mysql stop
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
