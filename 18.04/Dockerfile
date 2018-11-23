@@ -112,9 +112,11 @@ RUN npm install -g proboscis \
 # Start and configure our PostgreSQL server
 RUN service postgresql start \
   && su - postgres -c "createuser -d -l -r -s root" \
-  && su - postgres -c "createdb --owner=postgres drupal"
+  && su - postgres -c "createdb --owner=postgres drupal" \
+	&& psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';"
 COPY files/pgpass.txt /root/.pgpass
-RUN chmod 600 /root/.pgpass
+RUN chmod 600 /root/.pgpass \
+  && service postgresql stop
 
 # Configure Apache
 RUN rm -rf /var/www/html
