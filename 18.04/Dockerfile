@@ -26,7 +26,6 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 	nano \
 	netcat-openbsd \
 	nodejs \
-	npm \
 	ntp \
 	sendmail \
 	software-properties-common \
@@ -101,17 +100,21 @@ RUN npm install -g proboscis \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
-COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
+RUN service postgresql start
+#RUN su postgres -c "createuser -d -l -r -s root"
+#RUN su postgres -c "createdb --owner=root drupal"
+RUN service postgresql stop
 
 RUN rm -rf /var/www/html
 
-#RUN su postgres -c "createuser -d -l -r -s root"
-#RUN su postgres -c "createdb --owner=root drupal"
-
+COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 COPY files/my.cnf.j2 /root/.my.cnf
-RUN chmod 600 /root/.my.cnf
 COPY files/mysql-setup.sql /mysql-setup.sql
-RUN mysql -uroot < /mysql-setup.sql
+
+RUN service mysql start
+RUN chmod 600 /root/.my.cnf \
+  && mysql -uroot < /mysql-setup.sql
+RUN service mysql stop
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
