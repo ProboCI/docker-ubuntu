@@ -114,12 +114,11 @@ COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-hos
 
 # Start and configure our MySQL Server
 RUN apt update -y
-COPY files/my.cnf.j2 /root/.my.cnf
+#COPY files/my.cnf.j2 /root/.my.cnf
 COPY files/mysql-setup.sql /mysql-setup.sql
 RUN apt install -y mariadb-server mariadb-client
 RUN service mysql start \
-  && chmod 600 /root/.my.cnf \
-	&& mysql -uroot < /mysql-setup.sql
+  && mysql -uroot < /mysql-setup.sql
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
