@@ -103,5 +103,7 @@ RUN npm install -g proboscis \
 
 COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 
+RUN rm -rf /var/www/html
+
 RUN mkdir .ssh \
   && chmod 700 .ssh
