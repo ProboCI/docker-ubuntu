@@ -62,7 +62,6 @@ RUN apt install -y \
 	php-redis \
 	php-imagick \
 	php-pear \
-	php-uploadprogress \
 	imagemagick \
 	postgresql \
 	postgresql-contrib \
@@ -88,33 +87,40 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
     drush/drush:8.* && \
     ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
 
+# Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar
 RUN mv /drupal.phar /bin/drupal
 RUN chmod 755 /bin/drupal
 
+# Get Node Package Manager
 RUN apt install -y npm
 
+# Install Proboscis
 RUN npm install -g proboscis \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/proboscis \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/proboscis-control \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
-RUN service postgresql start
+# Start and configure our PostgreSQL server
+#RUN service postgresql start
 #RUN su postgres -c "createuser -d -l -r -s root"
 #RUN su postgres -c "createdb --owner=root drupal"
-RUN service postgresql stop
+#COPY files/pgpass.txt /root/.pgpass
+#RUN chmod 600 /root/.pgpass
+#RUN service postgresql stop
 
+# Configure Apache
 RUN rm -rf /var/www/html
-
 COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
+
+# Start and configure our MySQL Server
 COPY files/my.cnf.j2 /root/.my.cnf
 COPY files/mysql-setup.sql /mysql-setup.sql
-
-RUN service mysql start
+RUN systemctl start mysql
 RUN chmod 600 /root/.my.cnf \
   && mysql -uroot < /mysql-setup.sql
-RUN service mysql stop
+RUN systemctl stop mysql
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
