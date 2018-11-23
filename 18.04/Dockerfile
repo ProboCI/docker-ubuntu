@@ -105,8 +105,8 @@ COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-hos
 
 RUN rm -rf /var/www/html
 
-RUN su postgres -c "cd; createuser -d -l -r -s root"
-RUN su postgres -c "cd; createdb --owner=root drupal"
+RUN su postgres -c "createuser -d -l -r -s root"
+RUN su postgres -c "createdb --owner=root drupal"
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
