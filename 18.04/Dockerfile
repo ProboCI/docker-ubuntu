@@ -33,8 +33,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 	sudo \
 	vim \
 	wget \
-	zip \
-  && rm -rf /var/lib/apt/lists/* /tmp/*
+	zip
 
 RUN add-apt-repository ppa:ondrej/php
 RUN apt install -y \
@@ -75,8 +74,8 @@ RUN apt install -y \
 
 RUN apt install zlib1g-dev
 
-RUN gem install rails
-RUN gem install mailcatcher
+#RUN gem install rails
+#RUN gem install mailcatcher
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -93,6 +92,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar
 RUN mv /drupal.phar /bin/drupal
 RUN chmod 755 /bin/drupal
+
+RUN apt install -y npm
 
 RUN npm install -g proboscis \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/proboscis \
