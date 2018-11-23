@@ -15,6 +15,8 @@ FROM ubuntu:18.04
 
 WORKDIR /root
 
+ENV TERM xterm
+
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 	apt-transport-https \
 	build-essential \
@@ -36,7 +38,6 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 
 RUN add-apt-repository ppa:ondrej/php
 RUN apt install -y \
-	mysql-server \
 	php7.1 \
 	php7.1-bcmath \
 	php7.1-bz2 \
@@ -101,23 +102,24 @@ RUN npm install -g proboscis \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Start and configure our PostgreSQL server
-#RUN service postgresql start
-#RUN su postgres -c "createuser -d -l -r -s root"
-#RUN su postgres -c "createdb --owner=root drupal"
-#COPY files/pgpass.txt /root/.pgpass
-#RUN chmod 600 /root/.pgpass
-#RUN service postgresql stop
+RUN service postgresql start \
+  && su - postgres -c "createuser -d -l -r -s root" \
+  && su - postgres -c "createdb --owner=postgres drupal"
+COPY files/pgpass.txt /root/.pgpass
+RUN chmod 600 /root/.pgpass
+RUN service postgresql stop
 
 # Configure Apache
 RUN rm -rf /var/www/html
 COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 
 # Start and configure our MySQL Server
+RUN apt update -y
 COPY files/my.cnf.j2 /root/.my.cnf
 COPY files/mysql-setup.sql /mysql-setup.sql
-RUN mysqld_safe \
-  && chmod 600 /root/.my.cnf \
-  && mysql -uroot < /mysql-setup.sql
+RUN apt install -y mariadb-server mariadb-client
+RUN service mysql start \
+  && chmod 600 /root/.my.cnf 
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
