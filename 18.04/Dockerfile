@@ -129,5 +129,9 @@ RUN apt install -y mariadb-server mariadb-client
 RUN service mysql start \
   && mysql -uroot < /mysql-setup.sql
 
+RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
+  && gem install rails \
+  && gem install mailcatcher
+
 RUN mkdir .ssh \
   && chmod 700 .ssh
