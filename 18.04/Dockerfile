@@ -15,8 +15,7 @@ FROM ubuntu:18.04
 
 WORKDIR /root
 
-
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils \
+RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 	apt-transport-https \
 	build-essential \
 	ca-certificates \
@@ -37,7 +36,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
 	zip \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
-RUN apt-get install -y \
+RUN add-apt-repository ppa:ondrej/php
+RUN apt install -y \
 	mariadb-server \
 	php7.1 \
 	php7.1-bcmath \
@@ -69,11 +69,30 @@ RUN apt-get install -y \
 	postgresql \
 	postgresql-contrib \
 	apache2 \
-  apache2-utils \
+	apache2-utils \
 	libsqlite3-dev \
 	ruby-dev
 
-RUN gem install rails && gem install mailcatcher
+RUN apt install zlib1g-dev
+
+RUN gem install rails
+RUN gem install mailcatcher
+
+# Install Composer and Drush
+RUN curl -sS https://getcomposer.org/installer | php -- \
+    --install-dir=/usr/local/bin \
+    --filename=composer \
+    --version=1.6.3 && \
+    composer \
+    --working-dir=/usr/local/src/ \
+    global \
+    require \
+    drush/drush:8.* && \
+    ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
+
+RUN curl https://drupalconsole.com/installer -L -o /drupal.phar
+RUN mv /drupal.phar /bin/drupal
+RUN chmod 755 /bin/drupal
 
 RUN npm install -g proboscis \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/proboscis \
