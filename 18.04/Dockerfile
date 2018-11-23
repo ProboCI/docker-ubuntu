@@ -37,7 +37,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 
 RUN add-apt-repository ppa:ondrej/php
 RUN apt install -y \
-	mysqld-server \
+	mysql-server \
 	php7.1 \
 	php7.1-bcmath \
 	php7.1-bz2 \
