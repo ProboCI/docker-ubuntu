@@ -11,7 +11,15 @@
 # Build the proboci/ubuntu:18.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
 # docker build -t proboci/ubuntu:18.04
 
+# Set our our meta data for this container.
+
 FROM ubuntu:18.04
+
+LABEL name="Ubuntu 18.04 LTS Based ProboCI Image"
+LABEL description="Our base container for ProboCI Builds."
+LABEL author="Michael R. Bagnall <mrbagnall@icloud.com>"
+LABEL vendor="ProboCI, LLC."
+LABEL version="0.01"
 
 WORKDIR /root
 
@@ -114,7 +122,6 @@ COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-hos
 
 # Start and configure our MySQL Server
 RUN apt update -y
-#COPY files/my.cnf.j2 /root/.my.cnf
 COPY files/mysql-setup.sql /mysql-setup.sql
 RUN apt install -y mariadb-server mariadb-client
 RUN service mysql start \
