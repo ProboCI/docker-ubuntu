@@ -66,9 +66,7 @@ RUN apt install -y \
 	postgresql \
 	postgresql-contrib \
 	apache2 \
-	apache2-utils \
-	libsqlite3-dev \
-	ruby-dev
+	apache2-utils
 
 RUN apt install zlib1g-dev
 
@@ -117,10 +115,9 @@ COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-hos
 # Start and configure our MySQL Server
 COPY files/my.cnf.j2 /root/.my.cnf
 COPY files/mysql-setup.sql /mysql-setup.sql
-RUN service mysql start \
+RUN mysqld_safe \
   && chmod 600 /root/.my.cnf \
-  && mysql -uroot < /mysql-setup.sql \
-  && service mysql stop
+  && mysql -uroot < /mysql-setup.sql
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
