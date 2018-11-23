@@ -37,13 +37,49 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
 	zip \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
+RUN apt-get install -y \
+	mariadb-server \
+	php7.1 \
+	php7.1-bcmath \
+	php7.1-bz2 \
+	php7.1-cli \
+	php7.1-common \
+	php7.1-curl \
+	php7.1-dba \
+	php7.1-dev \
+	php7.1-gd \
+	php7.1-json \
+	php7.1-ldap \
+	php7.1-mbstring \
+	php7.1-mcrypt \
+	php7.1-mysql \
+	php7.1-opcache \
+	php7.1-readline \
+	php7.1-soap \
+	php7.1-xml \
+	php7.1-zip \
+	php7.1-pgsql \
+	php-memcached \
+	libapache2-mod-php7.1 \
+	php-redis \
+	php-imagick \
+	php-pear \
+	php-uploadprogress \
+	imagemagick \
+	postgresql \
+	postgresql-contrib \
+	apache2 \
+  apache2-utils \
+	libsqlite3-dev \
+	ruby-dev
+
+RUN gem install rails && gem install mailcatcher
+
 RUN npm install -g proboscis \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/penelope \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/penelope-control \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/penelope-format \
+  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/proboscis \
+  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/proboscis-control \
+  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
-
-
