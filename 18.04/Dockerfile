@@ -107,7 +107,6 @@ RUN service postgresql start \
   && su - postgres -c "createdb --owner=postgres drupal"
 COPY files/pgpass.txt /root/.pgpass
 RUN chmod 600 /root/.pgpass
-RUN service postgresql stop
 
 # Configure Apache
 RUN rm -rf /var/www/html
