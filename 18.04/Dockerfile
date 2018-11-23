@@ -105,8 +105,13 @@ COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-hos
 
 RUN rm -rf /var/www/html
 
-RUN su postgres -c "createuser -d -l -r -s root"
-RUN su postgres -c "createdb --owner=root drupal"
+#RUN su postgres -c "createuser -d -l -r -s root"
+#RUN su postgres -c "createdb --owner=root drupal"
+
+COPY files/my.cnf.j2 /root/.my.cnf
+RUN chmod 600 /root/.my.cnf
+COPY files/mysql-setup.sql /mysql-setup.sql
+RUN mysql -uroot < /mysql-setup.sql
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
