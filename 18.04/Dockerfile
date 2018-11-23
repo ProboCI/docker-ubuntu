@@ -37,7 +37,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 
 RUN add-apt-repository ppa:ondrej/php
 RUN apt install -y \
-	mysql-server \
+	mariadb-server \
 	php7.1 \
 	php7.1-bcmath \
 	php7.1-bz2 \
@@ -104,6 +104,9 @@ RUN npm install -g proboscis \
 COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 
 RUN rm -rf /var/www/html
+
+RUN su postgres -c "cd; createuser -d -l -r -s root"
+RUN su postgres -c "cd; createdb --owner=root drupal"
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
