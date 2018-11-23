@@ -81,7 +81,7 @@ RUN apt install zlib1g-dev
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --install-dir=/usr/local/bin \
     --filename=composer \
-    --version=1.6.3 && \
+    --version=1.7.3 && \
     composer \
     --working-dir=/usr/local/src/ \
     global \
@@ -100,6 +100,8 @@ RUN npm install -g proboscis \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/proboscis-control \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
   && rm -rf /var/lib/apt/lists/* /tmp/*
+
+COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
