@@ -19,7 +19,6 @@ LABEL name="Ubuntu 18.04 LTS Based ProboCI Image"
 LABEL description="Our base container for ProboCI Builds."
 LABEL author="Michael R. Bagnall <mrbagnall@icloud.com>"
 LABEL vendor="ProboCI, LLC."
-LABEL version="0.01"
 
 WORKDIR /root
 
@@ -38,7 +37,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 	netcat-openbsd \
 	nodejs \
 	ntp \
-	redis \
+	redis-server \
 	sendmail \
 	software-properties-common \
 	sudo \
