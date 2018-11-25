@@ -19,7 +19,6 @@ LABEL name="Ubuntu 18.04 LTS Based ProboCI Image"
 LABEL description="Our base container for ProboCI Builds."
 LABEL author="Michael R. Bagnall <mrbagnall@icloud.com>"
 LABEL vendor="ProboCI, LLC."
-LABEL version="v2"
 
 WORKDIR /root
 
@@ -77,6 +76,8 @@ RUN apt install -y \
 	postgresql-contrib \
 	apache2 \
 	apache2-utils
+
+RUN a2enmod rewrite
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \

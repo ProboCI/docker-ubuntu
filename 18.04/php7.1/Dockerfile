@@ -78,6 +78,8 @@ RUN apt install -y \
 	apache2 \
 	apache2-utils
 
+RUN a2enmod rewrite
+
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --install-dir=/usr/bin \
