@@ -80,7 +80,7 @@ RUN apt install -y \
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
-    --install-dir=/usr/local/bin \
+    --install-dir=/usr/bin \
     --filename=composer \
     --version=1.7.3 && \
     composer \
