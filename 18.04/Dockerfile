@@ -33,10 +33,12 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 	git \
 	libnss3 \
 	lsb-release \
+	memcached \
 	nano \
 	netcat-openbsd \
 	nodejs \
 	ntp \
+	redis \
 	sendmail \
 	software-properties-common \
 	sudo \
@@ -76,11 +78,6 @@ RUN apt install -y \
 	postgresql-contrib \
 	apache2 \
 	apache2-utils
-
-RUN apt install zlib1g-dev
-
-#RUN gem install rails
-#RUN gem install mailcatcher
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
