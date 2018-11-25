@@ -78,8 +78,6 @@ RUN apt install -y \
 	apache2 \
 	apache2-utils
 
-RUN a2enmod rewrite
-
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --install-dir=/usr/bin \
@@ -116,8 +114,20 @@ COPY files/pgpass.txt /root/.pgpass
 RUN chmod 600 /root/.pgpass \
   && service postgresql stop
 
-# Configure Apache
-RUN rm -rf /var/www/html
+# Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
+RUN rm -rf /var/www/html \
+  && a2enmod rewrite \
+  && a2enmod actions \
+  && a2enmod alias \
+  && a2enmod deflate \
+  && a2enmod dir \
+  && a2enmod expires \
+  && a2enmod headers \
+  && a2enmod mime \
+  && a2enmod negotiation \
+  && a2enmod setenvif \
+  && a2enmod proxy \
+  && a2enmod proxy_http
 COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 
 # Start and configure our MySQL Server
