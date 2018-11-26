@@ -37,6 +37,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 	netcat-openbsd \
 	nodejs \
 	ntp \
+	openjdk-8-jre \
 	redis-server \
 	sendmail \
 	software-properties-common \
@@ -45,7 +46,9 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 	wget \
 	zip
 
-RUN add-apt-repository ppa:ondrej/php
+RUN add-apt-repository ppa:ondrej/php \
+  && apt update -y
+
 RUN apt install -y \
 	php7.1 \
 	php7.1-bcmath \
@@ -140,6 +143,20 @@ RUN service mysql start \
 RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
   && gem install rails \
   && gem install mailcatcher
+
+RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
+  && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
+	&& ./install_solr_service.sh solr-6.6.5.tgz  \
+	&& wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.14.tar.gz \
+  && tar xzf search_api_solr-7.x-1.14.tar.gz \
+  && mv search_api_solr /opt/solr/. \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
+	&& wget https://ftp.drupal.org/files/projects/search_api_solr-8.x-2.3.tar.gz \
+	&& rm -rf /opt/solr/search_api_solr \
+  && tar xzf search_api_solr-8.x-2.3.tar.gz \
+  && mv search_api_solr /opt/solr/. \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
+	&& service solr stop
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
