@@ -50,28 +50,28 @@ RUN add-apt-repository ppa:ondrej/php \
   && apt update -y
 
 RUN apt install -y \
-	php5.6 \
-	php5.6-bcmath \
-	php5.6-bz2 \
-	php5.6-cli \
-	php5.6-common \
-	php5.6-curl \
-	php5.6-dba \
-	php5.6-dev \
-	php5.6-gd \
-	php5.6-json \
-	php5.6-ldap \
-	php5.6-mbstring \
-	php5.6-mcrypt \
-	php5.6-mysql \
-	php5.6-opcache \
-	php5.6-readline \
-	php5.6-soap \
-	php5.6-xml \
-	php5.6-zip \
-	php5.6-pgsql \
+	php7.0 \
+	php7.0-bcmath \
+	php7.0-bz2 \
+	php7.0-cli \
+	php7.0-common \
+	php7.0-curl \
+	php7.0-dba \
+	php7.0-dev \
+	php7.0-gd \
+	php7.0-json \
+	php7.0-ldap \
+	php7.0-mbstring \
+	php7.0-mcrypt \
+	php7.0-mysql \
+	php7.0-opcache \
+	php7.0-readline \
+	php7.0-soap \
+	php7.0-xml \
+	php7.0-zip \
+	php7.0-pgsql \
 	php-memcached \
-	libapache2-mod-php5.6 \
+	libapache2-mod-php7.0 \
 	php-redis \
 	php-imagick \
 	php-pear \
@@ -157,6 +157,18 @@ RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
 	&& service solr stop
+
+COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
+RUN apt install -y \
+  && apt install -y debian-archive-keyring \
+  && curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
+	&& apt-get update -y \
+	&& apt install varnish/xenial
+#COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default-4.vcl
+COPY files/drupal-default-4.vcl /etc/varnish/default.vcl
+COPY files/varnish /etc/default/varnish
+COPY files/secret /etc/varnish/secret
+
 
 RUN mkdir .ssh \
   && chmod 700 .ssh

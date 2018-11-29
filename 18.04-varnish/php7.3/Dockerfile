@@ -50,28 +50,27 @@ RUN add-apt-repository ppa:ondrej/php \
   && apt update -y
 
 RUN apt install -y \
-	php5.6 \
-	php5.6-bcmath \
-	php5.6-bz2 \
-	php5.6-cli \
-	php5.6-common \
-	php5.6-curl \
-	php5.6-dba \
-	php5.6-dev \
-	php5.6-gd \
-	php5.6-json \
-	php5.6-ldap \
-	php5.6-mbstring \
-	php5.6-mcrypt \
-	php5.6-mysql \
-	php5.6-opcache \
-	php5.6-readline \
-	php5.6-soap \
-	php5.6-xml \
-	php5.6-zip \
-	php5.6-pgsql \
+	php7.3 \
+	php7.3-bcmath \
+	php7.3-bz2 \
+	php7.3-cli \
+	php7.3-common \
+	php7.3-curl \
+	php7.3-dba \
+	php7.3-dev \
+	php7.3-gd \
+	php7.3-json \
+	php7.3-ldap \
+	php7.3-mbstring \
+	php7.3-mysql \
+	php7.3-opcache \
+	php7.3-readline \
+	php7.3-soap \
+	php7.3-xml \
+	php7.3-zip \
+	php7.3-pgsql \
 	php-memcached \
-	libapache2-mod-php5.6 \
+	libapache2-mod-php7.1 \
 	php-redis \
 	php-imagick \
 	php-pear \
@@ -80,6 +79,8 @@ RUN apt install -y \
 	postgresql-contrib \
 	apache2 \
 	apache2-utils
+
+RUN a2enmod rewrite
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -157,6 +158,17 @@ RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
 	&& service solr stop
+
+COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
+RUN apt install -y \
+  && apt install -y debian-archive-keyring \
+  && curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
+	&& apt-get update -y \
+	&& apt install varnish/xenial
+#COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default-4.vcl
+COPY files/drupal-default-4.vcl /etc/varnish/default.vcl
+COPY files/varnish /etc/default/varnish
+COPY files/secret /etc/varnish/secret
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
