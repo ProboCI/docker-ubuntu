@@ -109,13 +109,13 @@ RUN npm install -g proboscis \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Start and configure our PostgreSQL server
-RUN service postgresql start \
-  && su - postgres -c "createuser -d -l -r -s root" \
-  && su - postgres -c "createdb --owner=postgres drupal" \
-	&& psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';"
 COPY files/pgpass.txt /root/.pgpass
-RUN chmod 600 /root/.pgpass \
-  && service postgresql stop
+RUN service postgresql start \
+	&& su - postgres -c "createuser -d -l -r -s root" \
+	&& su - postgres -c "createdb --owner=postgres drupal" \
+	&& psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';" \
+	&& chmod 600 /root/.pgpass \
+	&& service postgresql stop
 
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
 RUN rm -rf /var/www/html \
@@ -145,23 +145,23 @@ RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
   && gem install mailcatcher
 
 RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
-  && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
+	&& tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
 	&& ./install_solr_service.sh solr-6.6.5.tgz  \
 	&& wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.14.tar.gz \
-  && tar xzf search_api_solr-7.x-1.14.tar.gz \
-  && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
+	&& tar xzf search_api_solr-7.x-1.14.tar.gz \
+	&& mv search_api_solr /opt/solr/. \
+	&& sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
 	&& wget https://ftp.drupal.org/files/projects/search_api_solr-8.x-2.3.tar.gz \
 	&& rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-8.x-2.3.tar.gz \
-  && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
+	&& tar xzf search_api_solr-8.x-2.3.tar.gz \
+	&& mv search_api_solr /opt/solr/. \
+	&& sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
 	&& service solr stop
 
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN apt install -y \
-  && apt install -y debian-archive-keyring \
-  && curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
+	&& apt install -y debian-archive-keyring \
+	&& curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
 	&& apt-get update -y \
 	&& apt install varnish/xenial
 #COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default-4.vcl
