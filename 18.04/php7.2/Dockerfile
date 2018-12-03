@@ -25,60 +25,60 @@ WORKDIR /root
 ENV TERM xterm
 
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
-	apt-transport-https \
-	build-essential \
-	ca-certificates \
-	curl \
-	git \
-	libnss3 \
-	lsb-release \
-	memcached \
-	nano \
-	netcat-openbsd \
-	nodejs \
-	ntp \
-	openjdk-8-jre \
-	redis-server \
-	sendmail \
-	software-properties-common \
-	sudo \
-	vim \
-	wget \
-	zip
+  apt-transport-https \
+  build-essential \
+  ca-certificates \
+  curl \
+  git \
+  libnss3 \
+  lsb-release \
+  memcached \
+  nano \
+  netcat-openbsd \
+  nodejs \
+  ntp \
+  openjdk-8-jre \
+  redis-server \
+  sendmail \
+  software-properties-common \
+  sudo \
+  vim \
+  wget \
+  zip
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt update -y
 
 RUN apt install -y \
-	php7.2 \
-	php7.2-bcmath \
-	php7.2-bz2 \
-	php7.2-cli \
-	php7.2-common \
-	php7.2-curl \
-	php7.2-dba \
-	php7.2-dev \
-	php7.2-gd \
-	php7.2-json \
-	php7.2-ldap \
-	php7.2-mbstring \
-	php7.2-mysql \
-	php7.2-opcache \
-	php7.2-readline \
-	php7.2-soap \
-	php7.2-xml \
-	php7.2-zip \
-	php7.2-pgsql \
-	php-memcached \
-	libapache2-mod-php7.2 \
-	php-redis \
-	php-imagick \
-	php-pear \
-	imagemagick \
-	postgresql \
-	postgresql-contrib \
-	apache2 \
-	apache2-utils
+  php7.2 \
+  php7.2-bcmath \
+  php7.2-bz2 \
+  php7.2-cli \
+  php7.2-common \
+  php7.2-curl \
+  php7.2-dba \
+  php7.2-dev \
+  php7.2-gd \
+  php7.2-json \
+  php7.2-ldap \
+  php7.2-mbstring \
+  php7.2-mysql \
+  php7.2-opcache \
+  php7.2-readline \
+  php7.2-soap \
+  php7.2-xml \
+  php7.2-zip \
+  php7.2-pgsql \
+  php-memcached \
+  libapache2-mod-php7.2 \
+  php-redis \
+  php-imagick \
+  php-pear \
+  imagemagick \
+  postgresql \
+  postgresql-contrib \
+  apache2 \
+  apache2-utils
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -110,11 +110,11 @@ RUN npm install -g proboscis \
 # Start and configure our PostgreSQL server
 COPY files/pgpass.txt /root/.pgpass
 RUN service postgresql start \
-	&& su - postgres -c "createuser -d -l -r -s root" \
-	&& su - postgres -c "createdb --owner=postgres drupal" \
-	&& psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';" \
-	&& chmod 600 /root/.pgpass \
-	&& service postgresql stop
+  && su - postgres -c "createuser -d -l -r -s root" \
+  && su - postgres -c "createdb --owner=postgres drupal" \
+  && psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';" \
+  && chmod 600 /root/.pgpass \
+  && service postgresql stop
 
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
 RUN rm -rf /var/www/html \
@@ -144,18 +144,18 @@ RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
   && gem install mailcatcher
 
 RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
-	&& tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
-	&& ./install_solr_service.sh solr-6.6.5.tgz  \
-	&& wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.14.tar.gz \
-	&& tar xzf search_api_solr-7.x-1.14.tar.gz \
-	&& mv search_api_solr /opt/solr/. \
-	&& sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
-	&& wget https://ftp.drupal.org/files/projects/search_api_solr-8.x-2.3.tar.gz \
-	&& rm -rf /opt/solr/search_api_solr \
-	&& tar xzf search_api_solr-8.x-2.3.tar.gz \
-	&& mv search_api_solr /opt/solr/. \
-	&& sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
-	&& service solr stop
+  && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-6.6.5.tgz  \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.14.tar.gz \
+  && tar xzf search_api_solr-7.x-1.14.tar.gz \
+  && mv search_api_solr /opt/solr/. \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-8.x-2.3.tar.gz \
+  && rm -rf /opt/solr/search_api_solr \
+  && tar xzf search_api_solr-8.x-2.3.tar.gz \
+  && mv search_api_solr /opt/solr/. \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
+  && service solr stop
 
 RUN mkdir .ssh \
   && chmod 700 .ssh
