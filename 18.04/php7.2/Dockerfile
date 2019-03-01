@@ -176,9 +176,14 @@ RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
   && service solr stop
 
-# Create .ssh dir.
-RUN mkdir .ssh \
-  && chmod 700 .ssh
+# Create .ssh dir and add SSH config file.
+# TODO: There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
+RUN mkdir /root/.ssh \
+  && chmod 700 /root/.ssh \
+  && touch /root/.ssh/config \
+  && chmod 0700 /root/.ssh/config \
+  && echo "Host *" >> /root/.ssh/config \
+  && echo "StrictHostKeyChecking no" >> /root/.ssh/config
 
 # Install WP-CLI Wordpress command line tool, https://wp-cli.org/.
 RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
