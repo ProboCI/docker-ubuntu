@@ -80,7 +80,7 @@ RUN apt install -y \
   apache2 \
   apache2-utils
 
-RUN apt-install -y \
+RUN apt install -y \
   php7.1-dev \
   php7.1-xml
 
