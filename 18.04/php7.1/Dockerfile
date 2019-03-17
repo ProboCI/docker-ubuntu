@@ -84,6 +84,8 @@ RUN apt install -y \
   php7.1-dev \
   php7.1-xml
 
+RUN pecl install redis
+
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --install-dir=/usr/bin \
