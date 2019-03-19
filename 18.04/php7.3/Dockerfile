@@ -57,7 +57,6 @@ RUN apt install -y \
   php7.3-common \
   php7.3-curl \
   php7.3-dba \
-  php7.3-dev \
   php7.3-gd \
   php7.3-json \
   php7.3-ldap \
@@ -66,7 +65,6 @@ RUN apt install -y \
   php7.3-opcache \
   php7.3-readline \
   php7.3-soap \
-  php7.3-xml \
   php7.3-zip \
   php7.3-pgsql \
   php-memcached \
@@ -79,6 +77,14 @@ RUN apt install -y \
   postgresql-contrib \
   apache2 \
   apache2-utils
+
+# Install dev and xml. For some reason this does not work when included in the list above.
+RUN apt install -y \
+  php7.3-dev \
+  php7.3-xml
+
+# Install the PhpRedis class
+RUN pecl install redis
 
 RUN a2enmod rewrite
 

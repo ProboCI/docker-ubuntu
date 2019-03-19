@@ -57,7 +57,6 @@ RUN apt install -y \
   php7.1-common \
   php7.1-curl \
   php7.1-dba \
-  php7.1-dev \
   php7.1-gd \
   php7.1-json \
   php7.1-ldap \
@@ -67,7 +66,6 @@ RUN apt install -y \
   php7.1-opcache \
   php7.1-readline \
   php7.1-soap \
-  php7.1-xml \
   php7.1-zip \
   php7.1-pgsql \
   php-memcached \
@@ -80,6 +78,14 @@ RUN apt install -y \
   postgresql-contrib \
   apache2 \
   apache2-utils
+
+# Install dev and xml. For some reason this does not work when included in the list above.
+RUN apt install -y \
+  php7.1-dev \
+  php7.1-xml
+
+# Install the PhpRedis class
+RUN pecl install redis
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \

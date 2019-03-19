@@ -57,7 +57,6 @@ RUN apt install -y \
   php5.6-common \
   php5.6-curl \
   php5.6-dba \
-  php5.6-dev \
   php5.6-gd \
   php5.6-json \
   php5.6-ldap \
@@ -67,7 +66,6 @@ RUN apt install -y \
   php5.6-opcache \
   php5.6-readline \
   php5.6-soap \
-  php5.6-xml \
   php5.6-zip \
   php5.6-pgsql \
   php-memcached \
@@ -80,6 +78,14 @@ RUN apt install -y \
   postgresql-contrib \
   apache2 \
   apache2-utils
+
+# Install dev and xml. For some reason this does not work when included in the list above.
+RUN apt install -y \
+  php5.6-dev \
+  php6.5-xml
+
+# Install the PhpRedis class
+RUN pecl install redis
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \

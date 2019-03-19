@@ -80,10 +80,12 @@ RUN apt install -y \
   apache2 \
   apache2-utils
 
+# Install dev and xml. For some reason this does not work when included in the list above.
 RUN apt install -y \
   php7.1-dev \
   php7.1-xml
 
+# Install the PhpRedis class
 RUN pecl install redis
 
 # Install Composer and Drush
