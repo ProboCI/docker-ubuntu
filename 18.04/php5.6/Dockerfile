@@ -82,7 +82,7 @@ RUN apt install -y \
 # Install dev and xml. For some reason this does not work when included in the list above.
 RUN apt install -y \
   php5.6-dev \
-  php6.5-xml
+  php5.6-xml
 
 # Install the PhpRedis class
 RUN pecl install redis
