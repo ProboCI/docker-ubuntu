@@ -137,7 +137,8 @@ RUN rm -rf /var/www/html \
   && a2enmod negotiation \
   && a2enmod setenvif \
   && a2enmod proxy \
-  && a2enmod proxy_http
+  && a2enmod proxy_http \
+  && a2enmod spelling
 COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 
 # Start and configure our MySQL Server

@@ -84,6 +84,7 @@ RUN apt install -y \
   php7.0-dev \
   php7.0-xml
 
+# Install the PhpRedis class
 RUN pecl install redis
 
 # Install Composer and Drush
