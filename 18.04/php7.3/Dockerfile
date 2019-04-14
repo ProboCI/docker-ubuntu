@@ -25,57 +25,66 @@ WORKDIR /root
 ENV TERM xterm
 
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
-	apt-transport-https \
-	build-essential \
-	ca-certificates \
-	curl \
-	git \
-	libnss3 \
-	lsb-release \
-	memcached \
-	nano \
-	netcat-openbsd \
-	nodejs \
-	ntp \
-	redis-server \
-	sendmail \
-	software-properties-common \
-	sudo \
-	vim \
-	wget \
-	zip
+  apt-transport-https \
+  build-essential \
+  ca-certificates \
+  curl \
+  git \
+  libnss3 \
+  lsb-release \
+  memcached \
+  nano \
+  netcat-openbsd \
+  nodejs \
+  ntp \
+  openjdk-8-jre \
+  redis-server \
+  sendmail \
+  software-properties-common \
+  sudo \
+  vim \
+  wget \
+  zip
 
-RUN add-apt-repository ppa:ondrej/php
+RUN add-apt-repository ppa:ondrej/php \
+  && apt update -y
+
 RUN apt install -y \
-	php7.3 \
-	php7.3-bcmath \
-	php7.3-bz2 \
-	php7.3-cli \
-	php7.3-common \
-	php7.3-curl \
-	php7.3-dba \
-	php7.3-dev \
-	php7.3-gd \
-	php7.3-json \
-	php7.3-ldap \
-	php7.3-mbstring \
-	php7.3-mysql \
-	php7.3-opcache \
-	php7.3-readline \
-	php7.3-soap \
-	php7.3-xml \
-	php7.3-zip \
-	php7.3-pgsql \
-	php-memcached \
-	libapache2-mod-php7.1 \
-	php-redis \
-	php-imagick \
-	php-pear \
-	imagemagick \
-	postgresql \
-	postgresql-contrib \
-	apache2 \
-	apache2-utils
+  php7.3 \
+  php7.3-bcmath \
+  php7.3-bz2 \
+  php7.3-cli \
+  php7.3-common \
+  php7.3-curl \
+  php7.3-dba \
+  php7.3-gd \
+  php7.3-json \
+  php7.3-ldap \
+  php7.3-mbstring \
+  php7.3-mysql \
+  php7.3-opcache \
+  php7.3-readline \
+  php7.3-soap \
+  php7.3-zip \
+  php7.3-pgsql \
+  php-memcached \
+  libapache2-mod-php7.1 \
+  php-redis \
+  php-imagick \
+  php-pear \
+  imagemagick \
+  postgresql \
+  postgresql-contrib \
+  apache2 \
+  apache2-utils
+
+# Install dev and xml. For some reason this does not work when included in the list above.
+RUN apt install -y \
+  php7.3-dev \
+  php7.3-xml
+
+# Install the PhpRedis class
+RUN pecl install redis
 
 RUN a2enmod rewrite
 
@@ -107,12 +116,12 @@ RUN npm install -g proboscis \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Start and configure our PostgreSQL server
+COPY files/pgpass.txt /root/.pgpass
 RUN service postgresql start \
   && su - postgres -c "createuser -d -l -r -s root" \
   && su - postgres -c "createdb --owner=postgres drupal" \
-	&& psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';"
-COPY files/pgpass.txt /root/.pgpass
-RUN chmod 600 /root/.pgpass \
+  && psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';" \
+  && chmod 600 /root/.pgpass \
   && service postgresql stop
 
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
@@ -128,7 +137,8 @@ RUN rm -rf /var/www/html \
   && a2enmod negotiation \
   && a2enmod setenvif \
   && a2enmod proxy \
-  && a2enmod proxy_http
+  && a2enmod proxy_http \
+  && a2enmod speling
 COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 
 # Start and configure our MySQL Server
@@ -141,6 +151,20 @@ RUN service mysql start \
 RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
   && gem install rails \
   && gem install mailcatcher
+
+RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
+  && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-6.6.5.tgz  \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.14.tar.gz \
+  && tar xzf search_api_solr-7.x-1.14.tar.gz \
+  && mv search_api_solr /opt/solr/. \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-8.x-2.3.tar.gz \
+  && rm -rf /opt/solr/search_api_solr \
+  && tar xzf search_api_solr-8.x-2.3.tar.gz \
+  && mv search_api_solr /opt/solr/. \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
+  && service solr stop
 
 RUN mkdir .ssh \
   && chmod 700 .ssh

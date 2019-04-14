@@ -66,7 +66,6 @@ RUN apt install -y \
   php7.1-opcache \
   php7.1-readline \
   php7.1-soap \
-  php7.1-xml \
   php7.1-zip \
   php7.1-pgsql \
   php-memcached \
@@ -125,6 +124,7 @@ RUN service postgresql start \
   && service postgresql stop
 
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
+COPY files/apache2.conf /etc/apache2/apache2.conf
 RUN rm -rf /var/www/html \
   && a2enmod rewrite \
   && a2enmod actions \
@@ -137,8 +137,7 @@ RUN rm -rf /var/www/html \
   && a2enmod negotiation \
   && a2enmod setenvif \
   && a2enmod proxy \
-  && a2enmod proxy_http \
-  && a2enmod speling
+  && a2enmod proxy_http
 COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 
 # Start and configure our MySQL Server
@@ -153,7 +152,7 @@ RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
   && gem install mailcatcher
 
 RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
-   && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
+  && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-6.6.5.tgz  \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.14.tar.gz \
   && tar xzf search_api_solr-7.x-1.14.tar.gz \
@@ -165,6 +164,17 @@ RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
   && service solr stop
+
+COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
+RUN apt install -y \
+  && apt install -y debian-archive-keyring \
+  && curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
+  && apt-get update -y \
+  && apt install varnish/xenial
+#COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default-4.vcl
+COPY files/drupal-default-4.vcl /etc/varnish/default.vcl
+COPY files/varnish /etc/default/varnish
+COPY files/secret /etc/varnish/secret
 
 RUN mkdir .ssh \
   && chmod 700 .ssh

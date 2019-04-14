@@ -50,25 +50,23 @@ RUN add-apt-repository ppa:ondrej/php \
   && apt update -y
 
 RUN apt install -y \
-  php7.1 \
-  php7.1-bcmath \
-  php7.1-bz2 \
-  php7.1-cli \
-  php7.1-common \
-  php7.1-curl \
-  php7.1-dba \
-  php7.1-gd \
-  php7.1-json \
-  php7.1-ldap \
-  php7.1-mbstring \
-  php7.1-mcrypt \
-  php7.1-mysql \
-  php7.1-opcache \
-  php7.1-readline \
-  php7.1-soap \
-  php7.1-xml \
-  php7.1-zip \
-  php7.1-pgsql \
+  php7.3 \
+  php7.3-bcmath \
+  php7.3-bz2 \
+  php7.3-cli \
+  php7.3-common \
+  php7.3-curl \
+  php7.3-dba \
+  php7.3-gd \
+  php7.3-json \
+  php7.3-ldap \
+  php7.3-mbstring \
+  php7.3-mysql \
+  php7.3-opcache \
+  php7.3-readline \
+  php7.3-soap \
+  php7.3-zip \
+  php7.3-pgsql \
   php-memcached \
   libapache2-mod-php7.1 \
   php-redis \
@@ -82,11 +80,13 @@ RUN apt install -y \
 
 # Install dev and xml. For some reason this does not work when included in the list above.
 RUN apt install -y \
-  php7.1-dev \
-  php7.1-xml
+  php7.3-dev \
+  php7.3-xml
 
 # Install the PhpRedis class
 RUN pecl install redis
+
+RUN a2enmod rewrite
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -153,7 +153,7 @@ RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
   && gem install mailcatcher
 
 RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
-   && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
+  && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-6.6.5.tgz  \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.14.tar.gz \
   && tar xzf search_api_solr-7.x-1.14.tar.gz \
@@ -165,6 +165,17 @@ RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
   && service solr stop
+
+COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
+RUN apt install -y \
+  && apt install -y debian-archive-keyring \
+  && curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
+  && apt-get update -y \
+  && apt install varnish/xenial
+#COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default-4.vcl
+COPY files/drupal-default-4.vcl /etc/varnish/default.vcl
+COPY files/varnish /etc/default/varnish
+COPY files/secret /etc/varnish/secret
 
 RUN mkdir .ssh \
   && chmod 700 .ssh

@@ -50,27 +50,25 @@ RUN add-apt-repository ppa:ondrej/php \
   && apt update -y
 
 RUN apt install -y \
-  php7.1 \
-  php7.1-bcmath \
-  php7.1-bz2 \
-  php7.1-cli \
-  php7.1-common \
-  php7.1-curl \
-  php7.1-dba \
-  php7.1-gd \
-  php7.1-json \
-  php7.1-ldap \
-  php7.1-mbstring \
-  php7.1-mcrypt \
-  php7.1-mysql \
-  php7.1-opcache \
-  php7.1-readline \
-  php7.1-soap \
-  php7.1-xml \
-  php7.1-zip \
-  php7.1-pgsql \
+  php7.2 \
+  php7.2-bcmath \
+  php7.2-bz2 \
+  php7.2-cli \
+  php7.2-common \
+  php7.2-curl \
+  php7.2-dba \
+  php7.2-gd \
+  php7.2-json \
+  php7.2-ldap \
+  php7.2-mbstring \
+  php7.2-mysql \
+  php7.2-opcache \
+  php7.2-readline \
+  php7.2-soap \
+  php7.2-zip \
+  php7.2-pgsql \
   php-memcached \
-  libapache2-mod-php7.1 \
+  libapache2-mod-php7.2 \
   php-redis \
   php-imagick \
   php-pear \
@@ -82,8 +80,8 @@ RUN apt install -y \
 
 # Install dev and xml. For some reason this does not work when included in the list above.
 RUN apt install -y \
-  php7.1-dev \
-  php7.1-xml
+  php7.2-dev \
+  php7.2-xml
 
 # Install the PhpRedis class
 RUN pecl install redis
@@ -153,7 +151,7 @@ RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
   && gem install mailcatcher
 
 RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
-   && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
+  && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-6.6.5.tgz  \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.14.tar.gz \
   && tar xzf search_api_solr-7.x-1.14.tar.gz \
