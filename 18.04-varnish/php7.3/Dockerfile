@@ -109,6 +109,14 @@ RUN npm install -g proboscis \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
+# Install NPM Packages.
+RUN npm install -g bower \
+  grunt-cli \
+  gulp-cli \
+  lighthouse \
+  the-a11y-machine \
+  yarn
+
 # Start and configure our PostgreSQL server
 COPY files/pgpass.txt /root/.pgpass
 RUN service postgresql start \

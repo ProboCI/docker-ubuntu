@@ -83,7 +83,7 @@ PHP is installed from the `ondrej/php` PPA repository, https://launchpad.net/~on
     - drupal8
 
 ## Additional Packages and Tools
-The following packages and tools have been installed to all Probo Images to allow for additional functionality on images out of the box.
+The following packages and tools have been installed to all Probo Images to allow for additional functionality on images for building and testing web applications out of the box.
 
 - bundler
 - composer

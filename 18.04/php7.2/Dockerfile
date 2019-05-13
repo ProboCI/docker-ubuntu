@@ -116,11 +116,11 @@ RUN npm install -g proboscis \
 
 # Install NPM Packages.
 RUN npm install -g bower \
-  && grunt-cli \
-  && gulp-cli \
-  && lighthouse \
-  && the-a11y-machine \
-  && yarn
+  grunt-cli \
+  gulp-cli \
+  lighthouse \
+  the-a11y-machine \
+  yarn
 
 # Start and configure our PostgreSQL server.
 COPY files/pgpass.txt /root/.pgpass
