@@ -24,6 +24,7 @@ WORKDIR /root
 
 ENV TERM xterm
 
+# Update apt repos and install base apt packages.
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
   apt-transport-https \
   build-essential \
@@ -84,7 +85,8 @@ RUN apt install -y \
   postgresql \
   postgresql-contrib \
   apache2 \
-  apache2-utils
+  apache2-utils \
+  google-chrome-stable
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \

@@ -24,6 +24,7 @@ WORKDIR /root
 
 ENV TERM xterm
 
+# Update apt repos and install base apt packages.
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
   apt-transport-https \
   build-essential \
@@ -46,9 +47,15 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
   wget \
   zip
 
+# Add google-chrome-stable apt-key.
+RUN curl -o /tmp/linux_signing_key.pub https://dl.google.com/linux/linux_signing_key.pub \
+  && apt-key add /tmp/linux_signing_key.pub
+
+# Add ondrej/php PPA repository for PHP.
 RUN add-apt-repository ppa:ondrej/php \
   && apt update -y
 
+# Install PHP, PHP packages, Postgresql, and Apache2 apt packages.
 RUN apt install -y \
   php5.6 \
   php5.6-bcmath \
@@ -79,7 +86,8 @@ RUN apt install -y \
   postgresql \
   postgresql-contrib \
   apache2 \
-  apache2-utils
+  apache2-utils \
+  google-chrome-stable
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -148,10 +156,14 @@ RUN apt install -y mariadb-server mariadb-client
 RUN service mysql start \
   && mysql -uroot < /mysql-setup.sql
 
+# Install Ruby and Gem packages.
 RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
   && gem install rails \
-  && gem install mailcatcher
+  && gem install mailcatcher \
+  && gem install ruby-compass \
+  && gem install bundler
 
+# Install solr with default search cores.
 RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-6.6.5.tgz  \
@@ -166,6 +178,7 @@ RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
   && service solr stop
 
+# Install varnish with default config.
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN apt install -y \
   && apt install -y debian-archive-keyring \
@@ -177,5 +190,16 @@ COPY files/drupal-default-4.vcl /etc/varnish/default.vcl
 COPY files/varnish /etc/default/varnish
 COPY files/secret /etc/varnish/secret
 
-RUN mkdir .ssh \
-  && chmod 700 .ssh
+# Create .ssh dir and add SSH config file.
+# TODO: There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
+RUN mkdir /root/.ssh \
+  && chmod 700 /root/.ssh \
+  && touch /root/.ssh/config \
+  && chmod 0700 /root/.ssh/config \
+  && echo "Host *" >> /root/.ssh/config \
+  && echo "StrictHostKeyChecking no" >> /root/.ssh/config
+
+# Install WP-CLI Wordpress command line tool, https://wp-cli.org/.
+RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+  && chmod +x /tmp/wp-cli.phar \
+  && mv /tmp/wp-cli.phar /usr/local/bin/wp
