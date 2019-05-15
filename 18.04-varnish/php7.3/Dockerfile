@@ -76,7 +76,8 @@ RUN apt install -y \
   postgresql \
   postgresql-contrib \
   apache2 \
-  apache2-utils
+  apache2-utils \
+  google-chrome-stable
 
 # Install dev and xml. For some reason this does not work when included in the list above.
 RUN apt install -y \
