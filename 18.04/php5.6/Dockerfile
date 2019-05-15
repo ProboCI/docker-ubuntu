@@ -160,7 +160,7 @@ RUN service mysql start \
 RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
   && gem install rails \
   && gem install mailcatcher \
-  && gem install ruby-compass \
+  && gem install compass \
   && gem install bundler
 
 # Install solr with default search cores.
