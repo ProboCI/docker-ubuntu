@@ -81,8 +81,7 @@ RUN curl -o /tmp/linux_signing_key.pub https://dl.google.com/linux/linux_signing
   postgresql \
   postgresql-contrib \
   apache2 \
-  apache2-utils \
-  google-chrome-stable
+  apache2-utils
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
