@@ -119,7 +119,7 @@ RUN npm install -g bower \
   yarn
 
 # Start and configure our PostgreSQL server
-COPY ./files/pgpass.txt /root/.pgpass
+COPY files/pgpass.txt /root/.pgpass
 RUN service postgresql start \
   && su - postgres -c "createuser -d -l -r -s root" \
   && su - postgres -c "createdb --owner=postgres drupal" \
@@ -141,11 +141,11 @@ RUN rm -rf /var/www/html \
   && a2enmod setenvif \
   && a2enmod proxy \
   && a2enmod proxy_http
-COPY ./files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
+COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 
 # Start and configure our MySQL Server
 RUN apt update -y
-COPY ./files/mysql-setup.sql /mysql-setup.sql
+COPY files/mysql-setup.sql /mysql-setup.sql
 RUN apt install -y mariadb-server mariadb-client
 RUN service mysql start \
   && mysql -uroot < /mysql-setup.sql
