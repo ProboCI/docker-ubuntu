@@ -48,8 +48,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
   zip
 
 # Add google-chrome-stable apt-key. Add ondrej/php PPA repository for PHP. # Install PHP, PHP packages, Postgresql, and Apache2 apt packages.
-RUN curl -o /tmp/linux_signing_key.pub https://dl.google.com/linux/linux_signing_key.pub \
-  && apt-key add /tmp/linux_signing_key.pub \
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
   && add-apt-repository ppa:ondrej/php \
   && apt update && apt install -y \
   php5.6 \
@@ -81,7 +80,8 @@ RUN curl -o /tmp/linux_signing_key.pub https://dl.google.com/linux/linux_signing
   postgresql \
   postgresql-contrib \
   apache2 \
-  apache2-utils
+  apache2-utils \
+  google-chrome-stable
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
