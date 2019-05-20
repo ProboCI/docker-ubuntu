@@ -1,2 +1,0 @@
-deb https://packagecloud.io/varnishcache/varnish41/ubuntu/ xenial main
-deb-src https://packagecloud.io/varnishcache/varnish41/ubuntu/ xenial main
