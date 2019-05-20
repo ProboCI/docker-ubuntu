@@ -47,16 +47,32 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
   wget \
   zip
 
-# Add google-chrome-stable apt-key.
-RUN curl -o /tmp/linux_signing_key.pub https://dl.google.com/linux/linux_signing_key.pub \
-  && apt-key add /tmp/linux_signing_key.pub
-
-# Add ondrej/php PPA repository for PHP.
-RUN add-apt-repository ppa:ondrej/php \
-  && apt update -y
-
-# Install PHP, PHP packages, Postgresql, and Apache2 apt packages.
-RUN apt install -y \
+# Install base, LAMP, npm, ruby, and all other tools apt packages.
+COPY files/mysql-setup.sql /mysql-setup.sql
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
+  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list \
+  && add-apt-repository ppa:ondrej/php \
+  && apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
+  apt-transport-https \
+  build-essential \
+  ca-certificates \
+  curl \
+  git \
+  libnss3 \
+  lsb-release \
+  memcached \
+  nano \
+  netcat-openbsd \
+  nodejs \
+  ntp \
+  openjdk-8-jre \
+  redis-server \
+  sendmail \
+  software-properties-common \
+  sudo \
+  vim \
+  wget \
+  zip \
   php7.3 \
   php7.3-bcmath \
   php7.3-bz2 \
@@ -86,7 +102,17 @@ RUN apt install -y \
   postgresql-contrib \
   apache2 \
   apache2-utils \
-  google-chrome-stable
+  mariadb-server \
+  mariadb-client \
+  google-chrome-stable \
+  npm \
+  libreadline-dev \
+  zlib1g-dev \
+  ruby-dev \
+  libsqlite3-dev \
+  && service mysql start \
+  && mysql -uroot < /mysql-setup.sql \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /mysql-setup.sql
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -101,27 +127,23 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
     ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
 
 # Download Drupal Console and install it in our standard path.
-RUN curl https://drupalconsole.com/installer -L -o /drupal.phar
-RUN mv /drupal.phar /bin/drupal
-RUN chmod 755 /bin/drupal
+RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
+  && mv /drupal.phar /bin/drupal \
+  && chmod 755 /bin/drupal
 
-# Get Node Package Manager
-RUN apt install -y npm
-
-# Install Proboscis
-RUN npm install -g proboscis \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/proboscis \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/proboscis-control \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
-  && rm -rf /var/lib/apt/lists/* /tmp/*
-
-# Install NPM Packages.
+# Install NPM packages and setup Proboscis
 RUN npm install -g bower \
   grunt-cli \
   gulp-cli \
   lighthouse \
   the-a11y-machine \
-  yarn
+  yarn \
+  proboscis \
+  --no-document \
+  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/proboscis \
+  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/proboscis-control \
+  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
+  && rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Start and configure our PostgreSQL server
 COPY files/pgpass.txt /root/.pgpass
@@ -148,19 +170,12 @@ RUN rm -rf /var/www/html \
   && a2enmod proxy_http
 COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 
-# Start and configure our MySQL Server
-RUN apt update -y
-COPY files/mysql-setup.sql /mysql-setup.sql
-RUN apt install -y mariadb-server mariadb-client
-RUN service mysql start \
-  && mysql -uroot < /mysql-setup.sql
-
-# Install Ruby and Gem packages.
-RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
-  && gem install rails \
-  && gem install mailcatcher \
-  && gem install ruby-compass \
-  && gem install bundler
+# Install Gem packages.
+RUN gem install rails \
+  mailcatcher \
+  ruby-compass \
+  bundler \
+  --no-document
 
 # Install solr with default search cores.
 RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
