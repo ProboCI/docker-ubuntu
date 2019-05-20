@@ -49,6 +49,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
 
 # Add google-chrome-stable apt-key. Add ondrej/php PPA repository for PHP. # Install PHP, PHP packages, Postgresql, and Apache2 apt packages.
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
+  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
   && apt update && apt install -y \
   php5.6 \
