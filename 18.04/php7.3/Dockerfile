@@ -52,8 +52,7 @@ COPY files/mysql-setup.sql /mysql-setup.sql
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
-  && apt update && DEBIAN_FRONTEND=noninteractive apt install -y libssl-dev \
-  php7.3 \
+  && apt update && DEBIAN_FRONTEND=noninteractive apt install -y php7.3 \
   php7.3-bcmath \
   php7.3-bz2 \
   php7.3-cli \
@@ -85,8 +84,6 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo ap
   mariadb-server \
   mariadb-client \
   google-chrome-stable \
-  nodejs-dev \
-  node-gyp \
   npm \
   libreadline-dev \
   zlib1g-dev \
