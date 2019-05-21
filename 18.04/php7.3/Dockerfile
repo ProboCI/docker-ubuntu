@@ -132,7 +132,7 @@ RUN service postgresql start \
   && su - postgres -c "createuser -d -l -r -s root" \
   && su - postgres -c "createdb --owner=postgres drupal" \
   && psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';" \
-  && chmod 600 /root/.pgpass \
+  && chmod 0600 /root/.pgpass \
   && service postgresql stop
 
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
