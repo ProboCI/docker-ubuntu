@@ -110,9 +110,6 @@ RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
   && mv /drupal.phar /bin/drupal \
   && chmod 755 /bin/drupal
 
-# Get Node Package Manager
-RUN apt install -y npm
-
 # Install NPM packages and setup Proboscis
 RUN npm install -g bower \
   grunt-cli \
