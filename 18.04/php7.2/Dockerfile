@@ -105,9 +105,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   && ln -s /usr/local/src/vendor/bin/drush /usr/local/bin/drush
 
 # Download Drupal Console and install it in our standard path.
-RUN curl https://drupalconsole.com/installer -L -o /tmp/drupal.phar
-RUN mv /tmp/drupal.phar /usr/local/bin/drupal
-RUN chmod +x /usr/local/bin/drupal
+RUN curl https://drupalconsole.com/installer -L -o /tmp/drupal.phar \
+  && mv /tmp/drupal.phar /usr/local/bin/drupal \
+  && chmod +x /usr/local/bin/drupal
 
 # Get Node Package Manager
 RUN apt-get install -y npm
