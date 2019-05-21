@@ -24,29 +24,6 @@ WORKDIR /root
 
 ENV TERM xterm
 
-# Update apt repos and install base apt packages.
-RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
-  apt-transport-https \
-  build-essential \
-  ca-certificates \
-  curl \
-  git \
-  libnss3 \
-  lsb-release \
-  memcached \
-  nano \
-  netcat-openbsd \
-  nodejs \
-  ntp \
-  openjdk-8-jre \
-  redis-server \
-  sendmail \
-  software-properties-common \
-  sudo \
-  vim \
-  wget \
-  zip
-
 # Install base, LAMP, npm, ruby, and all other tools apt packages.
 COPY files/mysql-setup.sql /mysql-setup.sql
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
@@ -105,6 +82,9 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo ap
   mariadb-server \
   mariadb-client \
   google-chrome-stable \
+  nodejs-dev \
+  node-gyp \
+  libssl1.0-dev \
   npm \
   libreadline-dev \
   zlib1g-dev \
