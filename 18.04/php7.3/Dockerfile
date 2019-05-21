@@ -91,7 +91,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo ap
   libsqlite3-dev \
   && service mysql start \
   && mysql -uroot < /mysql-setup.sql \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /mysql-setup.sql
+  && rm -rf /tmp/* /mysql-setup.sql
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -109,6 +109,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
   && mv /drupal.phar /bin/drupal \
   && chmod 755 /bin/drupal
+
+# Get Node Package Manager
+RUN apt install -y npm
 
 # Install NPM packages and setup Proboscis
 RUN npm install -g bower \
