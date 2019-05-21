@@ -25,7 +25,7 @@ WORKDIR /root
 ENV TERM xterm
 
 # Update apt repos and install base apt packages.
-RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils \
   apt-transport-https \
   build-essential \
   ca-certificates \
@@ -47,17 +47,12 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
   wget \
   zip
 
-# Add google-chrome-stable apt-key.
-RUN curl -o /tmp/linux_signing_key.pub https://dl.google.com/linux/linux_signing_key.pub \
-  && apt-key add /tmp/linux_signing_key.pub
-
-# Add ondrej/php PPA repository for PHP.
-RUN add-apt-repository ppa:ondrej/php \
-  && apt update -y
-
-# Install PHP, PHP packages, Postgresql, and Apache2 apt packages.
-RUN apt install -y \
-  php7.1 \
+# Install apt packages for LAMP, npm, ruby, and all other tools available from apt.
+COPY files/mysql-setup.sql /mysql-setup.sql
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
+  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
+  && add-apt-repository ppa:ondrej/php \
+  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.1 \
   php7.1-bcmath \
   php7.1-bz2 \
   php7.1-cli \
@@ -87,42 +82,46 @@ RUN apt install -y \
   postgresql-contrib \
   apache2 \
   apache2-utils \
-  google-chrome-stable
+  mariadb-server \
+  mariadb-client \
+  google-chrome-stable \
+  && service mysql start \
+  && mysql -uroot < /mysql-setup.sql \
+  && rm -rf /tmp/* /mysql-setup.sql
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
-    --install-dir=/usr/bin \
-    --filename=composer \
-    --version=1.7.3 && \
-    composer \
-    --working-dir=/usr/local/src/ \
-    global \
-    require \
-    drush/drush:8.* && \
-    ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
+  --install-dir=/usr/bin \
+  --filename=composer \
+  --version=1.8.5 \
+  && composer \
+  --working-dir=/usr/local/src/ \
+  global \
+  require \
+  drush/drush:8.* \
+  && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
 
 # Download Drupal Console and install it in our standard path.
-RUN curl https://drupalconsole.com/installer -L -o /drupal.phar
-RUN mv /drupal.phar /bin/drupal
-RUN chmod 755 /bin/drupal
+RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
+  && mv /drupal.phar /bin/drupal \
+  && chmod 755 /bin/drupal
 
 # Get Node Package Manager
 RUN apt install -y npm
 
 # Install Proboscis
-RUN npm install -g proboscis \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/proboscis \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/proboscis-control \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
-  && rm -rf /var/lib/apt/lists/* /tmp/*
-
-# Install NPM Packages.
 RUN npm install -g bower \
   grunt-cli \
   gulp-cli \
   lighthouse \
   the-a11y-machine \
-  yarn
+  yarn \
+  proboscis \
+  --no-document \
+  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/proboscis \
+  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/proboscis-control \
+  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
+  && rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Start and configure our PostgreSQL server
 COPY files/pgpass.txt /root/.pgpass
@@ -130,7 +129,7 @@ RUN service postgresql start \
   && su - postgres -c "createuser -d -l -r -s root" \
   && su - postgres -c "createdb --owner=postgres drupal" \
   && psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';" \
-  && chmod 600 /root/.pgpass \
+  && chmod 0600 /root/.pgpass \
   && service postgresql stop
 
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
@@ -149,23 +148,16 @@ RUN rm -rf /var/www/html \
   && a2enmod proxy_http
 COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
 
-# Start and configure our MySQL Server
-RUN apt update -y
-COPY files/mysql-setup.sql /mysql-setup.sql
-RUN apt install -y mariadb-server mariadb-client
-RUN service mysql start \
-  && mysql -uroot < /mysql-setup.sql
-
 # Install Ruby and Gem packages.
-RUN apt install -y libreadline-dev zlib1g-dev ruby-dev libsqlite3-dev \
-  && gem install rails \
-  && gem install mailcatcher \
-  && gem install ruby-compass \
-  && gem install bundler
+RUN gem install rails \
+  mailcatcher \
+  compass \
+  bundler \
+  --no-document
 
 # Install solr with default search cores.
 RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
-   && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
+  && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-6.6.5.tgz  \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.14.tar.gz \
   && tar xzf search_api_solr-7.x-1.14.tar.gz \
