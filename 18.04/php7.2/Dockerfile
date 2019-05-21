@@ -76,13 +76,13 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY
   php-redis \
   php-imagick \
   php-pear \
-  mariadb-server \
-  mariadb-client \
   imagemagick \
   postgresql \
   postgresql-contrib \
   apache2 \
   apache2-utils \
+  mariadb-server \
+  mariadb-client \
   google-chrome-stable \
   libreadline-dev \
   zlib1g-dev \
@@ -96,13 +96,13 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
   --filename=composer \
-  --version=1.8.5 && \
-  composer \
+  --version=1.8.5 \
+  && composer \
   --working-dir=/usr/local/src/ \
   global \
   require \
-  drush/drush:8.* && \
-  ln -s /usr/local/src/vendor/bin/drush /usr/local/bin/drush
+  drush/drush:8.* \
+  && ln -s /usr/local/src/vendor/bin/drush /usr/local/bin/drush
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /tmp/drupal.phar
