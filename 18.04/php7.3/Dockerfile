@@ -25,7 +25,7 @@ WORKDIR /root
 ENV TERM xterm
 
 # Update apt repos and install base apt packages.
-RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils \
   apt-transport-https \
   build-essential \
   ca-certificates \
@@ -52,7 +52,7 @@ COPY files/mysql-setup.sql /mysql-setup.sql
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
-  && apt update && DEBIAN_FRONTEND=noninteractive apt install -y php7.3 \
+  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.3 \
   php7.3-bcmath \
   php7.3-bz2 \
   php7.3-cli \
@@ -84,7 +84,6 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo ap
   mariadb-server \
   mariadb-client \
   google-chrome-stable \
-  npm \
   libreadline-dev \
   zlib1g-dev \
   ruby-dev \
@@ -109,6 +108,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
   && mv /drupal.phar /bin/drupal \
   && chmod 755 /bin/drupal
+
+# Get Node Package Manager
+RUN apt-get install -y npm
 
 # Install NPM packages and setup Proboscis
 RUN npm install -g bower \
@@ -152,7 +154,7 @@ COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-hos
 # Install Gem packages.
 RUN gem install rails \
   mailcatcher \
-  ruby-compass \
+  compass \
   bundler \
   --no-document
 
