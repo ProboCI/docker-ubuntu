@@ -47,10 +47,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
   wget \
   zip
 
-# Install base, LAMP, npm, ruby, and all other tools apt packages.
+# Install apt packages for LAMP, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
-  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list \
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
+  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
   && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.3 \
   php7.3-bcmath \
@@ -94,15 +94,15 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo ap
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
-    --install-dir=/usr/bin \
-    --filename=composer \
-    --version=1.7.3 && \
-    composer \
-    --working-dir=/usr/local/src/ \
-    global \
-    require \
-    drush/drush:8.* && \
-    ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
+  --install-dir=/usr/bin \
+  --filename=composer \
+  --version=1.8.5 \
+  && composer \
+  --working-dir=/usr/local/src/ \
+  global \
+  require \
+  drush/drush:8.* \
+  && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
