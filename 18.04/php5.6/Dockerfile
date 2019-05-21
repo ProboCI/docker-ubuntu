@@ -97,7 +97,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/bin \
   --filename=composer \
-  --version=1.7.3 \
+  --version=1.8.5 \
   && composer \
   --working-dir=/usr/local/src/ \
   global \
