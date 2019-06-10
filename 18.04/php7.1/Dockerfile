@@ -85,6 +85,10 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY
   mariadb-server \
   mariadb-client \
   google-chrome-stable \
+  libreadline-dev \
+  zlib1g-dev \
+  ruby-dev \
+  libsqlite3-dev \
   && service mysql start \
   && mysql -uroot < /mysql-setup.sql \
   && rm -rf /tmp/* /mysql-setup.sql
