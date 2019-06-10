@@ -175,6 +175,18 @@ RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
   && service solr stop
 
+# Install varnish with default config.
+COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
+RUN apt install -y \
+  && apt install -y debian-archive-keyring \
+  && curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
+  && apt-get update -y \
+  && apt install varnish/xenial
+COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default-4.vcl
+COPY files/drupal-default-4.vcl /etc/varnish/default.vcl
+COPY files/varnish /etc/default/varnish
+COPY files/secret /etc/varnish/secret
+
 # Create .ssh dir and add SSH config file.
 # TODO: There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
 RUN mkdir /root/.ssh \
