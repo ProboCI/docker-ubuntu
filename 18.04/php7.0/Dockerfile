@@ -48,8 +48,8 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y apt-utils \
   zip
 
 # Add google-chrome-stable apt-key.
-RUN curl -o /tmp/linux_signing_key.pub https://dl.google.com/linux/linux_signing_key.pub \
-  && apt-key add /tmp/linux_signing_key.pub
+#RUN curl -o /tmp/linux_signing_key.pub https://dl.google.com/linux/linux_signing_key.pub \
+#  && apt-key add /tmp/linux_signing_key.pub
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt update -y
@@ -84,8 +84,7 @@ RUN apt install -y \
   postgresql \
   postgresql-contrib \
   apache2 \
-  apache2-utils \
-  google-chrome-stable
+  apache2-utils
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
