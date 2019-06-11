@@ -50,6 +50,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
 
 # Install apt packages for LAMP, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
@@ -177,7 +178,6 @@ RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && service solr stop
 
 # Install varnish default configs.
-COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default-4.vcl
 COPY files/drupal-default-4.vcl /etc/varnish/default.vcl
 COPY files/varnish /etc/default/varnish
