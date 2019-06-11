@@ -30,8 +30,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
   build-essential \
   ca-certificates \
   curl \
-  debian-archive-keyring \
   git \
+  gnupg \
   libnss3 \
   lsb-release \
   memcached \
