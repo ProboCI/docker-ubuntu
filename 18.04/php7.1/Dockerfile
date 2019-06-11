@@ -31,6 +31,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
   ca-certificates \
   curl \
   git \
+  gnupg \
   libnss3 \
   lsb-release \
   memcached \
@@ -49,7 +50,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
 
 # Install apt packages for LAMP, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
+COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
+RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
+  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
   && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.1 \
@@ -89,6 +92,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY
   zlib1g-dev \
   ruby-dev \
   libsqlite3-dev \
+  varnish/xenial \
   && service mysql start \
   && mysql -uroot < /mysql-setup.sql \
   && rm -rf /tmp/* /mysql-setup.sql
@@ -174,13 +178,7 @@ RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
   && service solr stop
 
-# Install varnish with default config.
-COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
-RUN apt install -y \
-  && apt install -y debian-archive-keyring \
-  && curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
-  && apt-get update -y \
-  && apt install varnish/xenial
+# Install varnish default configs.
 COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default-4.vcl
 COPY files/drupal-default-4.vcl /etc/varnish/default.vcl
 COPY files/varnish /etc/default/varnish
