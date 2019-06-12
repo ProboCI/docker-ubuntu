@@ -50,6 +50,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
 
 # Install apt packages for LAMP, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/mycnf.txt /root/.my.cnf
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
   && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
