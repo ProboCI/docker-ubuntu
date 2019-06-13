@@ -73,7 +73,6 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   php7.3-zip \
   php7.3-pgsql \
   php-memcached \
-  libapache2-mod-php7.1 \
   php-redis \
   php-imagick \
   php-pear \
