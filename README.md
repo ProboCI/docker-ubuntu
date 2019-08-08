@@ -4,13 +4,15 @@ This repository is used to store the latest Ubuntu LTS (18.04 LTS) installation 
 
 The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags](https://hub.docker.com/r/proboci/ubuntu/tags) currently are built off of a corresponding Git tag in this repository. Code in the [archived](https://github.com/ProboCI/docker-ubuntu/tree/master/archived) directory should be ignored, and will be deleted at some point.
 
-- [18.04-php5.6](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php5.6): proboci/ubuntu:18.04-php5.6
-- [18.04-php7.0](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.0): proboci/ubuntu:18.04-php7.0
-- [18.04-php7.1](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.1): proboci/ubuntu:18.04-php7.1
-- [18.04-php7.2](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.2): proboci/ubuntu:18.04-php7.2
-- [18.04-php7.3](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.3): proboci/ubuntu:18.04-php7.3
+| Docker Tag  | GitHub Tag |
+| ------------- | ------------- |
+| proboci/ubuntu:18.04-php5.6  | [18.04-php5.6](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php5.6)  |
+| proboci/ubuntu:18.04-php7.0  | [18.04-php7.0](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.0)  |
+| proboci/ubuntu:18.04-php7.1  | [18.04-php7.1](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.1)  |
+| proboci/ubuntu:18.04-php7.2  | [18.04-php7.2](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.2)  |
+| proboci/ubuntu:18.04-php7.3  | [18.04-php7.3](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.3)  |
 
-**Note:** Builds for Ubuntu 14.04 LTS and Ubuntu 16.04 LTS images has been dropped in favor of building just the latest Ubuntu LTS with specific images available for PHP version and MySQL version.
+**Note:** Image builds for Ubuntu 14.04 LTS and Ubuntu 16.04 LTS have been discontinued in favor of maintaining the latest Ubuntu LTS with specific images available for PHP versions and MySQL versions.
 
 The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags](https://hub.docker.com/r/proboci/ubuntu/tags) built from this repository are located on the Docker Hub at: [https://hub.docker.com/u/proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) and [https://hub.docker.com/r/mbagnall/ubuntu](https://hub.docker.com/r/mbagnall/ubuntu)
 
