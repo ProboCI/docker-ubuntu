@@ -2,9 +2,9 @@
 
 This repository is used to store the latest Ubuntu LTS (18.04 LTS) installation and configuration settings for automating Docker image builds on the Docker Hub. The Docker images built from this repository are developed specifically to be used as Docker images that run the build containers for [Probo.CI](https://probo.ci).
 
-The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags](https://hub.docker.com/r/proboci/ubuntu/tags) currently are built off of a corresponding Git tag in this repository as detailed below.
+The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags](https://hub.docker.com/r/proboci/ubuntu/tags) currently are built off of a corresponding Git branch in this repository as detailed below.
 
-| Docker Tag  | GitHub Tag |
+| Docker Image Tag  | Git Branch |
 | ------------- | ------------- |
 | proboci/ubuntu:18.04-php5.6  | [18.04-php5.6](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php5.6)  |
 | proboci/ubuntu:18.04-php7.0  | [18.04-php7.0](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.0)  |
