@@ -2,7 +2,7 @@
 
 This repository is used to store the latest Ubuntu LTS (18.04 LTS) installation and configuration settings for automating Docker image builds on the Docker Hub. The Docker images built from this repository are developed specifically to be used as Docker images that run the build containers for [Probo.CI](https://probo.ci).
 
-The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags](https://hub.docker.com/r/proboci/ubuntu/tags) currently are built off of a corresponding Git tag in this repository. Code in the [archived](https://github.com/ProboCI/docker-ubuntu/tree/master/archived) directory should be ignored, and will be deleted at some point.
+The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags](https://hub.docker.com/r/proboci/ubuntu/tags) currently are built off of a corresponding Git tag in this repository as detailed below.
 
 | Docker Tag  | GitHub Tag |
 | ------------- | ------------- |
@@ -12,7 +12,7 @@ The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags
 | proboci/ubuntu:18.04-php7.2  | [18.04-php7.2](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.2)  |
 | proboci/ubuntu:18.04-php7.3  | [18.04-php7.3](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.3)  |
 
-**Note:** Image builds for Ubuntu 14.04 LTS and Ubuntu 16.04 LTS have been discontinued in favor of maintaining the latest Ubuntu LTS with specific images available for PHP versions and MySQL versions.
+**Note:** Image builds for Ubuntu 14.04 LTS and Ubuntu 16.04 LTS have been discontinued in favor of maintaining the latest Ubuntu LTS with specific images available for PHP versions and MySQL versions. Code in the [archived](https://github.com/ProboCI/docker-ubuntu/tree/master/archived) directory should be ignored, and will be deleted at some point.
 
 The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags](https://hub.docker.com/r/proboci/ubuntu/tags) built from this repository are located on the Docker Hub at: [https://hub.docker.com/u/proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) and [https://hub.docker.com/r/mbagnall/ubuntu](https://hub.docker.com/r/mbagnall/ubuntu)
 
