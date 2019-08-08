@@ -1,18 +1,18 @@
 # Probo.CI Docker Ubuntu
 
-This repository is used to store Ubuntu specific versions and configuration settings for building automated image builds on the Docker Hub.
+This repository is used to store the latest Ubuntu LTS (18.04 LTS) installation and configuration settings for automating Docker image builds on the Docker Hub. The Docker images built from this repository are developed specifically to be used as Docker images that run the build containers for [Probo.CI](https://probo.ci).
 
-The images built from this repository are developed specifically to be used as Docker images that run the builds for [Probo.CI](https://probo.ci).
+The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags](https://hub.docker.com/r/proboci/ubuntu/tags) currently are built off of a corresponding Git tag in this repository. Code in the [archived](https://github.com/ProboCI/docker-ubuntu/tree/master/archived) directory should be ignored, and will be deleted at some point.
 
-Supported Ubuntu versions (14.04 LTS, 16.04 LTS and 18.04 LTS) are located in their respective version directory, `14.04`, `16.04` and `18.04`.
+- [18.04-php5.6](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php5.6): proboci/ubuntu:18.04-php5.6
+- [18.04-php7.0](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.0): proboci/ubuntu:18.04-php7.0
+- [18.04-php7.1](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.1): proboci/ubuntu:18.04-php7.1
+- [18.04-php7.2](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.2): proboci/ubuntu:18.04-php7.2
+- [18.04-php7.3](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.3): proboci/ubuntu:18.04-php7.3
 
-**Note:** Support for Ubuntu 14.04 LTS and Ubuntu 16.04 LTS versions will be dropped when our 18.04 LTS images are released. The plan is to support only the latest Ubuntu LTS release moving forward with separate images being built for specific PHP versions, specific MySQL versions, Varnish enabled images, and more.
+**Note:** Builds for Ubuntu 14.04 LTS and Ubuntu 16.04 LTS images has been dropped in favor of building just the latest Ubuntu LTS with specific images available for PHP version and MySQL version.
 
-The Ubuntu Docker images and tags built from this repository are used as base images for other Probo.CI Docker images.
-
-Note that varnish enabled containers are in the directories suffixed with -varnish such as `18.04-varnish`.
-
-The Probo Ubuntu Docker images and tags built are located on the Docker Hub at: [https://hub.docker.com/u/proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) and [https://hub.docker.com/r/mbagnall/ubuntu](https://hub.docker.com/r/mbagnall/ubuntu)
+The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags](https://hub.docker.com/r/proboci/ubuntu/tags) built from this repository are located on the Docker Hub at: [https://hub.docker.com/u/proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) and [https://hub.docker.com/r/mbagnall/ubuntu](https://hub.docker.com/r/mbagnall/ubuntu)
 
 ## Apache Version
 - Apache 2.x (Default)
@@ -34,10 +34,10 @@ The Probo Ubuntu Docker images and tags built are located on the Docker Hub at: 
 - TBD
 
 ## PHP Versions Supported
-PHP is installed from the `ondrej/php` PPA repository, https://launchpad.net/~ondrej/+archive/ubuntu/php.
+PHP versions are installed from the [ondrej/php](https://launchpad.net/~ondrej/+archive/ubuntu/php) PPA repository.
 
-- PHP 5.5 (Deprecated)
-- PHP 5.6 (Deprecated)
+- ~~PHP 5.5~~ (Deprecated!)
+- PHP 5.6 (Soon to be deprecated!)
 - PHP 7.0
 - PHP 7.1
 - PHP 7.2 (Default)
@@ -65,6 +65,7 @@ PHP is installed from the `ondrej/php` PPA repository, https://launchpad.net/~on
     - php-redis
     - php-imagick
     - php-pear
+- PHP 7.3
 
 ## Node.JS Version
 - Node 8.x (Default)
