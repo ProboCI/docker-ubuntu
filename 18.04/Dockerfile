@@ -33,12 +33,14 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
   git \
   gnupg \
   libnss3 \
+  libsqlite3-dev \
   lsb-release \
   nano \
   netcat-openbsd \
   nodejs \
   ntp \
   openjdk-8-jre \
+  ruby-dev \
   sendmail \
   software-properties-common \
   sudo \
