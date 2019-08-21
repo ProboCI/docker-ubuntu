@@ -24,6 +24,8 @@ WORKDIR /root
 
 ENV TERM xterm
 
+COPY files/startup.sh /startup.sh
+
 # Update apt repos and install base apt packages.
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils \
   apt-transport-https \
