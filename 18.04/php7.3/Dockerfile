@@ -149,8 +149,10 @@ RUN rm -rf /var/www/html \
   && a2enmod proxy \
   && a2enmod proxy_http \
   && service apache2 stop
-COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
-COPY files/apache2.conf /etc/apache2/apache2.conf
+COPY files/apache-default-host.conf /etc/apache2/sites-available/000-default.conf
+COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
+COPY files/000-default-varnish.conf /etc/apache2/sites-available/000-default-varnish.conf
+COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install Gem packages.
 RUN gem install rails \
