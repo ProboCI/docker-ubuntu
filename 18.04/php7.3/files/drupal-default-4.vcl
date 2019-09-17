@@ -190,7 +190,7 @@ sub vcl_deliver {
 
 # In the event of an error, show friendlier messages.
 sub vcl_backend_error {
-  set resp.http.Content-Type = "text/plain; charset=utf-8";
+  set beresp.http.Content-Type = "text/plain; charset=utf-8";
   synthetic("Page Unavailable");
   return (deliver);
 }
