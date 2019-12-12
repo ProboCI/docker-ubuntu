@@ -86,8 +86,8 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   postgresql-contrib \
   apache2 \
   apache2-utils \
-  mariadb-server \
-  mariadb-client \
+  mysql-server \
+  mysql-client \
   google-chrome-stable \
   libreadline-dev \
   zlib1g-dev \
