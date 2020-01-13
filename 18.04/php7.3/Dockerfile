@@ -24,8 +24,6 @@ WORKDIR /root
 
 ENV TERM xterm
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get remove --purge php-common -y
-
 # Update apt repos and install base apt packages.
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils \
   apt-transport-https \
@@ -75,10 +73,6 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   php7.3-xml \
   php7.3-zip \
   php7.3-pgsql \
-  php-memcached \
-  php-redis \
-  php-imagick \
-  php-pear \
   imagemagick \
   postgresql \
   postgresql-contrib \
