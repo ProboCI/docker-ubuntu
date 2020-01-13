@@ -88,7 +88,8 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   varnish/xenial \
   && service mysql start \
   && mysql -uroot < /mysql-setup.sql \
-  && rm -rf /tmp/* /mysql-setup.sql
+  && service mysql stop \
+  && rm -rf /tmp/* /mysql-setup.sql 
 
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
