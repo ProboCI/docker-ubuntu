@@ -119,6 +119,7 @@ RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
 RUN apt-get install -y npm
 
 # Install NPM packages and setup Proboscis
+# The proboscis package is required!
 RUN npm install -g bower \
   grunt-cli \
   gulp-cli \
@@ -184,7 +185,8 @@ RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && service solr stop
 
 # Install varnish default configs.
-COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default-4.vcl
+COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default.vcl
+COPY files/drupal-default-4.vcl /etc/varnish/drupal-default.vcl
 COPY files/drupal-default-4.vcl /etc/varnish/default.vcl
 COPY files/varnish /etc/default/varnish
 COPY files/secret /etc/varnish/secret
