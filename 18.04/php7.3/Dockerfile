@@ -59,6 +59,8 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.3 \
   php7.3-bcmath \
   php7.3-bz2 \
+  php7.3-cli \
+  php7.3-common \
   php7.3-curl \
   php7.3-dba \
   php7.3-dev \
@@ -73,6 +75,11 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   php7.3-xml \
   php7.3-zip \
   php7.3-pgsql \
+  php-memcached \
+  libapache2-mod-php7.3 \
+  php-redis \
+  php-imagick \
+  php-pear \
   imagemagick \
   postgresql \
   postgresql-contrib \
