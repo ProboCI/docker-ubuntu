@@ -11,6 +11,7 @@ The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags
 | proboci/ubuntu:18.04-php7.1  | [18.04-php7.1](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.1)  |
 | proboci/ubuntu:18.04-php7.2  | [18.04-php7.2](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.2)  |
 | proboci/ubuntu:18.04-php7.3  | [18.04-php7.3](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.3)  |
+| proboci/ubuntu:18.04-php7.4  | [18.04-php7.4](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.4)  |
 
 **Note:** Image builds for Ubuntu 14.04 LTS and Ubuntu 16.04 LTS have been discontinued in favor of maintaining the latest Ubuntu LTS with specific images available for PHP versions and MySQL versions. Code in the [archived](https://github.com/ProboCI/docker-ubuntu/tree/master/archived) directory should be ignored, and will be deleted at some point.
 
@@ -38,12 +39,14 @@ The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags
 ## PHP Versions Supported
 PHP versions are installed from the [ondrej/php](https://launchpad.net/~ondrej/+archive/ubuntu/php) PPA repository.
 
-- ~~PHP 5.5~~ (Deprecated!)
-- PHP 5.6 (Soon to be deprecated!)
-- PHP 7.0
-- PHP 7.1
+We have some images with deprecated versions of PHP available to use for older projects, but we only provide Probo support for officially supported PHP versions, https://www.php.net/supported-versions (PHP 7.2, 7.3. 7.4).
+
+- ~~PHP 5.5~~ (Unsupported as of Jul 21 2016)
+- ~~PHP 5.6~~ (Unsupported as of Dec 31 2018)
+- ~~PHP 7.0~~ (Unsupported as of Jan 10 2019)
+- ~~PHP 7.1~~ (Unsupported as of Dec 1 2019)
 - PHP 7.2 (Default)
-  - PHP 7.2 Extension Packages Installed
+  - PHP 7.2 Extensions & Packages Installed
     - php7.2-bcmath
     - php7.2-bz2
     - php7.2-cli
@@ -68,6 +71,55 @@ PHP versions are installed from the [ondrej/php](https://launchpad.net/~ondrej/+
     - php-imagick
     - php-pear
 - PHP 7.3
+  - PHP 7.3 Extensions & Packages Installed
+    - php7.3-bcmath
+    - php7.3-bz2
+    - php7.3-cli
+    - php7.3-common
+    - php7.3-curl
+    - php7.3-dba
+    - php7.3-dev
+    - php7.3-gd
+    - php7.3-json
+    - php7.3-ldap
+    - php7.3-mbstring
+    - php7.3-mysql
+    - php7.3-opcache
+    - php7.3-readline
+    - php7.3-soap
+    - php7.3-xml
+    - php7.3-zip
+    - php7.3-pgsql
+    - php-memcached
+    - libapache2-mod-php7.3
+    - php-redis
+    - php-imagick
+    - php-pear
+- PHP 7.4
+  - PHP 7.4 Extensions & Packages Installed
+    - php7.4-bcmath
+    - php7.4-bz2
+    - php7.4-cli
+    - php7.4-common
+    - php7.4-curl
+    - php7.4-dba
+    - php7.4-dev
+    - php7.4-gd
+    - php7.4-json
+    - php7.4-ldap
+    - php7.4-mbstring
+    - php7.4-mysql
+    - php7.4-opcache
+    - php7.4-readline
+    - php7.4-soap
+    - php7.4-xml
+    - php7.4-zip
+    - php7.4-pgsql
+    - php-memcached
+    - libapache2-mod-php7.4
+    - php-redis
+    - php-imagick
+    - php-pear
 
 ## Node.JS Version
 - Node 8.x (Default)
