@@ -99,11 +99,10 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql 
 
-# Install Composer and Drush
+# Install Composer Latest Stable and Drush 8.x.
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
   --filename=composer \
-  --version=1.8.5 \
   && composer \
   --working-dir=/usr/local/src/ \
   global \
