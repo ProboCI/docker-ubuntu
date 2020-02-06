@@ -95,6 +95,8 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
   varnish/xenial \
   && service mysql start \
   && mysql -uroot < /mysql-setup.sql \
+  && service mysql stop \
+  && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 
 # Install Composer and Drush
@@ -154,8 +156,12 @@ RUN rm -rf /var/www/html \
   && a2enmod negotiation \
   && a2enmod setenvif \
   && a2enmod proxy \
-  && a2enmod proxy_http
-COPY files/apache-default-host.conf /etc/apache2/conf-enabled/apache-default-host.conf
+  && a2enmod proxy_http \
+  && service apache2 stop
+COPY files/apache-default-host.conf /etc/apache2/sites-available/000-default.conf
+COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
+COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-default-varnish.conf
+COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install Ruby and Gem packages.
 RUN gem install rails \
@@ -180,8 +186,9 @@ RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
   && service solr stop
 
 # Install varnish default configs.
-COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default-4.vcl
-COPY files/drupal-default-4.vcl /etc/varnish/default.vcl
+COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default.vcl
+COPY files/drupal-default-4.vcl /etc/varnish/drupal-default.vcl
+COPY files/default-4.vcl /etc/varnish/default.vcl
 COPY files/varnish /etc/default/varnish
 COPY files/secret /etc/varnish/secret
 
@@ -193,6 +200,10 @@ RUN mkdir /root/.ssh \
   && chmod 0700 /root/.ssh/config \
   && echo "Host *" >> /root/.ssh/config \
   && echo "StrictHostKeyChecking no" >> /root/.ssh/config
+
+# Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
+RUN curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar \
+  && php installer.phar install
 
 # Install WP-CLI Wordpress command line tool, https://wp-cli.org/.
 RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
