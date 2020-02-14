@@ -1,22 +1,24 @@
 # Docker Image Builder v2
 #
-# These images are built using Dockerfile inheritance to build the images used for Probo.CI.
+# These images are built automatically on the Docker Hub using Dockerfile inheritance to build the images used for Probo.CI.
+#
+# See https://hub.docker.com/r/proboci/ubuntu for more information on the Docker Hub builds.
 #
 # Image: proboci/ubuntu
-# Tag: 18.04
+# Tag: 18.04-php7.3
 # 
 # The default Node.js version is 8.x in Ubuntu 18.04. 
 # The npm package is also required for Ubuntu 18.04.
 #
-# Build the proboci/ubuntu:18.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
-# docker build -t proboci/ubuntu:18.04
+# Build the proboci/ubuntu:18.04-php7.3 image:tag manually with the following command from inside the docker-ubuntu/18.04/php7.3 directory where the Dockerfile lives:
+# docker build -t proboci/ubuntu:18.04-php7.3
 
 # Set our our meta data for this container.
 
 FROM ubuntu:18.04
 
-LABEL name="Ubuntu 18.04 LTS Based ProboCI Image"
-LABEL description="Our base container for ProboCI Builds."
+LABEL name="Ubuntu 18.04 LTS PHP 7.3 Probo.CI Image"
+LABEL description="An Ubuntu 18.04 based PHP 7.3 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mrbagnall@icloud.com>"
 LABEL vendor="ProboCI, LLC."
 
@@ -108,7 +110,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   global \
   require \
   drush/drush:8.* \
-  && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
+  && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush \
+  && mkdir /etc/drush \
+  && mkdir /etc/drush/conf.d
+COPY files/drush-environment.php /etc/drush/conf.d/environment.php
+COPY files/drushrc.php /etc/drush/drushrc.php
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
@@ -133,7 +139,7 @@ RUN npm install -g bower \
   && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
-# Start and configure our PostgreSQL server
+# Start and configure our PostgreSQL server.
 COPY files/pgpass.txt /root/.pgpass
 RUN service postgresql start \
   && su - postgres -c "createuser -d -l -r -s root" \
@@ -143,6 +149,7 @@ RUN service postgresql start \
   && service postgresql stop
 
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
+COPY files/ssl_environment_variable.conf /etc/apache2/conf-available/ssl_environment_variable.conf
 RUN rm -rf /var/www/html \
   && a2enmod rewrite \
   && a2enmod actions \
@@ -156,6 +163,7 @@ RUN rm -rf /var/www/html \
   && a2enmod setenvif \
   && a2enmod proxy \
   && a2enmod proxy_http \
+  && a2enconf ssl_environment_variable \
   && service apache2 stop
 COPY files/apache-default-host.conf /etc/apache2/sites-available/000-default.conf
 COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
