@@ -11,7 +11,7 @@
 # Build the proboci/ubuntu:18.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
 # docker build -t proboci/ubuntu:18.04
 
-# Set our our meta data for this container.x
+# Set our our meta data for this container.
 
 FROM ubuntu:18.04
 
