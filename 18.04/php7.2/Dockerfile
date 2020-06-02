@@ -17,23 +17,23 @@ FROM ubuntu:18.04
 
 LABEL name="Ubuntu 18.04 LTS Based ProboCI Image"
 LABEL description="Our base container for ProboCI Builds."
-LABEL author="Michael R. Bagnall <mrbagnall@icloud.com>"
+LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
 
 ENV TERM xterm
 
+RUN apt-get -y update
+RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+
 # Update apt repos and install base apt packages.
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils \
-  apt-transport-https \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   build-essential \
-  ca-certificates \
-  curl \
   git \
   gnupg \
   libnss3 \
-  lsb-release \
   memcached \
   nano \
   netcat-openbsd \
@@ -46,7 +46,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
   sudo \
   vim \
   wget \
-  zip
+  zip \
+  gcc \
+  g++ \
+  make
 
 # Install apt packages for LAMP, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
@@ -103,7 +106,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
   --filename=composer \
-  --version=1.8.5 \
+  --version=1.10.6 \
   && composer \
   --working-dir=/usr/local/src/ \
   global \
@@ -116,23 +119,16 @@ RUN curl https://drupalconsole.com/installer -L -o /tmp/drupal.phar \
   && mv /tmp/drupal.phar /usr/local/bin/drupal \
   && chmod +x /usr/local/bin/drupal
 
-# Get Node Package Manager
-RUN apt-get install -y npm
+# Install Proboscis
+RUN npm install -g proboscis --unsafe
 
-# Install NPM packages and setup proboscis.
-# The proboscis package is required!
+# Install NPM Packages.
 RUN npm install -g bower \
   grunt-cli \
   gulp-cli \
   lighthouse \
-  the-a11y-machine \
   yarn \
-  proboscis \
-  --no-document \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/proboscis \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/proboscis-control \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
-  && rm -rf /var/lib/apt/lists/* /tmp/*
+  --no-document
 
 # Start and configure our PostgreSQL server.
 COPY files/pgpass.txt /root/.pgpass
@@ -161,7 +157,7 @@ RUN rm -rf /var/www/html \
 COPY files/apache-default-host.conf /etc/apache2/sites-available/000-default.conf
 COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
 COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-default-varnish.conf
-COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
+#COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install Ruby and Gem packages.
 RUN gem install rails \
