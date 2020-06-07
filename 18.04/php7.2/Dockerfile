@@ -157,7 +157,7 @@ RUN rm -rf /var/www/html \
 COPY files/apache-default-host.conf /etc/apache2/sites-available/000-default.conf
 COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
 COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-default-varnish.conf
-#COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
+COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install Ruby and Gem packages.
 RUN gem install rails \
