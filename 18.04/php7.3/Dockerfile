@@ -19,23 +19,23 @@ FROM ubuntu:18.04
 
 LABEL name="Ubuntu 18.04 LTS PHP 7.3 Probo.CI Image"
 LABEL description="An Ubuntu 18.04 based PHP 7.3 image developed specifically for docker containers running Probo.CI Builds."
-LABEL author="Michael R. Bagnall <mrbagnall@icloud.com>"
+LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
 
 ENV TERM xterm
 
+RUN apt-get -y update
+RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+
 # Update apt repos and install base apt packages.
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils \
-  apt-transport-https \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   build-essential \
-  ca-certificates \
-  curl \
   git \
   gnupg \
   libnss3 \
-  lsb-release \
   memcached \
   nano \
   netcat-openbsd \
@@ -48,7 +48,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
   sudo \
   vim \
   wget \
-  zip
+  zip \
+  gcc \
+  g++ \
+  make
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
@@ -109,7 +112,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   --working-dir=/usr/local/src/ \
   global \
   require \
-  drush/drush:8.* \
+  drush/drush:10.* \
   && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush \
   && mkdir /etc/drush \
   && mkdir /etc/drush/conf.d
@@ -121,23 +124,16 @@ RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
   && mv /drupal.phar /bin/drupal \
   && chmod 755 /bin/drupal
 
-# Get Node Package Manager
-RUN apt-get install -y npm
+# Install Proboscis
+RUN npm install -g proboscis --unsafe
 
-# Install NPM packages and setup Proboscis
-# The proboscis package is required!
+# Install NPM Packages.
 RUN npm install -g bower \
   grunt-cli \
   gulp-cli \
   lighthouse \
-  the-a11y-machine \
   yarn \
-  proboscis \
-  --no-document \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/proboscis \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/proboscis-control \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
-  && rm -rf /var/lib/apt/lists/* /tmp/*
+  --no-document
 
 # Start and configure our PostgreSQL server.
 COPY files/pgpass.txt /root/.pgpass
