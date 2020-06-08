@@ -17,23 +17,23 @@ FROM ubuntu:18.04
 
 LABEL name="Ubuntu 18.04 LTS Based ProboCI Image"
 LABEL description="Our base container for ProboCI Builds."
-LABEL author="Michael R. Bagnall <mrbagnall@icloud.com>"
+LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
 
 ENV TERM xterm
 
+RUN apt-get -y update
+RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+
 # Update apt repos and install base apt packages.
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils \
-  apt-transport-https \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   build-essential \
-  ca-certificates \
-  curl \
   git \
   gnupg \
   libnss3 \
-  lsb-release \
   memcached \
   nano \
   netcat-openbsd \
@@ -46,7 +46,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-util
   sudo \
   vim \
   wget \
-  zip
+  zip \
+  gcc \
+  g++ \
+  make
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
@@ -99,7 +102,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql 
 
-# Install Composer Latest Stable and Drush 8.x.
+# Install Composer Latest Stable and Drush 10.x.
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
   --filename=composer \
@@ -107,7 +110,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   --working-dir=/usr/local/src/ \
   global \
   require \
-  drush/drush:8.* \
+  drush/drush:10.* \
   && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
 
 # Download Drupal Console and install it in our standard path.
@@ -115,23 +118,15 @@ RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
   && mv /drupal.phar /bin/drupal \
   && chmod 755 /bin/drupal
 
-# Get Node Package Manager
-RUN apt-get install -y npm
+# Install Proboscis
+RUN npm install -g proboscis --unsafe
 
-# Install NPM packages and setup Proboscis
-# The proboscis package is required!
+# Install NPM Packages.
 RUN npm install -g bower \
   grunt-cli \
   gulp-cli \
   lighthouse \
-  the-a11y-machine \
-  yarn \
-  proboscis \
-  --no-document \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis /usr/bin/proboscis \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-control /usr/bin/proboscis-control \
-  && ln -s /usr/lib/node_modules/proboscis/bin/proboscis-format /usr/bin/proboscis-format \
-  && rm -rf /var/lib/apt/lists/* /tmp/*
+  yarn
 
 # Start and configure our PostgreSQL server
 COPY files/pgpass.txt /root/.pgpass
