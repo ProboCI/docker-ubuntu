@@ -1,17 +1,16 @@
 # Docker Image Builder v2
 #
-# These images are built automatically on the Docker Hub using Dockerfile inheritance to build the images used for Probo.CI.
-#
-# See https://hub.docker.com/r/proboci/ubuntu for more information on the Docker Hub builds.
+# These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
 # Tag: 18.04-php7.3
 # 
-# The default Node.js version is 8.x in Ubuntu 18.04. 
-# The npm package is also required for Ubuntu 18.04.
+# The default Node.js version on this build is 12.18.0
+# The npm package is v6.14.4 as updated as part of NodeJS 12.
 #
-# Build the proboci/ubuntu:18.04-php7.3 image:tag manually with the following command from inside the docker-ubuntu/18.04/php7.3 directory where the Dockerfile lives:
-# docker build -t proboci/ubuntu:18.04-php7.3
+# Build the proboci/ubuntu:18.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
+# docker build . -t proboci/ubuntu:18.04-php7.3
+# docker push proboci/ubuntu:18.04-php7.3
 
 # Set our our meta data for this container.
 
@@ -51,7 +50,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   zip \
   gcc \
   g++ \
-  make
+  make \
+  cpanminus
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
