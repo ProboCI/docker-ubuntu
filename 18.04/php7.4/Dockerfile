@@ -10,6 +10,7 @@
 #
 # Build the proboci/ubuntu:18.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
 # docker build . -t proboci/ubuntu:18.04-php7.4
+# docker push proboci/ubuntu:18.04-php7.4
 
 # Set our our meta data for this container.
 
