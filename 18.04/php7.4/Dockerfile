@@ -5,11 +5,12 @@
 # Image: proboci/ubuntu
 # Tag: 18.04-php7.4
 # 
-# The default Node.js version is 8.x in Ubuntu 18.04. 
-# The npm package is also required for Ubuntu 18.04.
+# The default Node.js version on this build is 12.18.0
+# The npm package is v6.14.4 as updated as part of NodeJS 12.
 #
 # Build the proboci/ubuntu:18.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
-# docker build -t proboci/ubuntu:18.04
+# docker build . -t proboci/ubuntu:18.04-php7.4
+# docker push proboci/ubuntu:18.04-php7.4
 
 # Set our our meta data for this container.
 
@@ -49,7 +50,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   zip \
   gcc \
   g++ \
-  make
+  make \
+  cpanminus
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
