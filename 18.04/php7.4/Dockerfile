@@ -16,8 +16,8 @@
 
 FROM ubuntu:18.04
 
-LABEL name="Ubuntu 18.04 LTS Based ProboCI Image"
-LABEL description="Our base container for ProboCI Builds."
+LABEL name="Ubuntu 18.04 LTS PHP 7.4 Probo.CI Image"
+LABEL description="An Ubuntu 18.04 based PHP 7.4 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
@@ -104,7 +104,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql 
 
-# Install Composer Latest Stable and Drush 10.x.
+# Install Composer Latest Stable and Drush 9.x.
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
   --filename=composer \
@@ -112,8 +112,13 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   --working-dir=/usr/local/src/ \
   global \
   require \
-  drush/drush:10.* \
-  && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
+  drush/drush:9.* \
+  && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush \
+  && mkdir /etc/drush \
+  && mkdir /etc/drush/conf.d
+
+COPY files/drush-environment.php /etc/drush/conf.d/environment.php
+COPY files/drushrc.php /etc/drush/drushrc.php
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
@@ -128,9 +133,10 @@ RUN npm install -g bower \
   grunt-cli \
   gulp-cli \
   lighthouse \
-  yarn
+  yarn \
+  --no-document
 
-# Start and configure our PostgreSQL server
+# Start and configure our PostgreSQL server.
 COPY files/pgpass.txt /root/.pgpass
 RUN service postgresql start \
   && su - postgres -c "createuser -d -l -r -s root" \
@@ -140,6 +146,7 @@ RUN service postgresql start \
   && service postgresql stop
 
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
+COPY files/ssl_environment_variable.conf /etc/apache2/conf-available/ssl_environment_variable.conf
 RUN rm -rf /var/www/html \
   && a2enmod rewrite \
   && a2enmod actions \
@@ -153,6 +160,7 @@ RUN rm -rf /var/www/html \
   && a2enmod setenvif \
   && a2enmod proxy \
   && a2enmod proxy_http \
+  && a2enconf ssl_environment_variable \
   && service apache2 stop
 COPY files/apache-default-host.conf /etc/apache2/sites-available/000-default.conf
 COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
