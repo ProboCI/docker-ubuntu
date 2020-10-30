@@ -108,7 +108,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
   --filename=composer \
-  --version=1.10.6 \
+  --version=1.10.17 \
   && composer \
   --working-dir=/usr/local/src/ \
   global \
