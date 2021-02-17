@@ -3,21 +3,21 @@
 # These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
-# Tag: 18.04-php7.4
+# Tag: 18.04-php8.0
 # 
 # The default Node.js version on this build is 12.18.0
 # The npm package is v6.14.4 as updated as part of NodeJS 12.
 #
 # Build the proboci/ubuntu:18.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
-# docker build . -t proboci/ubuntu:18.04-php7.4
-# docker push proboci/ubuntu:18.04-php7.4
+# docker build . -t proboci/ubuntu:18.04-php8.0
+# docker push proboci/ubuntu:18.04-php8.0
 
 # Set our our meta data for this container.
 
 FROM ubuntu:18.04
 
-LABEL name="Ubuntu 18.04 LTS PHP 7.4 Probo.CI Image"
-LABEL description="An Ubuntu 18.04 based PHP 7.4 image developed specifically for docker containers running Probo.CI Builds."
+LABEL name="Ubuntu 18.04 LTS PHP 8.0 Probo.CI Image"
+LABEL description="An Ubuntu 18.04 based PHP 8.0 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
@@ -61,27 +61,26 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
-  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.4 \
-  php7.4-bcmath \
-  php7.4-bz2 \
-  php7.4-cli \
-  php7.4-common \
-  php7.4-curl \
-  php7.4-dba \
-  php7.4-dev \
-  php7.4-gd \
-  php7.4-json \
-  php7.4-ldap \
-  php7.4-mbstring \
-  php7.4-mysql \
-  php7.4-opcache \
-  php7.4-readline \
-  php7.4-soap \
-  php7.4-xml \
-  php7.4-zip \
-  php7.4-pgsql \
+  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
+  php8.0-bcmath \
+  php8.0-bz2 \
+  php8.0-cli \
+  php8.0-common \
+  php8.0-curl \
+  php8.0-dba \
+  php8.0-dev \
+  php8.0-gd \
+  php8.0-ldap \
+  php8.0-mbstring \
+  php8.0-mysql \
+  php8.0-opcache \
+  php8.0-readline \
+  php8.0-soap \
+  php8.0-xml \
+  php8.0-zip \
+  php8.0-pgsql \
   php-memcached \
-  libapache2-mod-php7.4 \
+  libapache2-mod-php8.0 \
   php-redis \
   php-imagick \
   php-pear \
@@ -112,7 +111,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   --working-dir=/usr/local/src/ \
   global \
   require \
-  drush/drush:9.* \
+  drush/drush:10.* \
   && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush \
   && mkdir /etc/drush \
   && mkdir /etc/drush/conf.d
