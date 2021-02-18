@@ -112,7 +112,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   --working-dir=/usr/local/src/ \
   global \
   require \
-  drush/drush:9.* \
+  drush/drush:10.* \
   && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush \
   && mkdir /etc/drush \
   && mkdir /etc/drush/conf.d
