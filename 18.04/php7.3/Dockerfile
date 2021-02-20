@@ -109,17 +109,7 @@ RUN apt-get install -y mysql-server \
 # Install Composer Latest Stable and Drush 8.x.
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
-  --filename=composer \
-  && composer \
-  --working-dir=/usr/local/src/ \
-  global \
-  require \
-  drush/drush:10.* \
-  && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush \
-  && mkdir /etc/drush \
-  && mkdir /etc/drush/conf.d
-COPY files/drush-environment.php /etc/drush/conf.d/environment.php
-COPY files/drushrc.php /etc/drush/drushrc.php
+  --filename=composer
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
