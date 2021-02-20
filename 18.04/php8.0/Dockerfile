@@ -3,21 +3,21 @@
 # These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
-# Tag: 18.04-php7.4
+# Tag: 18.04-php8.0
 # 
 # The default Node.js version on this build is 12.18.0
 # The npm package is v6.14.4 as updated as part of NodeJS 12.
 #
 # Build the proboci/ubuntu:18.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
-# docker build . -t proboci/ubuntu:18.04-php7.4
-# docker push proboci/ubuntu:18.04-php7.4
+# docker build . -t proboci/ubuntu:18.04-php8.0
+# docker push proboci/ubuntu:18.04-php8.0
 
 # Set our our meta data for this container.
 
 FROM ubuntu:18.04
 
-LABEL name="Ubuntu 18.04 LTS Based ProboCI Image"
-LABEL description="Our base container for ProboCI Builds."
+LABEL name="Ubuntu 18.04 LTS PHP 8.0 Probo.CI Image"
+LABEL description="An Ubuntu 18.04 based PHP 8.0 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
@@ -61,27 +61,26 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
-  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.4 \
-  php7.4-bcmath \
-  php7.4-bz2 \
-  php7.4-cli \
-  php7.4-common \
-  php7.4-curl \
-  php7.4-dba \
-  php7.4-dev \
-  php7.4-gd \
-  php7.4-json \
-  php7.4-ldap \
-  php7.4-mbstring \
-  php7.4-mysql \
-  php7.4-opcache \
-  php7.4-readline \
-  php7.4-soap \
-  php7.4-xml \
-  php7.4-zip \
-  php7.4-pgsql \
+  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
+  php8.0-bcmath \
+  php8.0-bz2 \
+  php8.0-cli \
+  php8.0-common \
+  php8.0-curl \
+  php8.0-dba \
+  php8.0-dev \
+  php8.0-gd \
+  php8.0-ldap \
+  php8.0-mbstring \
+  php8.0-mysql \
+  php8.0-opcache \
+  php8.0-readline \
+  php8.0-soap \
+  php8.0-xml \
+  php8.0-zip \
+  php8.0-pgsql \
   php-memcached \
-  libapache2-mod-php7.4 \
+  libapache2-mod-php8.0 \
   php-redis \
   php-imagick \
   php-pear \
@@ -104,16 +103,13 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql 
 
-# Install Composer Latest Stable and Drush 10.x.
+# Install Composer Latest Stable and Drush 9.x.
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
-  --filename=composer \
-  && composer \
-  --working-dir=/usr/local/src/ \
-  global \
-  require \
-  drush/drush:10.* \
-  && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
+  --filename=composer
+
+COPY files/drush-environment.php /etc/drush/conf.d/environment.php
+COPY files/drushrc.php /etc/drush/drushrc.php
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
@@ -128,9 +124,10 @@ RUN npm install -g bower \
   grunt-cli \
   gulp-cli \
   lighthouse \
-  yarn
+  yarn \
+  --no-document
 
-# Start and configure our PostgreSQL server
+# Start and configure our PostgreSQL server.
 COPY files/pgpass.txt /root/.pgpass
 RUN service postgresql start \
   && su - postgres -c "createuser -d -l -r -s root" \
@@ -140,6 +137,7 @@ RUN service postgresql start \
   && service postgresql stop
 
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
+COPY files/ssl_environment_variable.conf /etc/apache2/conf-available/ssl_environment_variable.conf
 RUN rm -rf /var/www/html \
   && a2enmod rewrite \
   && a2enmod actions \
@@ -153,6 +151,7 @@ RUN rm -rf /var/www/html \
   && a2enmod setenvif \
   && a2enmod proxy \
   && a2enmod proxy_http \
+  && a2enconf ssl_environment_variable \
   && service apache2 stop
 COPY files/apache-default-host.conf /etc/apache2/sites-available/000-default.conf
 COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
@@ -167,18 +166,18 @@ RUN gem install rails \
   --no-document
 
 # Install solr with default search cores.
-RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
-  && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
-  && ./install_solr_service.sh solr-6.6.5.tgz  \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.14.tar.gz \
-  && tar xzf search_api_solr-7.x-1.14.tar.gz \
+RUN wget http://archive.apache.org/dist/lucene/solr/7.3.1/solr-7.3.1.tgz \
+  && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-7.3.1.tgz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.15.tar.gz \
+  && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-8.x-2.3.tar.gz \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.1.10.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-8.x-2.3.tar.gz \
+  && tar xzf search_api_solr-4.1.10.tar.gz \
   && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
 
 # Install varnish default configs.
@@ -198,8 +197,10 @@ RUN mkdir /root/.ssh \
   && echo "StrictHostKeyChecking no" >> /root/.ssh/config
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
-RUN curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar \
-  && php installer.phar install
+RUN mkdir ~/terminus && cd ~/terminus \
+  && curl -L https://github.com/pantheon-systems/terminus/releases/download/$(curl --silent "https://api.github.com/repos/pantheon-systems/terminus/releases/latest" | perl -nle'print $& while m{"tag_name": "\K.*?(?=")}g')/terminus.phar --output terminus \
+  && chmod +x terminus \
+  && ln -s ~/terminus/terminus /usr/local/bin/terminus
 
 # Install WP-CLI Wordpress command line tool, https://wp-cli.org/.
 RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
