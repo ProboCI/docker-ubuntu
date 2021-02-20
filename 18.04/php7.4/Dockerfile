@@ -107,15 +107,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
 # Install Composer Latest Stable and Drush 9.x.
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
-  --filename=composer \
-  && composer \
-  --working-dir=/usr/local/src/ \
-  global \
-  require \
-  drush/drush:10.* \
-  && ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush \
-  && mkdir /etc/drush \
-  && mkdir /etc/drush/conf.d
+  --filename=composer
 
 COPY files/drush-environment.php /etc/drush/conf.d/environment.php
 COPY files/drushrc.php /etc/drush/drushrc.php
