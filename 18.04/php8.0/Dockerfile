@@ -27,7 +27,7 @@ ENV TERM xterm
 
 RUN apt-get -y update
 RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils
-RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+RUN curl -sL https://deb.nodesource.com/setup_12ß.x | bash -
 
 # Update apt repos and install base apt packages.
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -44,7 +44,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   redis-server \
   sendmail \
   software-properties-common \
-  sudo \
   vim \
   wget \
   zip \
