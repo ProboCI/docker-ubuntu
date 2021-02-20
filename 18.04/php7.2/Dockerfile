@@ -109,6 +109,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
   --filename=composer
 
+COPY files/drush-environment.php /etc/drush/conf.d/environment.php
+COPY files/drushrc.php /etc/drush/drushrc.php
+
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /tmp/drupal.phar \
   && mv /tmp/drupal.phar /usr/local/bin/drupal \
