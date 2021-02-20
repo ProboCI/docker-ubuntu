@@ -107,14 +107,10 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
 # Install Composer and Drush
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
-  --filename=composer \
-  --version=1.10.6 \
-  && composer \
-  --working-dir=/usr/local/src/ \
-  global \
-  require \
-  drush/drush:8.* \
-  && ln -s /usr/local/src/vendor/bin/drush /usr/local/bin/drush
+  --filename=composer
+
+COPY files/drush-environment.php /etc/drush/conf.d/environment.php
+COPY files/drushrc.php /etc/drush/drushrc.php
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /tmp/drupal.phar \
@@ -169,18 +165,18 @@ RUN gem install rails \
   --no-document
 
 # Install solr with default search cores.
-RUN wget http://archive.apache.org/dist/lucene/solr/6.6.5/solr-6.6.5.tgz \
-  && tar xzf solr-6.6.5.tgz solr-6.6.5/bin/install_solr_service.sh --strip-components=2 \
-  && ./install_solr_service.sh solr-6.6.5.tgz  \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.14.tar.gz \
-  && tar xzf search_api_solr-7.x-1.14.tar.gz \
+RUN wget http://archive.apache.org/dist/lucene/solr/7.3.1/solr-7.3.1.tgz \
+  && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-7.3.1.tgz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.15.tar.gz \
+  && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-8.x-2.3.tar.gz \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.1.10.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-8.x-2.3.tar.gz \
+  && tar xzf search_api_solr-4.1.10.tar.gz \
   && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/solr-conf/6.x" \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
 
 # Install varnish default configs.
@@ -200,8 +196,10 @@ RUN mkdir /root/.ssh \
   && echo "StrictHostKeyChecking no" >> /root/.ssh/config
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
-RUN curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar \
-  && php installer.phar install
+RUN mkdir ~/terminus && cd ~/terminus \
+  && curl -L https://github.com/pantheon-systems/terminus/releases/download/$(curl --silent "https://api.github.com/repos/pantheon-systems/terminus/releases/latest" | perl -nle'print $& while m{"tag_name": "\K.*?(?=")}g')/terminus.phar --output terminus \
+  && chmod +x terminus \
+  && ln -s ~/terminus/terminus /usr/local/bin/terminus
 
 # Install WP-CLI Wordpress command line tool, https://wp-cli.org/.
 RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
