@@ -12,10 +12,9 @@ The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags
 | proboci/ubuntu:18.04-php7.2  | [18.04-php7.2](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.2)  |
 | proboci/ubuntu:18.04-php7.3  | [18.04-php7.3](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.3)  |
 | proboci/ubuntu:18.04-php7.4  | [18.04-php7.4](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php7.4)  |
+| proboci/ubuntu:18.04-php8.0  | [18.04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/18.04-php8.0)  |
 
-**Note:** Image builds for Ubuntu 14.04 LTS and Ubuntu 16.04 LTS have been discontinued in favor of maintaining the latest Ubuntu LTS with specific images available for PHP versions and MySQL versions. Code in the [archived](https://github.com/ProboCI/docker-ubuntu/tree/master/archived) directory should be ignored, and will be deleted at some point.
-
-The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tags](https://hub.docker.com/r/proboci/ubuntu/tags) built from this repository are located on the Docker Hub at: [https://hub.docker.com/u/proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) and [https://hub.docker.com/r/mbagnall/ubuntu](https://hub.docker.com/r/mbagnall/ubuntu)
+**Note:** Image builds for Ubuntu 14.04 LTS and Ubuntu 16.04 LTS have been deprecated in favor of maintaining the latest Ubuntu LTS with specific images available for PHP versions and MySQL versions. Code in the [archived](https://github.com/ProboCI/docker-ubuntu/tree/master/archived) directory should be ignored, and will be deleted at some point.
 
 ## Apache Version
 - Apache 2.x (Default)
@@ -120,22 +119,46 @@ We have some images with deprecated versions of PHP available to use for older p
     - php-redis
     - php-imagick
     - php-pear
+- PHP 8.0
+  - PHP 8.0 Extensions & Packages Installed
+    - php7.4-bcmath
+    - php7.4-bz2
+    - php7.4-cli
+    - php7.4-common
+    - php7.4-curl
+    - php7.4-dba
+    - php7.4-dev
+    - php7.4-gd
+    - php7.4-ldap
+    - php7.4-mbstring
+    - php7.4-mysql
+    - php7.4-opcache
+    - php7.4-readline
+    - php7.4-soap
+    - php7.4-xml
+    - php7.4-zip
+    - php7.4-pgsql
+    - php-memcached
+    - libapache2-mod-php7.4
+    - php-redis
+    - php-imagick
+    - php-pear
 
 ## Node.JS Version
-- Node 8.x (Default)
+- Node 12.x (Default)
 
 ## PostgreSQL Version
-- TBD
+- PostgreSQL 10
 
 ## Ruby Version
 - Ruby 2.x (Default)
 
 ## Solr Version
-- Apache Solr 6.x (Default)
-  - Search API Solr module installed for Drupal 7 and Drupal 8.
-  - Default Solr cores available for Drupal 7 and Drupal 8.
+- Apache Solr 7.7.3 (Default)
+  - Search API Solr module installed for Drupal 7, 8 and 9.
+  - Default Solr cores available for Drupal 7, 8 and 9.
     - drupal7
-    - drupal8
+    - drupal8 (note use this for both Drupal 8 and 9 installs)
 
 ## Additional Packages and Tools
 The following packages and tools have been installed to all Probo Images to allow for additional functionality on images for building and testing web applications out of the box.
