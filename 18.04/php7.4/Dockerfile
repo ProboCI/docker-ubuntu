@@ -80,10 +80,10 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   php7.4-xml \
   php7.4-zip \
   php7.4-pgsql \
-  php-memcached \
+  php7.4-memcache \
+  php7.4-redis \
+  php7.4-imagick \
   libapache2-mod-php7.4 \
-  php-redis \
-  php-imagick \
   php-pear \
   imagemagick \
   postgresql \
