@@ -81,10 +81,10 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
   php7.0-xml \
   php7.0-zip \
   php7.0-pgsql \
-  php-memcached \
+  php7.0-memcache \
+  php7.0-redis \
+  php7.0-imagick \
   libapache2-mod-php7.0 \
-  php-redis \
-  php-imagick \
   php-pear \
   imagemagick \
   postgresql \
@@ -103,13 +103,29 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
   && mysql -uroot < /mysql-setup.sql \
   && rm -rf /tmp/* /mysql-setup.sql
 
-# Install Composer and Drush
+# Install composer and drush.
+RUN mkdir /usr/local/src/drush9
+RUN mkdir /usr/local/src/drush8
+RUN mkdir /usr/local/src/drush-launcher
 RUN curl -sS https://getcomposer.org/installer | php -- \
-  --install-dir=/usr/bin \
-  --filename=composer
-
+  --install-dir=/usr/local/bin \
+  --filename=composer \
+  && composer \
+  --working-dir=/usr/local/src/drush9 \
+  global \
+  require \
+  drush/drush:9.* \
+  && composer \
+  --working-dir=/usr/local/src/drush8 \
+  global \
+  require \
+  drush/drush:8.* \
+  && mkdir /etc/drush \
+  && mkdir /etc/drush/conf.d
 COPY files/drush-environment.php /etc/drush/conf.d/environment.php
 COPY files/drushrc.php /etc/drush/drushrc.php
+RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
+RUN chmod +x /usr/local/src/drush-launcher/drush
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
