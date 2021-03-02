@@ -128,6 +128,7 @@ RUN chmod +x /usr/local/src/drush-launcher/drush
 
 COPY files/drush-environment.php /etc/drush/conf.d/environment.php
 COPY files/drushrc.php /etc/drush/drushrc.php
+COPY files/probo.cnf /root/.probo.cnf
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
