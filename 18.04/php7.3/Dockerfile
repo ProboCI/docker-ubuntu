@@ -4,7 +4,7 @@
 #
 # Image: proboci/ubuntu
 # Tag: 18.04-php7.3
-# 
+#
 # The default Node.js version on this build is 12.18.0
 # The npm package is v6.14.4 as updated as part of NodeJS 12.
 #
@@ -52,7 +52,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   g++ \
   make \
   cpanminus \
-  lsof
+  lsof \
+  rsync
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
@@ -104,7 +105,7 @@ RUN apt-get install -y mysql-server \
   && mysql -uroot < /mysql-setup.sql \
   && service mysql stop \
   && service varnish stop \
-  && rm -rf /tmp/* /mysql-setup.sql 
+  && rm -rf /tmp/* /mysql-setup.sql
 
 # Install composer and drush.
 RUN mkdir /usr/local/src/drush9
