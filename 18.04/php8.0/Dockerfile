@@ -50,16 +50,18 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   gcc \
   g++ \
   make \
-  cpanminus
+  cpanminus \
+  lsof \
+  rsync
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
-  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
-  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
-  && add-apt-repository ppa:ondrej/php \
+  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+  && LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php \
   && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
   php8.0-bcmath \
   php8.0-bz2 \
@@ -213,6 +215,10 @@ RUN mkdir /root/.ssh \
   && chmod 0700 /root/.ssh/config \
   && echo "Host *" >> /root/.ssh/config \
   && echo "StrictHostKeyChecking no" >> /root/.ssh/config
+
+#COPY files/mysql-heartbeat.sh /mysql-heartbeat.sh
+#COPY files/mysql-heartbeat.sql /mysql-heartbeat.sql
+#RUN chmod +x /mysql-heartbeat.sh
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
 RUN mkdir ~/terminus && cd ~/terminus \
