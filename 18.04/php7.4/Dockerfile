@@ -51,7 +51,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   gcc \
   g++ \
   make \
-  cpanminus
+  cpanminus \
+  lsof \
+  rsync
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
