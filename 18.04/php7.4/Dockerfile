@@ -100,11 +100,18 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   ruby-dev \
   libsqlite3-dev \
   varnish/xenial \
+  xvfb \
+  libxi6 \
+  libgconf-2-4 \
   && service mysql start \
   && mysql -uroot < /mysql-setup.sql \
   && service mysql stop \
   && service varnish stop \
-  && rm -rf /tmp/* /mysql-setup.sql 
+  && rm -rf /tmp/* /mysql-setup.sql
+
+RUN wget -N http://chromedriver.storage.googleapis.com/90.0.4430.24/chromedriver_linux64.zip && \
+  unzip chromedriver_linux64.zip && \
+  mv chromedriver /usr/local/bin/.
 
 # Install composer and drush.
 RUN mkdir /usr/local/src/drush9
