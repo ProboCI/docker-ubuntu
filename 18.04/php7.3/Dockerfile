@@ -14,7 +14,7 @@
 
 # Set our our meta data for this container.
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 LABEL name="Ubuntu 18.04 LTS PHP 7.3 Probo.CI Image"
 LABEL description="An Ubuntu 18.04 based PHP 7.3 image developed specifically for docker containers running Probo.CI Builds."
@@ -27,7 +27,7 @@ ENV TERM xterm
 
 RUN apt-get -y update
 RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils
-RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 # Update apt repos and install base apt packages.
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -52,7 +52,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   g++ \
   make \
   cpanminus \
-  lsof
+  lsof \
+  rsync
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
@@ -90,21 +91,40 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   postgresql \
   postgresql-contrib \
   apache2 \
-  apache2-utils
+  apache2-utils \
+  libjemalloc2
 
-RUN apt-get install -y mysql-server \
-  mysql-client \
+# This will roll out MySQL 5.7
+RUN apt-get update -y
+COPY files/probo.cnf .my.cnf
+RUN apt -y install libaio1 libtinfo5 psmisc libmecab2 libnuma1 apparmor
+RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-common_5.7.32-1ubuntu18.04_amd64.deb
+RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-server_5.7.32-1ubuntu18.04_amd64.deb
+RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-client_5.7.32-1ubuntu18.04_amd64.deb
+RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-client_5.7.32-1ubuntu18.04_amd64.deb
+RUN dpkg -i mysql-common_5.7.32-1ubuntu18.04_amd64.deb
+RUN dpkg -i mysql-community-client_5.7.32-1ubuntu18.04_amd64.deb
+RUN dpkg -i mysql-client_5.7.32-1ubuntu18.04_amd64.deb
+RUN dpkg -i mysql-community-server_5.7.32-1ubuntu18.04_amd64.deb
+COPY files/mysql-setup.sql /mysql-setup.sql
+RUN service mysql start && \
+  mysql -uroot < /mysql-setup.sql && \
+  service mysql stop
+
+RUN apt-get install -y \
   google-chrome-stable \
   libreadline-dev \
   zlib1g-dev \
   ruby-dev \
   libsqlite3-dev \
-  varnish/xenial \
-  && service mysql start \
-  && mysql -uroot < /mysql-setup.sql \
-  && service mysql stop \
-  && service varnish stop \
-  && rm -rf /tmp/* /mysql-setup.sql 
+  varnish/focal \
+  xvfb \
+  libgconf-2-4 \
+  && service varnish stop 
+
+RUN wget -N http://chromedriver.storage.googleapis.com/90.0.4430.24/chromedriver_linux64.zip && \
+  unzip chromedriver_linux64.zip && \
+  mv chromedriver /usr/local/bin/.
 
 # Install composer and drush.
 RUN mkdir /usr/local/src/drush9
@@ -125,6 +145,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   drush/drush:8.* \
   && mkdir /etc/drush \
   && mkdir /etc/drush/conf.d
+COPY files/drush-environment.php /etc/drush/conf.d/environment.php
+COPY files/drushrc.php /etc/drush/drushrc.php
+RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
+RUN chmod +x /usr/local/src/drush-launcher/drush
+
 COPY files/drush-environment.php /etc/drush/conf.d/environment.php
 COPY files/drushrc.php /etc/drush/drushrc.php
 RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
