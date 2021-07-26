@@ -3,21 +3,21 @@
 # These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
-# Tag: 18.04-php7.3
+# Tag: 20.04-php7.4
 # 
 # The default Node.js version on this build is 12.18.0
 # The npm package is v6.14.4 as updated as part of NodeJS 12.
 #
-# Build the proboci/ubuntu:18.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
-# docker build . -t proboci/ubuntu:18.04-php7.3
-# docker push proboci/ubuntu:18.04-php7.3
+# Build the proboci/ubuntu:20.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
+# docker build . -t proboci/ubuntu:20.04-php7.4
+# docker push proboci/ubuntu:20.04-php7.4
 
 # Set our our meta data for this container.
 
 FROM ubuntu:20.04
 
-LABEL name="Ubuntu 18.04 LTS PHP 7.3 Probo.CI Image"
-LABEL description="An Ubuntu 18.04 based PHP 7.3 image developed specifically for docker containers running Probo.CI Builds."
+LABEL name="Ubuntu 20.04 LTS PHP 7.4 Probo.CI Image"
+LABEL description="An Ubuntu 20.04 based PHP 7.4 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
@@ -63,29 +63,29 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
-  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.3 \
-  php7.3-bcmath \
-  php7.3-bz2 \
-  php7.3-cli \
-  php7.3-common \
-  php7.3-curl \
-  php7.3-dba \
-  php7.3-dev \
-  php7.3-gd \
-  php7.3-json \
-  php7.3-ldap \
-  php7.3-mbstring \
-  php7.3-mysql \
-  php7.3-opcache \
-  php7.3-readline \
-  php7.3-soap \
-  php7.3-xml \
-  php7.3-zip \
-  php7.3-pgsql \
-  php7.3-memcache \
-  php7.3-redis \
-  php7.3-imagick \
-  libapache2-mod-php7.3 \
+  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.4 \
+  php7.4-bcmath \
+  php7.4-bz2 \
+  php7.4-cli \
+  php7.4-common \
+  php7.4-curl \
+  php7.4-dba \
+  php7.4-dev \
+  php7.4-gd \
+  php7.4-json \
+  php7.4-ldap \
+  php7.4-mbstring \
+  php7.4-mysql \
+  php7.4-opcache \
+  php7.4-readline \
+  php7.4-soap \
+  php7.4-xml \
+  php7.4-zip \
+  php7.4-pgsql \
+  php7.4-memcache \
+  php7.4-redis \
+  php7.4-imagick \
+  libapache2-mod-php7.4 \
   php-pear \
   imagemagick \
   postgresql \
@@ -94,22 +94,13 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   apache2-utils \
   libjemalloc2
 
-# This will roll out MySQL 5.7
+# Start and configure our MySQL Server
 RUN apt-get update -y
-COPY files/probo.cnf .my.cnf
-RUN apt -y install libaio1 libtinfo5 psmisc libmecab2 libnuma1 apparmor
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-common_5.7.32-1ubuntu18.04_amd64.deb
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-server_5.7.32-1ubuntu18.04_amd64.deb
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-client_5.7.32-1ubuntu18.04_amd64.deb
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-client_5.7.32-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-common_5.7.32-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-community-client_5.7.32-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-client_5.7.32-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-community-server_5.7.32-1ubuntu18.04_amd64.deb
 COPY files/mysql-setup.sql /mysql-setup.sql
-RUN service mysql start && \
-  mysql -uroot < /mysql-setup.sql && \
-  service mysql stop
+COPY files/probo.cnf .my.cnf
+RUN apt-get install -y mysql-server mysql-client \
+  && service mysql start \
+  && mysql -uroot < /mysql-setup.sql
 
 RUN apt-get install -y \
   google-chrome-stable \
