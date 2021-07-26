@@ -122,7 +122,7 @@ RUN apt-get install -y \
   libgconf-2-4 \
   && service varnish stop 
 
-RUN wget -N http://chromedriver.storage.googleapis.com/90.0.4430.24/chromedriver_linux64.zip && \
+RUN wget -N http://chromedriver.storage.googleapis.com/92.0.4515.43/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/.
 
