@@ -105,13 +105,34 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && mysql -uroot < /mysql-setup.sql \
   && rm -rf /tmp/* /mysql-setup.sql
 
-# Install Composer Latest Stable and Drush 9.x.
+RUN wget -N http://chromedriver.storage.googleapis.com/92.0.4515.43/chromedriver_linux64.zip && \
+  unzip chromedriver_linux64.zip && \
+  mv chromedriver /usr/local/bin/.
+
+# Install composer and drush.
+RUN mkdir /usr/local/src/drush9
+RUN mkdir /usr/local/src/drush8
+RUN mkdir /usr/local/src/drush-launcher
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
-  --filename=composer
-
+  --filename=composer \
+  && composer \
+  --working-dir=/usr/local/src/drush9 \
+  global \
+  require \
+  drush/drush:9.* \
+  && composer \
+  --working-dir=/usr/local/src/drush8 \
+  global \
+  require \
+  drush/drush:8.* \
+  && mkdir /etc/drush \
+  && mkdir /etc/drush/conf.d
 COPY files/drush-environment.php /etc/drush/conf.d/environment.php
 COPY files/drushrc.php /etc/drush/drushrc.php
+RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
+RUN chmod +x /usr/local/src/drush-launcher/drush
+RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
@@ -173,9 +194,9 @@ RUN wget http://archive.apache.org/dist/lucene/solr/7.3.1/solr-7.3.1.tgz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.1.10.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.0.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.1.10.tar.gz \
+  && tar xzf search_api_solr-4.2.0.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
