@@ -94,7 +94,6 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   libjemalloc2
 
 # This will roll out MySQL 5.7
-RUN apt-get update -y
 COPY files/probo.cnf .my.cnf
 RUN apt -y install libaio1 libtinfo5 psmisc libmecab2 libnuma1 apparmor
 RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-common_5.7.34-1ubuntu18.04_amd64.deb
@@ -148,6 +147,7 @@ COPY files/drush-environment.php /etc/drush/conf.d/environment.php
 COPY files/drushrc.php /etc/drush/drushrc.php
 RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
 RUN chmod +x /usr/local/src/drush-launcher/drush
+RUN echo "\n\ndrush() { /usr/local/bin/drush -r /var/www/html \"\$@\" }" >> /root/.bashrc
 
 COPY files/drush-environment.php /etc/drush/conf.d/environment.php
 COPY files/drushrc.php /etc/drush/drushrc.php
