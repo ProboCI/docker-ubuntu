@@ -106,7 +106,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 
-RUN wget -N http://chromedriver.storage.googleapis.com/92.0.4515.43/chromedriver_linux64.zip && \
+RUN wget -N http://chromedriver.storage.googleapis.com/92.0.4515.107/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/.
   
@@ -134,6 +134,7 @@ COPY files/drushrc.php /etc/drush/drushrc.php
 RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
 RUN chmod +x /usr/local/src/drush-launcher/drush
 RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
+RUN echo "\n\nversionizer() { \nphp /versionizer.php\n }" >> /root/.bashrc
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /tmp/drupal.phar \
