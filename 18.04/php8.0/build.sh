@@ -1,4 +1,4 @@
 #!/bin/bash
 
-docker build . -t proboci/ubuntu:18.04-php8.0 --no-cache
+docker build . -t proboci/ubuntu:18.04-php8.0
 docker push proboci/ubuntu:18.04-php8.0
