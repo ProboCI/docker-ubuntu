@@ -140,11 +140,7 @@ COPY files/drush-environment.php /etc/drush/conf.d/environment.php
 COPY files/drushrc.php /etc/drush/drushrc.php
 RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
 RUN chmod +x /usr/local/src/drush-launcher/drush
-
-COPY files/drush-environment.php /etc/drush/conf.d/environment.php
-COPY files/drushrc.php /etc/drush/drushrc.php
-RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
-RUN chmod +x /usr/local/src/drush-launcher/drush
+COPY files/versionizer.php /versionizer.php
 RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n}" >> /root/.bashrc
 RUN echo "\n\nversionizer() { \nphp /versionizer.php\n }" >> /root/.bashrc
 
