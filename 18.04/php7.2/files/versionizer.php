@@ -26,6 +26,7 @@ print $php_version . "\n";
 print "Web " . $apache_version . "\n";
 print $chrome_version;
 print $chromedriver_version;
+print $mysql_version;
 print "Kernel: " . $linux_kernel;
 print $linux_distribution . "\n";
 print $composer_version;
