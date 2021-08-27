@@ -153,11 +153,13 @@ RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
 RUN npm install -g proboscis --unsafe
 
 # Install NPM Packages.
+RUN npm config set unsafe-perm true
 RUN npm install -g bower \
   grunt-cli \
   gulp-cli \
   lighthouse \
   yarn \
+  cypress \
   --no-document
 
 # Start and configure our PostgreSQL server.
