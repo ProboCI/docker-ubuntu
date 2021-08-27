@@ -150,11 +150,13 @@ RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
 RUN npm install -g proboscis --unsafe
 
 # Install NPM Packages.
+RUN npm config set unsafe-perm true
 RUN npm install -g bower \
   grunt-cli \
   gulp-cli \
   lighthouse \
   yarn \
+  cypress \
   --no-document
 
 # Start and configure our PostgreSQL server.
@@ -203,9 +205,9 @@ RUN wget http://archive.apache.org/dist/lucene/solr/7.3.1/solr-7.3.1.tgz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.0.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.1.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.2.0.tar.gz \
+  && tar xzf search_api_solr-4.2.1.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
