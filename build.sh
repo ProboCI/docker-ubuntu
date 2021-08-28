@@ -32,3 +32,9 @@ cd ../../20.04/php8.0-mysql5.7/
 
 cd ../../20.04/php8.0-mysql8.0/
 ./build.sh
+
+cd ../../20.04/php8.1-mysql5.7/
+./build.sh
+
+cd ../../20.04/php8.1-mysql8.0/
+./build.sh
