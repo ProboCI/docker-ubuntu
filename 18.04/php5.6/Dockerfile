@@ -63,7 +63,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
-  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php5.6 \
+  && apt-get update -y && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php5.6 \
   php5.6-bcmath \
   php5.6-bz2 \
   php5.6-cli \
@@ -105,7 +105,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && mysql -uroot < /mysql-setup.sql \
   && rm -rf /tmp/* /mysql-setup.sql
 
-RUN wget -N http://chromedriver.storage.googleapis.com/92.0.4515.107/chromedriver_linux64.zip && \
+RUN wget -N http://chromedriver.storage.googleapis.com/93.0.4577.15/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/.
 

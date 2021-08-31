@@ -62,7 +62,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
   && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
   && LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php \
-  && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
+  && apt-get update -y && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
   php8.0-bcmath \
   php8.0-bz2 \
   php8.0-cli \
@@ -107,7 +107,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql 
 
-RUN wget -N http://chromedriver.storage.googleapis.com/92.0.4515.107/chromedriver_linux64.zip && \
+RUN wget -N http://chromedriver.storage.googleapis.com/93.0.4577.15/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/.
 
