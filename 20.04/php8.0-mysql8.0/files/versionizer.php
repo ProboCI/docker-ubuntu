@@ -17,7 +17,7 @@ $composer_version = `composer --version`;
 $drush_version = `drush --version`;
 $node_version = `node --version`;
 $wp_cli_version = `wp --version --allow-root`;
-$terminus_version = `terminus --version`;
+// $terminus_version = `terminus --version`;
 
 print "\n\n";
 print "Probo.CI - Software Versions Report:\n";
@@ -33,5 +33,5 @@ print $composer_version;
 print $drush_version;
 print "Node: " . $node_version;
 print "WordPress CLI: " . $wp_cli_version;
-print "Pantheon " . $terminus_version;
+// print "Pantheon " . $terminus_version;
 print "\n\n";
