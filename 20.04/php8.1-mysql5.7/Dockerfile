@@ -107,12 +107,11 @@ RUN dpkg -i mysql-community-server_5.7.34-1ubuntu18.04_amd64.deb
 COPY files/mysql-setup.sql /mysql-setup.sql
 RUN service mysql start && \
   mysql -uroot < /mysql-setup.sql && \
-  service mysql stop
-
-RUN rm -rf mysql-common_5.7.34-1ubuntu18.04_amd64.deb
-RUN rm -rf mysql-community-server_5.7.34-1ubuntu18.04_amd64.deb
-RUN rm -rf mysql-client_5.7.34-1ubuntu18.04_amd64.deb
-RUN rm -rf mysql-community-client_5.7.34-1ubuntu18.04_amd64.deb
+  service mysql stop && \
+  rm -rf mysql-common_5.7.34-1ubuntu18.04_amd64.deb && \
+  rm -rf mysql-community-server_5.7.34-1ubuntu18.04_amd64.deb && \
+  rm -rf mysql-client_5.7.34-1ubuntu18.04_amd64.deb && \
+  rm -rf mysql-community-client_5.7.34-1ubuntu18.04_amd64.deb
 
 RUN apt-get install -y \
   google-chrome-stable \
@@ -127,9 +126,8 @@ RUN apt-get install -y \
 
 RUN wget -N http://chromedriver.storage.googleapis.com/93.0.4577.15/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/.
-
-RUN rm -rf chromedriver_linux64.zip
+  mv chromedriver /usr/local/bin/. && \
+	rm -rf chromedriver_linux64.zip
 
 # Install composer and drush.
 RUN mkdir /usr/local/src/drush9
@@ -227,11 +225,11 @@ RUN wget http://archive.apache.org/dist/lucene/solr/7.3.1/solr-7.3.1.tgz \
   && tar xzf search_api_solr-4.2.1.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
-  && service solr stop
-
-RUN rm -rf search_api_solr-4.2.1.tar.gz
-RUN rm -rf search_api_solr-7.x-1.15.tar.gz
-RUN rm -rf solr-7.3.1.tgz
+  && service solr stop \
+  && rm -rf search_api_solr-4.2.1.tar.gz \
+ 	&& rm -rf search_api_solr-7.x-1.15.tar.gz \
+  && rm -rf solr-7.3.1.tgz \
+  && rm -rf install_solr_service.sh
 
 # Install varnish default configs.
 COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default.vcl
