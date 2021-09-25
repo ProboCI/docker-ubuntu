@@ -109,6 +109,11 @@ RUN service mysql start && \
   mysql -uroot < /mysql-setup.sql && \
   service mysql stop
 
+RUN rm -rf mysql-common_5.7.34-1ubuntu18.04_amd64.deb
+RUN rm -rf mysql-community-server_5.7.34-1ubuntu18.04_amd64.deb
+RUN rm -rf mysql-client_5.7.34-1ubuntu18.04_amd64.deb
+RUN rm -rf mysql-community-client_5.7.34-1ubuntu18.04_amd64.deb
+
 RUN apt-get install -y \
   google-chrome-stable \
   libreadline-dev \
@@ -123,6 +128,8 @@ RUN apt-get install -y \
 RUN wget -N http://chromedriver.storage.googleapis.com/93.0.4577.15/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/.
+
+RUN rm -rf chromedriver_linux64.zip
 
 # Install composer and drush.
 RUN mkdir /usr/local/src/drush9
@@ -222,6 +229,10 @@ RUN wget http://archive.apache.org/dist/lucene/solr/7.3.1/solr-7.3.1.tgz \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
 
+RUN rm -rf search_api_solr-4.2.1.tar.gz
+RUN rm -rf search_api_solr-7.x-1.15.tar.gz
+RUN rm -rf solr-7.3.1.tgz
+
 # Install varnish default configs.
 COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default.vcl
 COPY files/drupal-default-4.vcl /etc/varnish/drupal-default.vcl
@@ -239,10 +250,10 @@ RUN mkdir /root/.ssh \
   && echo "StrictHostKeyChecking no" >> /root/.ssh/config
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
-RUN mkdir ~/terminus && cd ~/terminus \
-  && curl -L https://github.com/pantheon-systems/terminus/releases/download/$(curl --silent "https://api.github.com/repos/pantheon-systems/terminus/releases/latest" | perl -nle'print $& while m{"tag_name": "\K.*?(?=")}g')/terminus.phar --output terminus \
-  && chmod +x terminus \
-  && ln -s ~/terminus/terminus /usr/local/bin/terminus
+#RUN mkdir ~/terminus && cd ~/terminus \
+#  && curl -L https://github.com/pantheon-systems/terminus/releases/download/$(curl --silent "https://api.github.com/repos/pantheon-systems/terminus/releases/latest" | perl -nle'print $& while m{"tag_name": "\K.*?(?=")}g')/terminus.phar --output terminus \
+#  && chmod +x terminus \
+#  && ln -s ~/terminus/terminus /usr/local/bin/terminus
 
 # Install WP-CLI Wordpress command line tool, https://wp-cli.org/.
 RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
