@@ -208,9 +208,9 @@ RUN wget http://archive.apache.org/dist/lucene/solr/7.3.1/solr-7.3.1.tgz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.0.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.1.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.2.0.tar.gz \
+  && tar xzf search_api_solr-4.2.1.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
@@ -241,3 +241,7 @@ RUN mkdir ~/terminus && cd ~/terminus \
 RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x /tmp/wp-cli.phar \
   && mv /tmp/wp-cli.phar /usr/local/bin/wp
+
+RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
+  && chmod +x acli.phar \
+  && mv acli.phar /usr/local/bin/acli

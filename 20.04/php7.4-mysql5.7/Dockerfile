@@ -98,14 +98,14 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
 RUN apt-get update -y
 COPY files/probo.cnf .my.cnf
 RUN apt -y install libaio1 libtinfo5 psmisc libmecab2 libnuma1 apparmor
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-common_5.7.34-1ubuntu18.04_amd64.deb
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-server_5.7.34-1ubuntu18.04_amd64.deb
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-client_5.7.34-1ubuntu18.04_amd64.deb
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-client_5.7.34-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-common_5.7.34-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-community-client_5.7.34-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-client_5.7.34-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-community-server_5.7.34-1ubuntu18.04_amd64.deb
+RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-common_5.7.36-1ubuntu18.04_amd64.deb
+RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-server_5.7.36-1ubuntu18.04_amd64.deb
+RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-client_5.7.36-1ubuntu18.04_amd64.deb
+RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-client_5.7.36-1ubuntu18.04_amd64.deb
+RUN dpkg -i mysql-common_5.7.36-1ubuntu18.04_amd64.deb
+RUN dpkg -i mysql-community-client_5.7.36-1ubuntu18.04_amd64.deb
+RUN dpkg -i mysql-client_5.7.36-1ubuntu18.04_amd64.deb
+RUN dpkg -i mysql-community-server_5.7.36-1ubuntu18.04_amd64.deb
 COPY files/mysql-setup.sql /mysql-setup.sql
 RUN service mysql start && \
   mysql -uroot < /mysql-setup.sql && \
@@ -250,3 +250,7 @@ RUN mkdir ~/terminus && cd ~/terminus \
 RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x /tmp/wp-cli.phar \
   && mv /tmp/wp-cli.phar /usr/local/bin/wp
+
+RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
+  && chmod +x acli.phar \
+  && mv acli.phar /usr/local/bin/acli
