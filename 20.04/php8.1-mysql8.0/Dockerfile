@@ -200,9 +200,9 @@ RUN gem install rails \
   --no-document
 
 # Install solr with default search cores.
-RUN wget http://archive.apache.org/dist/lucene/solr/7.3.1/solr-7.3.1.tgz \
-  && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
-  && ./install_solr_service.sh solr-7.3.1.tgz \
+RUN wget http://archive.apache.org/dist/lucene/solr/7.7.3/solr-7.7.3.tgz \
+  && tar xzf solr-7.7.3.tgz solr-7.7.3/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-7.7.3.tgz \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.15.tar.gz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
@@ -231,12 +231,16 @@ RUN mkdir /root/.ssh \
   && echo "StrictHostKeyChecking no" >> /root/.ssh/config
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
-#RUN mkdir ~/terminus && cd ~/terminus \
-#  && curl -L https://github.com/pantheon-systems/terminus/releases/download/$(curl --silent "https://api.github.com/repos/pantheon-systems/terminus/releases/latest" | perl -nle'print $& while m{"tag_name": "\K.*?(?=")}g')/terminus.phar --output terminus \
-#  && chmod +x terminus \
-#  && ln -s ~/terminus/terminus /usr/local/bin/terminus
+RUN mkdir ~/terminus && cd ~/terminus \
+ && curl -L https://github.com/pantheon-systems/terminus/releases/download/$(curl --silent "https://api.github.com/repos/pantheon-systems/terminus/releases/latest" | perl -nle'print $& while m{"tag_name": "\K.*?(?=")}g')/terminus.phar --output terminus \
+ && chmod +x terminus \
+ && ln -s ~/terminus/terminus /usr/local/bin/terminus
 
 # Install WP-CLI Wordpress command line tool, https://wp-cli.org/.
 RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x /tmp/wp-cli.phar \
   && mv /tmp/wp-cli.phar /usr/local/bin/wp
+
+RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
+  && chmod +x acli.phar \
+  && mv acli.phar /usr/local/bin/acli

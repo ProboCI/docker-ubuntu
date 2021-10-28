@@ -107,7 +107,11 @@ RUN dpkg -i mysql-community-server_5.7.36-1ubuntu18.04_amd64.deb
 COPY files/mysql-setup.sql /mysql-setup.sql
 RUN service mysql start && \
   mysql -uroot < /mysql-setup.sql && \
-  service mysql stop
+  service mysql stop && \
+  rm -rf mysql-common_5.7.34-1ubuntu18.04_amd64.deb && \
+  rm -rf mysql-community-server_5.7.34-1ubuntu18.04_amd64.deb && \
+  rm -rf mysql-client_5.7.34-1ubuntu18.04_amd64.deb && \
+  rm -rf mysql-community-client_5.7.34-1ubuntu18.04_amd64.deb
 
 RUN apt-get install -y \
   google-chrome-stable \

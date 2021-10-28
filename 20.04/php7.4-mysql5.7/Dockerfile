@@ -95,13 +95,12 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   libjemalloc2
 
 # This will roll out MySQL 5.7
-RUN apt-get update -y
 COPY files/probo.cnf .my.cnf
 RUN apt -y install libaio1 libtinfo5 psmisc libmecab2 libnuma1 apparmor
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-common_5.7.36-1ubuntu18.04_amd64.deb
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-server_5.7.36-1ubuntu18.04_amd64.deb
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-client_5.7.36-1ubuntu18.04_amd64.deb
-RUN wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-client_5.7.36-1ubuntu18.04_amd64.deb
+RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-common_5.7.36-1ubuntu18.04_amd64.deb
+RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server_5.7.36-1ubuntu18.04_amd64.deb
+RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-client_5.7.36-1ubuntu18.04_amd64.deb
+RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client_5.7.36-1ubuntu18.04_amd64.deb
 RUN dpkg -i mysql-common_5.7.36-1ubuntu18.04_amd64.deb
 RUN dpkg -i mysql-community-client_5.7.36-1ubuntu18.04_amd64.deb
 RUN dpkg -i mysql-client_5.7.36-1ubuntu18.04_amd64.deb
@@ -109,7 +108,11 @@ RUN dpkg -i mysql-community-server_5.7.36-1ubuntu18.04_amd64.deb
 COPY files/mysql-setup.sql /mysql-setup.sql
 RUN service mysql start && \
   mysql -uroot < /mysql-setup.sql && \
-  service mysql stop
+  service mysql stop && \
+  rm -rf mysql-common_5.7.34-1ubuntu18.04_amd64.deb && \
+  rm -rf mysql-community-server_5.7.34-1ubuntu18.04_amd64.deb && \
+  rm -rf mysql-client_5.7.34-1ubuntu18.04_amd64.deb && \
+  rm -rf mysql-community-client_5.7.34-1ubuntu18.04_amd64.deb
 
 RUN apt-get install -y \
   google-chrome-stable \
@@ -210,9 +213,9 @@ RUN gem install rails \
   --no-document
 
 # Install solr with default search cores.
-RUN wget http://archive.apache.org/dist/lucene/solr/7.3.1/solr-7.3.1.tgz \
-  && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
-  && ./install_solr_service.sh solr-7.3.1.tgz \
+RUN wget http://archive.apache.org/dist/lucene/solr/7.7.3/solr-7.7.3.tgz \
+  && tar xzf solr-7.7.3.tgz solr-7.7.3/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-7.7.3.tgz \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.15.tar.gz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
