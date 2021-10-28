@@ -200,9 +200,9 @@ RUN gem install rails \
   --no-document
 
 # Install solr with default search cores.
-RUN wget http://archive.apache.org/dist/lucene/solr/7.3.1/solr-7.3.1.tgz \
-  && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
-  && ./install_solr_service.sh solr-7.3.1.tgz \
+RUN wget http://archive.apache.org/dist/lucene/solr/7.7.3/solr-7.7.3.tgz \
+  && tar xzf solr-7.7.3.tgz solr-7.7.3/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-7.7.3.tgz \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.15.tar.gz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
