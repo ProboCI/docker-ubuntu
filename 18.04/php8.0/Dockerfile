@@ -228,10 +228,6 @@ RUN mkdir /root/.ssh \
   && echo "Host *" >> /root/.ssh/config \
   && echo "StrictHostKeyChecking no" >> /root/.ssh/config
 
-#COPY files/mysql-heartbeat.sh /mysql-heartbeat.sh
-#COPY files/mysql-heartbeat.sql /mysql-heartbeat.sql
-#RUN chmod +x /mysql-heartbeat.sh
-
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
 RUN mkdir ~/terminus && cd ~/terminus \
   && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.0.0-beta1/terminus --output terminus \
