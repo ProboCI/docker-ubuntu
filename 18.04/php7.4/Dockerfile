@@ -109,7 +109,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 
-RUN wget -N http://chromedriver.storage.googleapis.com/93.0.4577.15/chromedriver_linux64.zip && \
+RUN wget -N https://chromedriver.storage.googleapis.com/95.0.4638.54/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/.
 
