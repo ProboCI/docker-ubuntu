@@ -13,6 +13,6 @@ else
   docker build . -t proboci/ubuntu:20.04-php7.4
 
   if [[ ${1} = 'production' ]] || [[ ${1} = 'prod' ]]; then
-    docker push proboci/ubuntu:20.04-php7.4-mysql8.0
+    docker push proboci/ubuntu:20.04-php7.4
   fi
 fi
