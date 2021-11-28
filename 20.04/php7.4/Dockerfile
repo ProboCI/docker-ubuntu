@@ -113,7 +113,7 @@ RUN apt-get install -y \
   libgconf-2-4 \
   && service varnish stop 
 
-RUN wget -N https://chromedriver.storage.googleapis.com/95.0.4638.54/chromedriver_linux64.zip && \
+RUN wget -N https://chromedriver.storage.googleapis.com/96.0.4664.45/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/.
 
@@ -208,9 +208,9 @@ RUN wget http://archive.apache.org/dist/lucene/solr/7.7.3/solr-7.7.3.tgz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.1.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.2.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.2.1.tar.gz \
+  && tar xzf search_api_solr-4.2.2.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop

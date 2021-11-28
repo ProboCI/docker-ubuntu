@@ -3,21 +3,21 @@
 # These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
-# Tag: 20.04-php7.4
+# Tag: 20.04-php8.0
 # 
 # The default Node.js version on this build is 12.18.0
 # The npm package is v6.14.4 as updated as part of NodeJS 12.
 #
 # Build the proboci/ubuntu:20.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
-# docker build . -t proboci/ubuntu:20.04-php7.4
-# docker push proboci/ubuntu:20.04-php7.4
+# docker build . -t proboci/ubuntu:20.04-php8.0
+# docker push proboci/ubuntu:20.04-php8.0
 
 # Set our our meta data for this container.
 
 FROM ubuntu:20.04
 
-LABEL name="Ubuntu 20.04 LTS PHP 7.4 Probo.CI Image"
-LABEL description="An Ubuntu 20.04 based PHP 7.4 image developed specifically for docker containers running Probo.CI Builds."
+LABEL name="Ubuntu 20.04 LTS PHP 8.0 Probo.CI Image"
+LABEL description="An Ubuntu 20.04 based PHP 8.0 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
@@ -63,29 +63,28 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
-  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.4 \
-  php7.4-bcmath \
-  php7.4-bz2 \
-  php7.4-cli \
-  php7.4-common \
-  php7.4-curl \
-  php7.4-dba \
-  php7.4-dev \
-  php7.4-gd \
-  php7.4-json \
-  php7.4-ldap \
-  php7.4-mbstring \
-  php7.4-mysql \
-  php7.4-opcache \
-  php7.4-readline \
-  php7.4-soap \
-  php7.4-xml \
-  php7.4-zip \
-  php7.4-pgsql \
-  php7.4-memcache \
-  php7.4-redis \
-  php7.4-imagick \
-  libapache2-mod-php7.4 \
+  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
+  php8.0-bcmath \
+  php8.0-bz2 \
+  php8.0-cli \
+  php8.0-common \
+  php8.0-curl \
+  php8.0-dba \
+  php8.0-dev \
+  php8.0-gd \
+  php8.0-ldap \
+  php8.0-mbstring \
+  php8.0-mysql \
+  php8.0-opcache \
+  php8.0-readline \
+  php8.0-soap \
+  php8.0-xml \
+  php8.0-zip \
+  php8.0-pgsql \
+  php8.0-memcache \
+  php8.0-redis \
+  php8.0-imagick \
+  libapache2-mod-php8.0 \
   php-pear \
   imagemagick \
   postgresql \
@@ -94,25 +93,13 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   apache2-utils \
   libjemalloc2
 
-# This will roll out MySQL 5.7
-COPY files/probo.cnf .my.cnf
-RUN apt -y install libaio1 libtinfo5 psmisc libmecab2 libnuma1 apparmor
-RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-common_5.7.36-1ubuntu18.04_amd64.deb
-RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server_5.7.36-1ubuntu18.04_amd64.deb
-RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-client_5.7.36-1ubuntu18.04_amd64.deb
-RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client_5.7.36-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-common_5.7.36-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-community-client_5.7.36-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-client_5.7.36-1ubuntu18.04_amd64.deb
-RUN dpkg -i mysql-community-server_5.7.36-1ubuntu18.04_amd64.deb
+# Start and configure our MySQL Server
+RUN apt-get update -y
 COPY files/mysql-setup.sql /mysql-setup.sql
-RUN service mysql start && \
-  mysql -uroot < /mysql-setup.sql && \
-  service mysql stop && \
-  rm -rf mysql-common_5.7.36-1ubuntu18.04_amd64.deb && \
-  rm -rf mysql-community-server_5.7.36-1ubuntu18.04_amd64.deb && \
-  rm -rf mysql-client_5.7.36-1ubuntu18.04_amd64.deb && \
-  rm -rf mysql-community-client_5.7.36-1ubuntu18.04_amd64.deb
+COPY files/probo.cnf .my.cnf
+RUN apt-get install -y mysql-server mysql-client \
+  && service mysql start \
+  && mysql -uroot < /mysql-setup.sql
 
 RUN apt-get install -y \
   google-chrome-stable \
@@ -125,7 +112,7 @@ RUN apt-get install -y \
   libgconf-2-4 \
   && service varnish stop 
 
-RUN wget -N https://chromedriver.storage.googleapis.com/95.0.4638.54/chromedriver_linux64.zip && \
+RUN wget -N https://chromedriver.storage.googleapis.com/96.0.4664.45/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/.
 
@@ -153,7 +140,7 @@ COPY files/drushrc.php /etc/drush/drushrc.php
 COPY files/versionizer.php /versionizer.php
 RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
 RUN chmod +x /usr/local/src/drush-launcher/drush
-RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n}" >> /root/.bashrc
+RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
 RUN echo "\n\nversionizer() { \nphp /versionizer.php\n }" >> /root/.bashrc
 
 # Download Drupal Console and install it in our standard path.
@@ -220,9 +207,9 @@ RUN wget http://archive.apache.org/dist/lucene/solr/7.7.3/solr-7.7.3.tgz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.1.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.2.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.2.1.tar.gz \
+  && tar xzf search_api_solr-4.2.2.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
@@ -245,7 +232,7 @@ RUN mkdir /root/.ssh \
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
 RUN mkdir ~/terminus && cd ~/terminus \
-  && curl -L https://github.com/pantheon-systems/terminus/releases/download/$(curl --silent "https://api.github.com/repos/pantheon-systems/terminus/releases/latest" | perl -nle'print $& while m{"tag_name": "\K.*?(?=")}g')/terminus.phar --output terminus \
+  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.0.0-beta1/terminus --output terminus \
   && chmod +x terminus \
   && ln -s ~/terminus/terminus /usr/local/bin/terminus
 
