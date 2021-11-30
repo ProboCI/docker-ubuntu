@@ -42,7 +42,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   ntp \
   openjdk-8-jre \
   redis-server \
-  sendmail \
+  nullmailer \
   software-properties-common \
   vim \
   wget \
