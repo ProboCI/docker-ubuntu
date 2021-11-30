@@ -3,21 +3,21 @@
 # These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
-# Tag: 20.04-php8.1
+# Tag: 18.04-php8.1
 # 
 # The default Node.js version on this build is 12.18.0
 # The npm package is v6.14.4 as updated as part of NodeJS 12.
 #
-# Build the proboci/ubuntu:20.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
-# docker build . -t proboci/ubuntu:20.04-php8.1
-# docker push proboci/ubuntu:20.04-php8.1
+# Build the proboci/ubuntu:18.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
+# docker build . -t proboci/ubuntu:18.04-php8.1
+# docker push proboci/ubuntu:18.04-php8.1
 
 # Set our our meta data for this container.
 
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
-LABEL name="Ubuntu 20.04 LTS PHP 8.1 Probo.CI Image"
-LABEL description="An Ubuntu 20.04 based PHP 8.1 image developed specifically for docker containers running Probo.CI Builds."
+LABEL name="Ubuntu 18.04 LTS PHP 8.1 Probo.CI Image"
+LABEL description="An Ubuntu 18.04 based PHP 8.1 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
@@ -44,7 +44,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   redis-server \
   sendmail \
   software-properties-common \
-  sudo \
   vim \
   wget \
   zip \
@@ -60,10 +59,10 @@ COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
-  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
-  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
-  && add-apt-repository ppa:ondrej/php \
-  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.1 \
+  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+  && LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php \
+  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
   php8.1-bcmath \
   php8.1-bz2 \
   php8.1-cli \
@@ -84,38 +83,33 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   php8.1-memcache \
   php8.1-redis \
   php8.1-imagick \
-  libapache2-mod-php8.1 \
+  libapache2-mod-php8.0 \
   php-pear \
   imagemagick \
   postgresql \
   postgresql-contrib \
   apache2 \
   apache2-utils \
-  libjemalloc2
-
-# Start and configure our MySQL Server
-RUN apt-get update -y
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/probo.cnf .my.cnf
-RUN apt-get install -y mysql-server mysql-client \
-  && service mysql start \
-  && mysql -uroot < /mysql-setup.sql
-
-RUN apt-get install -y \
+  mysql-server \
+  mysql-client \
   google-chrome-stable \
   libreadline-dev \
   zlib1g-dev \
   ruby-dev \
   libsqlite3-dev \
-  varnish/focal \
+  varnish/xenial \
   xvfb \
+  libxi6 \
   libgconf-2-4 \
-  && service varnish stop 
+  && service mysql start \
+  && mysql -uroot < /mysql-setup.sql \
+  && service mysql stop \
+  && service varnish stop \
+  && rm -rf /tmp/* /mysql-setup.sql 
 
 RUN wget -N https://chromedriver.storage.googleapis.com/96.0.4664.45/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-	rm -rf chromedriver_linux64.zip
+  mv chromedriver /usr/local/bin/.
 
 # Install composer and drush.
 RUN mkdir /usr/local/src/drush9
@@ -143,6 +137,9 @@ RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/dru
 RUN chmod +x /usr/local/src/drush-launcher/drush
 RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
 RUN echo "\n\nversionizer() { \nphp /versionizer.php\n }" >> /root/.bashrc
+
+COPY files/drush-environment.php /etc/drush/conf.d/environment.php
+COPY files/drushrc.php /etc/drush/drushrc.php
 
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
