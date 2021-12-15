@@ -30,7 +30,7 @@ RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certifica
 RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 
 # Update apt repos and install base apt packages.
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   build-essential \
   git \
   gnupg \

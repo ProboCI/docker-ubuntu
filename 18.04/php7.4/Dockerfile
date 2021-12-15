@@ -102,8 +102,10 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   varnish/xenial \
   xvfb \
   libxi6 \
-  libgconf-2-4 \
-  && service mysql start \
+  libgconf-2-4
+
+COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
+RUN service mysql start \
   && mysql -uroot < /mysql-setup.sql \
   && service mysql stop \
   && service varnish stop \
