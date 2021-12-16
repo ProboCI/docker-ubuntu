@@ -195,14 +195,14 @@ COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-def
 COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install Gem packages.
-RUN gem install rails \
-  mailcatcher \
-  compass \
-  bundler \
-  --no-document
+# RUN gem install rails \
+#   mailcatcher \
+#   compass \
+#   bundler \
+#   --no-document
 
 # Install solr with default search cores.
-RUN wget http://archive.apache.org/dist/lucene/solr/7.3.1/solr-7.3.1.tgz \
+RUN wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
   && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-7.3.1.tgz \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.15.tar.gz \
