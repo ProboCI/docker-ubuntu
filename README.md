@@ -13,12 +13,9 @@ The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tree
 | proboci/ubuntu:18.04-php7.3  | [18.04-php7.3](https://github.com/ProboCI/docker-ubuntu/tree/master/18.04/php7.3) |
 | proboci/ubuntu:18.04-php7.4  | [18.04-php7.4](https://github.com/ProboCI/docker-ubuntu/tree/master/18.04/php7.4) |
 | proboci/ubuntu:18.04-php8.0  | [18.04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/18.04/php8.0) |
-| proboci/ubuntu:20.04-php7.4-mysql5.7 | [20.04-php7.4-mysql5.7](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php7.4-mysql5.7) |
-| proboci/ubuntu:20.04-php7.4-mysql8.0 | [20.04-php7.4-mysql8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php7.4-mysql8.0) |
-| proboci/ubuntu:20-04-php8.0-mysql5.7 | [20-04-php8.0-mysql5.7](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.0-mysql5.7) |
-| proboci/ubuntu:20-04-php8.0-mysql8.0 | [20-04-php8.0-mysql8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.0-mysql8.0) |
-| proboci/ubuntu:20-04-php8.1-mysql5.7 | [20-04-php8.1-mysql5.7](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.1-mysql5.7) |
-| proboci/ubuntu:20-04-php8.1-mysql8.0 | [20-04-php8.1-mysql8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.1-mysql8.0) |
+| proboci/ubuntu:20.04-php7.4  | [20.04-php7.4](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php7.4) |
+| proboci/ubuntu:20-04-php8.0  | [20-04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.0) |
+| proboci/ubuntu:20-04-php8.1  | [20-04-php8.1](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.1) |
 
 ## Getting The Current Versions
 
