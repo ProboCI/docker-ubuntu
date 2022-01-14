@@ -143,11 +143,6 @@ RUN echo "\n\nversionizer() { \nphp /versionizer.php\n }" >> /root/.bashrc
 COPY files/drush-environment.php /etc/drush/conf.d/environment.php
 COPY files/drushrc.php /etc/drush/drushrc.php
 
-# Download Drupal Console and install it in our standard path.
-RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
-  && mv /drupal.phar /bin/drupal \
-  && chmod 755 /bin/drupal
-
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
 
@@ -200,13 +195,9 @@ COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 #   --no-document
 
 # Install solr with default search cores.
-RUN  wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
-  && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
-  && ./install_solr_service.sh solr-7.3.1.tgz \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.15.tar.gz \
-  && tar xzf search_api_solr-7.x-1.15.tar.gz \
-  && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
+RUN  wget https://proofroom.s3.amazonaws.com/solr-8.11.1.tgz \
+  && tar xzf solr-8.11.1.tgz solr-8.11.1/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-8.11.1.tgz \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.3.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
   && tar xzf search_api_solr-4.2.3.tar.gz \

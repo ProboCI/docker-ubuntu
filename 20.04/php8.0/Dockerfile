@@ -146,11 +146,6 @@ RUN chmod +x /usr/local/src/drush-launcher/drush
 RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
 RUN echo "\n\nversionizer() { \nphp /versionizer.php\n }" >> /root/.bashrc
 
-# Download Drupal Console and install it in our standard path.
-RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
-  && mv /drupal.phar /bin/drupal \
-  && chmod 755 /bin/drupal
-
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
 
@@ -196,20 +191,16 @@ COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-def
 COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install Gem packages.
-# RUN gem install rails \
-#   mailcatcher \
-#   compass \
-#   bundler \
-#   --no-document
+RUN gem install rails \
+  mailcatcher \
+  compass \
+  bundler \
+  --no-document
 
 # Install solr with default search cores.
-RUN wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
-  && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
-  && ./install_solr_service.sh solr-7.3.1.tgz \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.15.tar.gz \
-  && tar xzf search_api_solr-7.x-1.15.tar.gz \
-  && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
+RUN  wget https://proofroom.s3.amazonaws.com/solr-8.11.1.tgz \
+  && tar xzf solr-8.11.1.tgz solr-8.11.1/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-8.11.1.tgz \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.3.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
   && tar xzf search_api_solr-4.2.3.tar.gz \
@@ -235,7 +226,7 @@ RUN mkdir /root/.ssh \
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
 RUN mkdir ~/terminus && cd ~/terminus \
-  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.0.0-beta1/terminus --output terminus \
+  && curl -L https://github.com/pantheon-systems/terminus/releases/download/`curl --silent "https://api.github.com/repos/pantheon-systems/terminus/releases/latest" | perl -nle'print $& while m#"tag_name": "\K[^"]*#g'`/terminus.phar --output terminus \
   && chmod +x terminus \
   && ln -s ~/terminus/terminus /usr/local/bin/terminus
 

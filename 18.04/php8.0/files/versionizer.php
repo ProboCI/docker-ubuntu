@@ -30,6 +30,7 @@ print $chromedriver_version;
 print $mysql_version;
 print "Kernel: " . $linux_kernel;
 print $linux_distribution . "\n";
+print "SOLR: " . $solr_version;
 print $composer_version;
 print $drush_version;
 print "Node: " . $node_version;
