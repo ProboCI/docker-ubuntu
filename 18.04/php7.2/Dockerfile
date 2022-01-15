@@ -188,11 +188,11 @@ COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-def
 COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install Ruby and Gem packages.
-# RUN gem install rails \
-#   mailcatcher \
-#   compass \
-#   bundler \
-#   --no-document
+RUN gem install rails \
+  mailcatcher \
+  compass \
+  bundler \
+  --no-document
 
 # Install solr with default search cores.
 RUN  wget https://proofroom.s3.amazonaws.com/solr-8.11.1.tgz \
