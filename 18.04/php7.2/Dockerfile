@@ -53,7 +53,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   make \
   cpanminus \
   lsof \
-  rsync
+  rsync \
+  pv
 
 # Install apt packages for LAMP, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
@@ -108,10 +109,10 @@ RUN service mysql start \
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 
-RUN wget -N https://chromedriver.storage.googleapis.com/96.0.4664.45/chromedriver_linux64.zip && \
+RUN wget -N https://chromedriver.storage.googleapis.com/97.0.4692.71/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/.
-  
+
 # Install composer and drush.
 RUN mkdir /usr/local/src/drush9
 RUN mkdir /usr/local/src/drush8

@@ -55,7 +55,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   lsof \
   rsync \
   mysql-server \
-  mysql-client
+  mysql-client \
+  pv
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
@@ -116,9 +117,10 @@ RUN apt-get install -y \
   libgconf-2-4 \
   && service varnish stop 
 
-RUN wget -N https://chromedriver.storage.googleapis.com/96.0.4664.45/chromedriver_linux64.zip && \
+RUN wget -N https://chromedriver.storage.googleapis.com/97.0.4692.71/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/.
+  mv chromedriver /usr/local/bin/. && \
+	rm -rf chromedriver_linux64.zip
 
 # Install composer and drush.
 RUN mkdir /usr/local/src/drush9
