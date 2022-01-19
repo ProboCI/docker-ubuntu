@@ -54,7 +54,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   cpanminus \
   lsof \
   rsync \
-  libxml2-dev
+  libxml2-dev \
+  pv
 
 RUN apt-get install -y bzip2 libbz2-dev libcurl4-openssl-dev libgd-dev imagemagick libldap-dev libssl-dev
 
