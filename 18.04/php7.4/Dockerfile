@@ -108,7 +108,6 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
 COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
 RUN service mysql start \
   && mysql -uroot < /mysql-setup.sql \
-  && service mysql stop \
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 
@@ -235,7 +234,7 @@ RUN mkdir /root/.ssh \
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
 RUN mkdir ~/terminus && cd ~/terminus \
-  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.0.5/terminus.phar --output terminus \
+  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.0.6/terminus.phar --output terminus \
   && chmod +x terminus \
   && ln -s ~/terminus/terminus /usr/local/bin/terminus
 
