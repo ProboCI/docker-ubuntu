@@ -73,6 +73,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   php7.4-dba \
   php7.4-dev \
   php7.4-gd \
+  php7.4-intl \
   php7.4-json \
   php7.4-ldap \
   php7.4-mbstring \
@@ -111,7 +112,7 @@ RUN service mysql start \
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 
-RUN wget -N https://chromedriver.storage.googleapis.com/98.0.4758.102/chromedriver_linux64.zip && \
+RUN wget -N https://chromedriver.storage.googleapis.com/99.0.4844.51/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/.
 

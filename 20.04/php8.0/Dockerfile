@@ -74,6 +74,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   php8.0-curl \
   php8.0-dba \
   php8.0-gd \
+  php8.0-intl \
   php8.0-ldap \
   php8.0-mbstring \
   php8.0-mysql \
@@ -114,7 +115,7 @@ RUN apt-get install -y \
   libgconf-2-4 \
   && service varnish stop 
 
-RUN wget -N https://chromedriver.storage.googleapis.com/98.0.4758.102/chromedriver_linux64.zip && \
+RUN wget -N https://chromedriver.storage.googleapis.com/99.0.4844.51/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/. && \
   rm -rf chromedriver_linux64.zip
@@ -198,9 +199,13 @@ RUN gem install rails \
   --no-document
 
 # Install solr with default search cores.
-RUN  wget https://proofroom.s3.amazonaws.com/solr-8.11.1.tgz \
-  && tar xzf solr-8.11.1.tgz solr-8.11.1/bin/install_solr_service.sh --strip-components=2 \
-  && ./install_solr_service.sh solr-8.11.1.tgz \
+RUN wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
+  && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-7.3.1.tgz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.15.tar.gz \
+  && tar xzf search_api_solr-7.x-1.15.tar.gz \
+  && mv search_api_solr /opt/solr/. \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.7.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
   && tar xzf search_api_solr-4.2.7.tar.gz \
