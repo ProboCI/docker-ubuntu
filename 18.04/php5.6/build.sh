@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo -n "Ubuntu 18.04 - PHP 5.6 ProboCI Build: "
 architecture=`arch`
 if [ ${architecture} = 'arm64' ]; then
   echo "ARM64 Processor - Using buildx."
@@ -9,10 +10,12 @@ if [ ${architecture} = 'arm64' ]; then
     docker buildx build --platform linux/amd64 -t proboci/ubuntu:18.04-php5.6 .
   fi
 else
-  echo "x86_64 Processor - using build."
-  docker build . -t proboci/ubuntu:18.04-php5.6
+  docker build . -q -t proboci/ubuntu:18.04-php5.6
 
   if [[ ${1} = 'production' ]] || [[ ${1} = 'prod' ]]; then
-    docker push proboci/ubuntu:18.04-php5.6
+    echo -n "Pushing to DockerHub: "
+    docker push -q proboci/ubuntu:18.04-php5.6
   fi
 fi
+
+echo ""

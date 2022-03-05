@@ -95,7 +95,6 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
   apache2-utils \
   mysql-server \
   mysql-client \
-  google-chrome-stable \
   libreadline-dev \
   zlib1g-dev \
   ruby-dev \
@@ -109,9 +108,16 @@ RUN service mysql start \
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 
-RUN wget -N https://chromedriver.storage.googleapis.com/97.0.4692.71/chromedriver_linux64.zip && \
+# RUN wget -N https://chromedriver.storage.googleapis.com/99.0.4844.51/chromedriver_linux64.zip && \
+#   unzip chromedriver_linux64.zip && \
+#   mv chromedriver /usr/local/bin/.
+
+RUN cd /root && \
+  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
+  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/.
+  mv chromedriver /usr/local/bin/. && \
+  apt install -y ./google-chrome-stable_current_amd64.deb
 
 # Install composer and drush.
 RUN mkdir /usr/local/src/drush9
@@ -188,19 +194,19 @@ COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-def
 COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install Ruby and Gem packages.
-RUN gem install rails \
-  mailcatcher \
-  compass \
-  bundler \
-  --no-document
+# RUN gem install rails \
+#   mailcatcher \
+#   compass \
+#   bundler \
+#   --no-document
 
 # Install solr with default search cores.
 RUN  wget https://proofroom.s3.amazonaws.com/solr-8.11.1.tgz \
   && tar xzf solr-8.11.1.tgz solr-8.11.1/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-8.11.1.tgz \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.3.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.7.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.2.3.tar.gz \
+  && tar xzf search_api_solr-4.2.7.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
@@ -231,3 +237,18 @@ RUN mkdir ~/terminus && cd ~/terminus \
 RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x /tmp/wp-cli.phar \
   && mv /tmp/wp-cli.phar /usr/local/bin/wp
+
+RUN cd /root && \
+  wget https://github.com/ElusiveMind/bee/archive/refs/heads/bugfix/context-variable.zip && \
+  unzip context-variable.zip && \
+  mv bee-bugfix-context-variable bee && \
+  cd /usr/local/bin && \
+  ln -s /root/bee/bee.php bee && \
+  chmod -R 755 /root/bee/bee.php && \
+  cd
+
+RUN rm -rf chromedriver_linux64.zip \
+  google-chrome-stable_current_amd64.deb \
+  install_solr_service.sh \
+  search_api_solr-4.2.7.tar.gz \
+  search_api_solr-7.x-1.15.tar.gz solr-7.3.1.tgz

@@ -88,7 +88,6 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
   php7.0-redis \
   php7.0-imagick \
   libapache2-mod-php7.0 \
-  php-pear \
   imagemagick \
   postgresql \
   postgresql-contrib \
@@ -96,7 +95,6 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
   apache2-utils \
   mysql-server \
   mysql-client \
-  google-chrome-stable \
   libreadline-dev \
   zlib1g-dev \
   ruby-dev \
@@ -110,9 +108,16 @@ RUN service mysql start \
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 
-RUN wget -N https://chromedriver.storage.googleapis.com/97.0.4692.71/chromedriver_linux64.zip && \
+# RUN wget -N https://chromedriver.storage.googleapis.com/99.0.4844.51/chromedriver_linux64.zip && \
+#   unzip chromedriver_linux64.zip && \
+#   mv chromedriver /usr/local/bin/.
+
+RUN cd /root && \
+  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
+  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
   unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/.
+  mv chromedriver /usr/local/bin/. && \
+  apt install -y ./google-chrome-stable_current_amd64.deb
 
 # Install composer and drush.
 RUN mkdir /usr/local/src/drush9
@@ -203,9 +208,9 @@ RUN  wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.3.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.7.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.2.3.tar.gz \
+  && tar xzf search_api_solr-4.2.7.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
@@ -240,3 +245,18 @@ RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-
 RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
   && chmod +x acli.phar \
   && mv acli.phar /usr/local/bin/acli
+
+RUN cd /root && \
+  wget https://github.com/ElusiveMind/bee/archive/refs/heads/bugfix/context-variable.zip && \
+  unzip context-variable.zip && \
+  mv bee-bugfix-context-variable bee && \
+  cd /usr/local/bin && \
+  ln -s /root/bee/bee.php bee && \
+  chmod -R 755 /root/bee/bee.php && \
+  cd
+
+RUN rm -rf chromedriver_linux64.zip \
+  google-chrome-stable_current_amd64.deb \
+  install_solr_service.sh \
+  search_api_solr-4.2.7.tar.gz \
+  search_api_solr-7.x-1.15.tar.gz solr-7.3.1.tgz

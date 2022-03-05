@@ -19,6 +19,7 @@ $node_version = `node --version`;
 $wp_cli_version = `wp --version --allow-root`;
 $acli_version = `acli --version`;
 $terminus_version = `terminus --version`;
+$bee_version = `bee version`;
 
 print "\n\n";
 print "Probo.CI - Software Versions Report:\n";
@@ -37,4 +38,5 @@ print "Node: " . $node_version;
 print "WordPress CLI: " . $wp_cli_version;
 print "Pantheon " . $terminus_version;
 print "Acquia CLI: " . $acli_version;
+print $bee_version;
 print "\n\n";
