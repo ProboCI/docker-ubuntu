@@ -1,10 +1,7 @@
 [mysqld]
-key_buffer_size = 128M
+key_buffer_size = 16M
 join_buffer_size = 512M
-innodb_buffer_pool_size = 8129M
 max_allowed_packet = 64M
 table_open_cache = 2048
-query_cache_limit = 128M
-query_cache_size = 512M
-tmp_table_size = 128M
-max_heap_table_size = 128M
+skip-name-resolve
+wait_timeout = 300
