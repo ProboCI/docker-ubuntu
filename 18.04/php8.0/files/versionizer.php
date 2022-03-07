@@ -1,3 +1,4 @@
+#!/bin/php
 <?php
 
 $php_information = explode("\n", `php --version`);
@@ -22,8 +23,10 @@ $terminus_version = `terminus --version`;
 $bee_version = `bee version`;
 
 print "\n\n";
+print "\e[1;33m------------------------------------------\n";
 print "Probo.CI - Software Versions Report:\n";
-print "------------------------------------\n";
+print "Ubuntu Linux Distribution - v18.04\n";
+print "------------------------------------------\e[0m\n";
 print $php_version . "\n";
 print "Web " . $apache_version . "\n";
 print $chrome_version;

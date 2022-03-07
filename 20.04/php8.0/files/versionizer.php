@@ -1,5 +1,5 @@
+#!/bin/php
 <?php
-
 $php_information = explode("\n", `php --version`);
 $apache_information = explode("\n", `apache2 -v`);
 $linux_information = explode("\n", `lsb_release -a`);

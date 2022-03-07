@@ -140,11 +140,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   && mkdir /etc/drush/conf.d
 COPY files/drush-environment.php /etc/drush/conf.d/environment.php
 COPY files/drushrc.php /etc/drush/drushrc.php
-COPY files/versionizer.php /versionizer.php
+COPY files/versionizer.php /bin/versionizer
+COPY files/valid-user.sh /bin/valid
+RUN chmod 755 /bin/valid /bin/versionizer
 RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
 RUN chmod +x /usr/local/src/drush-launcher/drush
 RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
-RUN echo "\n\nversionizer() { \nphp /versionizer.php\n }" >> /root/.bashrc
 
 COPY files/drush-environment.php /etc/drush/conf.d/environment.php
 COPY files/drushrc.php /etc/drush/drushrc.php
@@ -159,7 +160,6 @@ RUN npm install -g bower \
   gulp-cli \
   lighthouse \
   yarn \
-  cypress \
   --no-document
 
 # Start and configure our PostgreSQL server.
@@ -192,13 +192,6 @@ COPY files/apache-default-host.conf /etc/apache2/sites-available/000-default.con
 COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
 COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-default-varnish.conf
 COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
-
-# Install Ruby and Gem packages.
-# RUN gem install rails \
-#   mailcatcher \
-#   compass \
-#   bundler \
-#   --no-document
 
 # Install solr with default search cores.
 RUN wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
