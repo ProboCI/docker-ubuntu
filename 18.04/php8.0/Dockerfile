@@ -153,15 +153,6 @@ COPY files/drushrc.php /etc/drush/drushrc.php
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
 
-# Install NPM Packages.
-RUN npm config set unsafe-perm true
-RUN npm install -g bower \
-  grunt-cli \
-  gulp-cli \
-  lighthouse \
-  yarn \
-  --no-document
-
 # Start and configure our PostgreSQL server.
 COPY files/pgpass.txt /root/.pgpass
 RUN service postgresql start \

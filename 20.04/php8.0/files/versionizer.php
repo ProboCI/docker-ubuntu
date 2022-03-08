@@ -1,5 +1,6 @@
 #!/bin/php
 <?php
+
 $php_information = explode("\n", `php --version`);
 $apache_information = explode("\n", `apache2 -v`);
 $linux_information = explode("\n", `lsb_release -a`);
@@ -17,12 +18,15 @@ $composer_version = `composer --version`;
 $drush_version = `drush --version`;
 $node_version = `node --version`;
 $wp_cli_version = `wp --version --allow-root`;
-$terminus_version = `terminus --version`;
 $acli_version = `acli --version`;
+$terminus_version = `terminus --version`;
+$bee_version = `bee version`;
 
 print "\n\n";
+print "\e[1;33m------------------------------------------\n";
 print "Probo.CI - Software Versions Report:\n";
-print "------------------------------------\n";
+print "Ubuntu Linux Distribution - v18.04\n";
+print "------------------------------------------\e[0m\n";
 print $php_version . "\n";
 print "Web " . $apache_version . "\n";
 print $chrome_version;
@@ -37,4 +41,5 @@ print "Node: " . $node_version;
 print "WordPress CLI: " . $wp_cli_version;
 print "Pantheon " . $terminus_version;
 print "Acquia CLI: " . $acli_version;
+print $bee_version;
 print "\n\n";
