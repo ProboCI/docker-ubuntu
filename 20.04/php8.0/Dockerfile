@@ -54,8 +54,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   cpanminus \
   lsof \
   rsync \
-  mysql-server \
-  mysql-client \
+  mariadb-server \
+  mariadb-client \
   pv
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
