@@ -25,7 +25,7 @@ $bee_version = `bee version`;
 print "\n\n";
 print "\e[1;33m------------------------------------------\n";
 print "Probo.CI - Software Versions Report:\n";
-print "Ubuntu Linux Distribution - v18.04\n";
+print "Ubuntu Linux Distribution\n";
 print "------------------------------------------\e[0m\n";
 print $php_version . "\n";
 print "Web " . $apache_version . "\n";
