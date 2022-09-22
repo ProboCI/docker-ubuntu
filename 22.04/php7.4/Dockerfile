@@ -3,21 +3,21 @@
 # These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
-# Tag: 20.04-php8.0
+# Tag: 20.04-php7.4
 # 
 # The default Node.js version on this build is 12.18.0
 # The npm package is v6.14.4 as updated as part of NodeJS 12.
 #
 # Build the proboci/ubuntu:20.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
-# docker build . -t proboci/ubuntu:20.04-php8.0
-# docker push proboci/ubuntu:20.04-php8.0
+# docker build . -t proboci/ubuntu:20.04-php7.4
+# docker push proboci/ubuntu:20.04-php7.4
 
 # Set our our meta data for this container.
 
 FROM ubuntu:20.04
 
-LABEL name="Ubuntu 20.04 LTS PHP 8.0 Probo.CI Image"
-LABEL description="An Ubuntu 20.04 based PHP 8.0 image developed specifically for docker containers running Probo.CI Builds."
+LABEL name="Ubuntu 20.04 LTS PHP 7.4 Probo.CI Image"
+LABEL description="An Ubuntu 20.04 based PHP 7.4 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
@@ -26,19 +26,7 @@ WORKDIR /root
 ENV TERM xterm
 
 RUN apt-get -y update
-RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils wget perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
-
-RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-server_5.7.39-1ubuntu18.04_amd64.deb
-
+RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 
 # Update apt repos and install base apt packages.
@@ -66,6 +54,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   cpanminus \
   lsof \
   rsync \
+  mariadb-server \
+  mariadb-client \
   pv
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
@@ -73,31 +63,32 @@ COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
-  #&& wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
+  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
-  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
-  php8.0-bcmath \
-  php8.0-bz2 \
-  php8.0-cli \
-  php8.0-common \
-  php8.0-curl \
-  php8.0-dba \
-  php8.0-gd \
-  php8.0-intl \
-  php8.0-ldap \
-  php8.0-mbstring \
-  php8.0-mysql \
-  php8.0-opcache \
-  php8.0-readline \
-  php8.0-soap \
-  php8.0-xml \
-  php8.0-zip \
-  php8.0-pgsql \
-  php8.0-memcache \
-  php8.0-redis \
-  php8.0-imagick \
-  libapache2-mod-php8.0 \
+  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.4 \
+  php7.4-bcmath \
+  php7.4-bz2 \
+  php7.4-cli \
+  php7.4-common \
+  php7.4-curl \
+  php7.4-dba \
+  php7.4-gd \
+  php7.4-intl \
+  php7.4-json \
+  php7.4-ldap \
+  php7.4-mbstring \
+  php7.4-mysql \
+  php7.4-opcache \
+  php7.4-readline \
+  php7.4-soap \
+  php7.4-xml \
+  php7.4-zip \
+  php7.4-pgsql \
+  php7.4-memcache \
+  php7.4-redis \
+  php7.4-imagick \
+  libapache2-mod-php7.4 \
   php-pear \
   imagemagick \
   postgresql \
@@ -162,6 +153,11 @@ RUN chmod 755 /bin/valid /bin/versionizer
 RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
 RUN chmod +x /usr/local/src/drush-launcher/drush
 RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
+
+# Download Drupal Console and install it in our standard path.
+RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
+  && mv /drupal.phar /bin/drupal \
+  && chmod 755 /bin/drupal
 
 # Install Proboscis
 RUN npm install -g proboscis --unsafe

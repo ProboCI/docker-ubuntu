@@ -14,7 +14,7 @@
 
 # Set our our meta data for this container.
 
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 LABEL name="Ubuntu 20.04 LTS PHP 8.0 Probo.CI Image"
 LABEL description="An Ubuntu 20.04 based PHP 8.0 image developed specifically for docker containers running Probo.CI Builds."
@@ -33,16 +33,16 @@ RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-server_5.7.39-1ubun
   wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
   wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \
   wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \
+  dpkg -i mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \ 
   dpkg -i mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
   dpkg -i mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
   dpkg -i mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
   dpkg -i mysql-server_5.7.39-1ubuntu18.04_amd64.deb
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 
 # Update apt repos and install base apt packages.
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   build-essential \
   git \
   gnupg \
@@ -74,7 +74,7 @@ COPY files/mycnf.txt /root/.my.cnf
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   #&& wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
-  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
+  #&& echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
   php8.0-bcmath \
@@ -123,10 +123,6 @@ RUN apt-get install -y \
   xvfb \
   libgconf-2-4 \
   && service varnish stop 
-
-# RUN wget -N https://chromedriver.storage.googleapis.com/99.0.4844.51/chromedriver_linux64.zip && \
-#   unzip chromedriver_linux64.zip && \
-#   mv chromedriver /usr/local/bin/.
 
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
