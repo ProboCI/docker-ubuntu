@@ -32,3 +32,12 @@ cd ../../20.04/php8.0/
 
 cd ../../20.04/php8.1/
 ./buildf.sh $1
+
+cd ../../22.04/php8.1/
+./buildf.sh $1
+
+cd ../../22.04/php8.0/
+./buildf.sh $1
+
+cd ../../22.04/php8.1/
+./buildf.sh $1
