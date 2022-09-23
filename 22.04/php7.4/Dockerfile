@@ -26,8 +26,10 @@ WORKDIR /root
 ENV TERM xterm
 
 RUN apt-get -y update
-RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils wget perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
+RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo \
+  apt-utils wget perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
 
+# Install MySQL 5.7 because we do not yet want to use MySQL 8 on these builds.
 RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-server_5.7.39-1ubuntu18.04_amd64.deb && \
   wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
   wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
@@ -38,7 +40,16 @@ RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-server_5.7.39-1ubun
   dpkg -i mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
   dpkg -i mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
   dpkg -i mysql-server_5.7.39-1ubuntu18.04_amd64.deb
+COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/mycnf.txt /root/.my.cnf
+COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/probo.cnf .my.cnf
+COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
+RUN service mysql start \
+  && mysql -uroot < /mysql-setup.sql \
+  && rm -rf /tmp/* /mysql-setup.sql
 
+# Prepare to use NodeJS 16.
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 
 # Update apt repos and install base apt packages.
@@ -67,13 +78,6 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   lsof \
   rsync \
   pv
-
-# Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/mycnf.txt /root/.my.cnf
-
-# COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
-# curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.4 \
@@ -107,23 +111,13 @@ RUN add-apt-repository ppa:ondrej/php \
   apache2-utils \
   libjemalloc2
 
-RUN apt-get update -y
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/probo.cnf .my.cnf
-COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
-RUN service mysql start \
-  && mysql -uroot < /mysql-setup.sql \
-  && rm -rf /tmp/* /mysql-setup.sql
-
 RUN apt-get install -y \
   libreadline-dev \
   zlib1g-dev \
   ruby-dev \
   libsqlite3-dev \
-  # varnish/focal \
   xvfb \
-  libgconf-2-4 
-  # && service varnish stop 
+  libgconf-2-4
 
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
@@ -207,12 +201,20 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.7.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.8.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.2.7.tar.gz \
+  && tar xzf search_api_solr-4.2.8.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
+
+RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/varnish.gpg && \
+  tee /etc/apt/sources.list.d/varnishcache_varnish70.list > /dev/null <<-EOF 
+deb https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main
+deb-src https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main
+EOF
+RUN apt-get update -y && \
+  apt-get install varnish
 
 # Install varnish default configs.
 COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default.vcl
@@ -245,14 +247,14 @@ RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
   && chmod +x acli.phar \
   && mv acli.phar /usr/local/bin/acli
 
-# RUN cd /root && \
-#   wget https://github.com/ElusiveMind/bee/archive/refs/heads/bugfix/context-variable.zip && \
-#   unzip context-variable.zip && \
-#   mv bee-bugfix-context-variable bee && \
-#   cd /usr/local/bin && \
-#   ln -s /root/bee/bee.php bee && \
-#   chmod -R 755 /root/bee/bee.php && \
-#   cd
+RUN cd /root && \
+  wget https://github.com/ElusiveMind/bee/archive/refs/heads/bugfix/default-context-value.zip && \
+  unzip default-context-value.zip && \
+  mv bee-bugfix-default-context-value bee && \
+  cd /usr/local/bin && \
+  ln -s /root/bee/bee.php bee && \
+  chmod -R 755 /root/bee/bee.php && \
+  cd
 
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
