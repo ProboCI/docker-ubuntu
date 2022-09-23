@@ -3,21 +3,21 @@
 # These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
-# Tag: 20.04-php8.0
+# Tag: 22.04-php8.0
 # 
 # The default Node.js version on this build is 12.18.0
 # The npm package is v6.14.4 as updated as part of NodeJS 12.
 #
-# Build the proboci/ubuntu:20.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
-# docker build . -t proboci/ubuntu:20.04-php8.0
-# docker push proboci/ubuntu:20.04-php8.0
+# Build the proboci/ubuntu:22.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
+# docker build . -t proboci/ubuntu:22.04-php8.0
+# docker push proboci/ubuntu:22.04-php8.0
 
 # Set our our meta data for this container.
 
 FROM ubuntu:22.04
 
-LABEL name="Ubuntu 20.04 LTS PHP 8.0 Probo.CI Image"
-LABEL description="An Ubuntu 20.04 based PHP 8.0 image developed specifically for docker containers running Probo.CI Builds."
+LABEL name="Ubuntu 22.04 LTS PHP 8.0 Probo.CI Image"
+LABEL description="An Ubuntu 22.04 based PHP 8.0 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
@@ -216,8 +216,6 @@ RUN apt-get update -y && \
 # Install varnish default configs.
 COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default.vcl
 COPY files/drupal-default-4.vcl /etc/varnish/drupal-default.vcl
-COPY files/default-4.vcl /etc/varnish/default.vcl
-COPY files/varnish /etc/default/varnish
 COPY files/secret /etc/varnish/secret
 
 # Create .ssh dir and add SSH config file.

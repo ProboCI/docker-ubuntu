@@ -2,8 +2,6 @@
 
 echo -n "Ubuntu 22.04 - PHP 7.4 ProboCI Build: "
 
-# docker buildx build --platform linux/amd64 -t docker.flyingflip.com/proboci/ubuntu:22.04-php7.4 --push .
-
 docker build . -q -t docker.flyingflip.com/probo/ubuntu:22.04-php7.4
 if [[ ${1} = 'production' ]] || [[ ${1} = 'prod' ]]; then
   echo -n "Pushing to FlyingFlip: "

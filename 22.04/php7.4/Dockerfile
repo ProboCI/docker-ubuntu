@@ -217,12 +217,10 @@ RUN apt-get update -y && \
 # Install varnish default configs.
 COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default.vcl
 COPY files/drupal-default-4.vcl /etc/varnish/drupal-default.vcl
-COPY files/default-4.vcl /etc/varnish/default.vcl
-COPY files/varnish /etc/default/varnish
 COPY files/secret /etc/varnish/secret
 
 # Create .ssh dir and add SSH config file.
-# TODO: There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
+# There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
 RUN mkdir /root/.ssh \
   && chmod 700 /root/.ssh \
   && touch /root/.ssh/config \
