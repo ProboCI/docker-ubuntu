@@ -209,10 +209,8 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
   && service solr stop
 
 RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/varnish.gpg && \
-  tee /etc/apt/sources.list.d/varnishcache_varnish70.list > /dev/null <<-EOF 
-deb https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main
-deb-src https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main
-EOF
+  echo "deb https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" > /etc/apt/sources.list.d/varnishcache_varnish70.list && \
+  echo "deb-src https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" >> /etc/apt/sources.list.d/varnishcache_varnish70.list
 RUN apt-get update -y && \
   apt-get install varnish
 
