@@ -145,9 +145,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   drush/drush:8.* \
   && mkdir /etc/drush \
   && mkdir /etc/drush/conf.d
-COPY files/drush-environment.php /etc/drush/conf.d/environment.php
-COPY files/drushrc.php /etc/drush/drushrc.php
 COPY files/versionizer.php /bin/versionizer
+COPY files/bashrc /root/.bashrc
 COPY files/valid-user.sh /bin/valid
 RUN chmod 755 /bin/valid /bin/versionizer
 RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
@@ -256,4 +255,9 @@ RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
   search_api_solr-4.2.7.tar.gz \
-  search_api_solr-7.x-1.15.tar.gz solr-7.3.1.tgz
+  search_api_solr-7.x-1.15.tar.gz solr-7.3.1.tgz \
+  mysql-server_5.7.39-1ubuntu18.04_amd64.deb \
+  mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb \
+  mysql-client_5.7.39-1ubuntu18.04_amd64.deb \
+  mysql-common_5.7.39-1ubuntu18.04_amd64.deb \ 
+  mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb
