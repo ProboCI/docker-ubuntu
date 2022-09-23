@@ -1,10 +1,10 @@
 #!/bin/php
 <?php
 
-$php_information = explode("\n", `php --version`);
-$apache_information = explode("\n", `apache2 -v`);
-$linux_information = explode("\n", `lsb_release -a`);
-$linux_distribution = str_replace('Description:', '', $linux_information[1]);
+$php_information = @explode("\n", `php --version`);
+$apache_information = @explode("\n", `apache2 -v`);
+$linux_information = @explode("\n", `lsb_release -a`);
+$linux_distribution = @str_replace('Description:', '', $linux_information[1]);
 // ----------------------------------------------------------------------------
 $php_version = $php_information[0];
 $apache_version = $apache_information[0];
@@ -20,7 +20,7 @@ $node_version = `node --version`;
 $wp_cli_version = `wp --version --allow-root`;
 $acli_version = `acli --version`;
 $terminus_version = `terminus --version`;
-$bee_version = `bee version`;
+// $bee_version = `bee version`;
 
 print "\n\n";
 print "\e[1;33m------------------------------------------\n";
@@ -41,5 +41,5 @@ print "Node: " . $node_version;
 print "WordPress CLI: " . $wp_cli_version;
 print "Pantheon " . $terminus_version;
 print "Acquia CLI: " . $acli_version;
-print $bee_version;
+// print $bee_version;
 print "\n\n";

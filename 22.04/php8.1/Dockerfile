@@ -212,8 +212,8 @@ RUN apt-get update -y && \
   apt-get install varnish
 
 # Install varnish default configs.
-COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default.vcl
-COPY files/drupal-default-4.vcl /etc/varnish/drupal-default.vcl
+COPY files/wordpress-default.vcl /etc/varnish/wordpress-default.vcl
+COPY files/drupal-default.vcl /etc/varnish/drupal-default.vcl
 COPY files/secret /etc/varnish/secret
 
 # Create .ssh dir and add SSH config file.
@@ -258,4 +258,6 @@ RUN rm -rf chromedriver_linux64.zip \
   mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb \
   mysql-client_5.7.39-1ubuntu18.04_amd64.deb \
   mysql-common_5.7.39-1ubuntu18.04_amd64.deb \ 
-  mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb
+  mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb \
+  default-content-value.zip \
+  search_api_solr-4.2.8.tar.gz
