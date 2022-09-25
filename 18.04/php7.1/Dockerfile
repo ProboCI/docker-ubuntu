@@ -234,9 +234,9 @@ RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
   && mv acli.phar /usr/local/bin/acli
 
 RUN cd /root && \
-  wget https://github.com/ElusiveMind/bee/archive/refs/heads/bugfix/context-variable.zip && \
-  unzip context-variable.zip && \
-  mv bee-bugfix-context-variable bee && \
+  wget https://github.com/ElusiveMind/bee/archive/refs/heads/bugfix/default-context-value.zip && \
+  unzip default-context-value.zip && \
+  mv bee-bugfix-default-context-value bee && \
   cd /usr/local/bin && \
   ln -s /root/bee/bee.php bee && \
   chmod -R 755 /root/bee/bee.php && \

@@ -223,14 +223,13 @@ RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-
   && mv /tmp/wp-cli.phar /usr/local/bin/wp
 
 RUN cd /root && \
-  wget https://github.com/ElusiveMind/bee/archive/refs/heads/bugfix/context-variable.zip && \
-  unzip context-variable.zip && \
-  mv bee-bugfix-context-variable bee && \
+  wget https://github.com/ElusiveMind/bee/archive/refs/heads/bugfix/default-context-value.zip && \
+  unzip default-context-value.zip && \
+  mv bee-bugfix-default-context-value bee && \
   cd /usr/local/bin && \
   ln -s /root/bee/bee.php bee && \
   chmod -R 755 /root/bee/bee.php && \
   cd
-
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
