@@ -26,19 +26,7 @@ WORKDIR /root
 ENV TERM xterm
 
 RUN apt-get -y update
-RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils wget perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
-
-RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-server_5.7.39-1ubuntu18.04_amd64.deb
-
+RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 
 # Update apt repos and install base apt packages.
@@ -66,6 +54,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   cpanminus \
   lsof \
   rsync \
+  mariadb-server \
+  mariadb-client \
   pv
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
