@@ -190,16 +190,16 @@ COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-def
 COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install solr with default search cores.
-RUN  wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
+RUN wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
   && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-7.3.1.tgz \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.15.tar.gz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.7.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.8.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.2.7.tar.gz \
+  && tar xzf search_api_solr-4.2.8.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
