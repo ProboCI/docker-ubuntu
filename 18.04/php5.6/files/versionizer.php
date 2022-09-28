@@ -20,7 +20,7 @@ if (file_exists('/usr/local/bin/drush')) {
   $drush_version = `drush --version`;
 }
 else {
-  $drush_version = 'Drush: Not a Drupal install - Drush not available';
+  $drush_version = "Drush: Not a Drupal install - Drush not available\n";
 }
 
 $node_version = `node --version`;
@@ -28,7 +28,6 @@ $wp_cli_version = `wp --version --allow-root`;
 $terminus_version = `terminus --version`;
 // $bee_version = `bee version`;
 
-print "\n\n";
 print "\e[1;33m------------------------------------------\n";
 print "Probo.CI - Software Versions Report:\n";
 print "Ubuntu Linux Distribution - v18.04\n";
