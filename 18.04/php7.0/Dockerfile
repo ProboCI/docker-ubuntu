@@ -226,10 +226,6 @@ RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-
   && chmod +x /tmp/wp-cli.phar \
   && mv /tmp/wp-cli.phar /usr/local/bin/wp
 
-RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
-  && chmod +x acli.phar \
-  && mv acli.phar /usr/local/bin/acli
-
 RUN cd /root && \
   wget https://github.com/ElusiveMind/bee/archive/refs/heads/bugfix/default-context-value.zip && \
   unzip default-context-value.zip && \

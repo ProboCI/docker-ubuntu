@@ -1,7 +1,0 @@
-[mysqld]
-key_buffer_size = 16M
-join_buffer_size = 512M
-max_allowed_packet = 64M
-table_open_cache = 2048
-skip-name-resolve
-wait_timeout = 300

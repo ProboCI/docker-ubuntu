@@ -1,4 +1,4 @@
-#!/bin/php
+#!/usr/bin/php
 <?php
 
 $php_information = explode("\n", `php --version`);
@@ -18,7 +18,6 @@ $composer_version = `composer --version`;
 $drush_version = `drush --version`;
 $node_version = `node --version`;
 $wp_cli_version = `wp --version --allow-root`;
-$acli_version = `acli --version`;
 $terminus_version = `terminus --version`;
 // $bee_version = `bee version`;
 
@@ -40,6 +39,5 @@ print $drush_version;
 print "Node: " . $node_version;
 print "WordPress CLI: " . $wp_cli_version;
 print "Pantheon " . $terminus_version;
-print "Acquia CLI: " . $acli_version;
 // print $bee_version;
 print "\n\n";
