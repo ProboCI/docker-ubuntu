@@ -54,7 +54,8 @@ RUN apt-get update && apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-g
   cpanminus \
   lsof \
   rsync \
-  pv
+  pv \
+  lsb-core
 
 # Install apt packages for LAMP, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
