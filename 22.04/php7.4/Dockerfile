@@ -254,7 +254,7 @@ RUN cd /root && \
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
-  search_api_solr-4.2.7.tar.gz \
+  search_api_solr-4.2.8.tar.gz \
   search_api_solr-7.x-1.15.tar.gz solr-7.3.1.tgz \
   mysql-server_5.7.39-1ubuntu18.04_amd64.deb \
   mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb \
