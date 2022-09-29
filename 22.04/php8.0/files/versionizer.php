@@ -15,7 +15,6 @@ $linux_kernel = `uname -r`;
 $linux_distribution = trim($linux_distribution);
 $solr_version = `/opt/solr/bin/solr version`;
 $composer_version = `composer --version`;
-$drush_version = `drush --version`;
 $node_version = `node --version`;
 $wp_cli_version = `wp --version --allow-root`;
 $acli_version = `acli --version`;
