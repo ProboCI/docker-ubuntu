@@ -1,4 +1,4 @@
-#!/bin/php
+#!/usr/bin/php
 <?php
 
 $php_information = explode("\n", `php --version`);
@@ -21,6 +21,13 @@ $wp_cli_version = `wp --version --allow-root`;
 $acli_version = `acli --version`;
 $terminus_version = `terminus --version`;
 // $bee_version = `bee version`;
+
+if (file_exists('/usr/local/bin/drush')) {
+  $drush_version = `drush --version`;
+}
+else {
+  $drush_version = "Drush: Not a Drupal install - Drush not available\n";
+}
 
 print "\n\n";
 print "\e[1;33m------------------------------------------\n";

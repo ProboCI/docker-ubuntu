@@ -76,7 +76,8 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   cpanminus \
   lsof \
   rsync \
-  pv
+  pv \
+  lsb-core
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.1 \

@@ -77,7 +77,8 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   cpanminus \
   lsof \
   rsync \
-  pv
+  pv \
+  lsb-core
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.4 \
@@ -238,7 +239,7 @@ RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-
   && chmod +x /tmp/wp-cli.phar \
   && mv /tmp/wp-cli.phar /usr/local/bin/wp
 
-RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
+RUN curl -OL https://github.com/acquia/cli/releases/download/1.30.1/acli.phar \
   && chmod +x acli.phar \
   && mv acli.phar /usr/local/bin/acli
 
