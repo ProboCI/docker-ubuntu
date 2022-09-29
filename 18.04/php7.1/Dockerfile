@@ -16,8 +16,8 @@
 
 FROM ubuntu:18.04
 
-LABEL name="Ubuntu 18.04 LTS Based ProboCI Image"
-LABEL description="Our base container for ProboCI Builds."
+LABEL name="Ubuntu 18.04 LTS PHP 7.1 Probo.CI Image"
+LABEL description="An Ubuntu 18.04 based PHP 7.1 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
@@ -61,8 +61,8 @@ COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
-  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
-  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
+  #&& wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
+  #&& echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.1 \
   php7.1-bcmath \
@@ -107,10 +107,6 @@ RUN service mysql start \
   && service mysql stop \
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
-
-# RUN wget -N https://chromedriver.storage.googleapis.com/99.0.4844.51/chromedriver_linux64.zip && \
-#   unzip chromedriver_linux64.zip && \
-#   mv chromedriver /usr/local/bin/.
 
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
@@ -157,6 +153,9 @@ RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
 
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
+
+# Install yarn
+RUN npm install -g yarn
 
 # Start and configure our PostgreSQL server
 COPY files/pgpass.txt /root/.pgpass
