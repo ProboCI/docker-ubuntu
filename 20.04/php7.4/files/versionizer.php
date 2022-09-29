@@ -15,7 +15,6 @@ $linux_kernel = `uname -r`;
 $linux_distribution = trim($linux_distribution);
 $solr_version = `/opt/solr/bin/solr version`;
 $composer_version = `composer --version`;
-$drush_version = `drush --version`;
 $node_version = `node --version`;
 $wp_cli_version = `wp --version --allow-root`;
 $acli_version = `acli --version`;
@@ -29,7 +28,6 @@ else {
   $drush_version = "Drush: Not a Drupal install - Drush not available\n";
 }
 
-print "\n\n";
 print "\e[1;33m------------------------------------------\n";
 print "Probo.CI - Software Versions Report:\n";
 print "Ubuntu Linux Distribution\n";

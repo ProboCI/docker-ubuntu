@@ -28,7 +28,6 @@ else {
   $drush_version = "Drush: Not a Drupal install - Drush not available\n";
 }
 
-print "\n\n";
 print "\e[1;33m------------------------------------------\n";
 print "Probo.CI - Software Versions Report:\n";
 print "Ubuntu Linux Distribution\n";
