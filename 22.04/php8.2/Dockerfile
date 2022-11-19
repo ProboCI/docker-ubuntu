@@ -98,9 +98,8 @@ RUN add-apt-repository ppa:ondrej/php \
   php8.2-xml \
   php8.2-zip \
   php8.2-pgsql \
-  php8.2-memcache \
-  php8.2-redis \
-  php8.2-imagick \
+  php-memcache \
+  php-redis \
   libapache2-mod-php8.2 \
   php-pear \
   imagemagick \
