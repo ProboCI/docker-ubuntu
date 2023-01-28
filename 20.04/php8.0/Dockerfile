@@ -151,9 +151,8 @@ RUN chmod +x /usr/local/src/drush-launcher/drush
 RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
 
 # Add our ability to pull from AWS S3
-COPY s3/aws_retrieval /usr/local/src/aws
-
-
+COPY s3/aws-retrieval /usr/local/src/aws
+RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
 
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
