@@ -150,6 +150,11 @@ RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/dru
 RUN chmod +x /usr/local/src/drush-launcher/drush
 RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
 
+# Add our ability to pull from AWS S3
+COPY s3/aws_retrieval /usr/local/src/aws
+
+
+
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
 
