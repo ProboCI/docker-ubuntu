@@ -5,3 +5,5 @@ max_allowed_packet = 128M
 table_open_cache = 2048
 skip-name-resolve
 wait_timeout = 28800
+skip-log-bin
+
