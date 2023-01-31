@@ -42,3 +42,6 @@ gzip image-backups/22.04-php8.0-$(date +%Y-%m-%d).tar
 echo "Backing up 22.04-php8.1"
 docker save proboci/ubuntu:22.04-php8.1 > image-backups/22.04-php8.1-$(date +%Y-%m-%d).tar
 gzip image-backups/22.04-php8.1-$(date +%Y-%m-%d).tar
+echo "Backing up 22.04-php8.2"
+docker save proboci/ubuntu:22.04-php8.2 > image-backups/22.04-php8.2-$(date +%Y-%m-%d).tar
+gzip image-backups/22.04-php8.2-$(date +%Y-%m-%d).tar
