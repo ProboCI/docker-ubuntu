@@ -151,6 +151,10 @@ RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/dru
 RUN chmod +x /usr/local/src/drush-launcher/drush
 RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
 
+# Add our ability to pull from AWS S3
+COPY s3/aws-retrieval /usr/local/src/aws
+RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
+
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
   && mv /drupal.phar /bin/drupal \
