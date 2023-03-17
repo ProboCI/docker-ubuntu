@@ -57,7 +57,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   mariadb-server \
   mariadb-client \
   pv \
-  lsb-core
+  lsb-core \
+  sqlite3
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
 COPY files/mysql-setup.sql /mysql-setup.sql
@@ -88,6 +89,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   php8.0-memcache \
   php8.0-redis \
   php8.0-imagick \
+  php8.0-sqlite3 \
   libapache2-mod-php8.0 \
   php-pear \
   imagemagick \

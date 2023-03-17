@@ -77,7 +77,8 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   lsof \
   rsync \
   pv \
-  lsb-core
+  lsb-core \
+  sqlite3
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.2 \
@@ -98,6 +99,7 @@ RUN add-apt-repository ppa:ondrej/php \
   php8.2-xml \
   php8.2-zip \
   php8.2-pgsql \
+  php8.2-sqlite3 \
   php-memcache \
   php-redis \
   libapache2-mod-php8.2 \

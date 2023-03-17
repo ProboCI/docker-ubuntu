@@ -77,7 +77,8 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   lsof \
   rsync \
   pv \
-  lsb-core
+  lsb-core \
+  sqlite3
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.1 \
@@ -101,6 +102,7 @@ RUN add-apt-repository ppa:ondrej/php \
   php8.1-memcache \
   php8.1-redis \
   php8.1-imagick \
+  php8.1-sqlite3 \
   libapache2-mod-php8.1 \
   php-pear \
   imagemagick \
