@@ -29,26 +29,6 @@ RUN apt-get -y update
 RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 
-# Install MySQL 5.7 because we do not yet want to use MySQL 8 on these builds.
-RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \ 
-  dpkg -i mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-server_5.7.39-1ubuntu18.04_amd64.deb
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/mycnf.txt /root/.my.cnf
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/probo.cnf .my.cnf
-COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
-RUN service mysql start \
-  && mysql -uroot < /mysql-setup.sql \
-  && rm -rf /tmp/* /mysql-setup.sql
-
 # Update apt repos and install base apt packages.
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   build-essential \
@@ -76,7 +56,31 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   rsync \
   pv \
   lsb-core \
-  sqlite3
+  libaio1 \
+  libnuma1 \
+  libmecab2 \
+  perl \
+  psmisc \
+  libtinfo5 \
+  sqlite3 && \
+  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-server_5.7.41-1ubuntu18.04_amd64.deb && \
+  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server_5.7.41-1ubuntu18.04_amd64.deb && \
+  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-client_5.7.41-1ubuntu18.04_amd64.deb && \
+  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-common_5.7.41-1ubuntu18.04_amd64.deb && \
+  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client_5.7.41-1ubuntu18.04_amd64.deb && \
+  dpkg -i mysql-common_5.7.41-1ubuntu18.04_amd64.deb && \ 
+  dpkg -i mysql-community-client_5.7.41-1ubuntu18.04_amd64.deb && \
+  dpkg -i mysql-client_5.7.41-1ubuntu18.04_amd64.deb && \
+  dpkg -i mysql-community-server_5.7.41-1ubuntu18.04_amd64.deb && \
+  dpkg -i mysql-server_5.7.41-1ubuntu18.04_amd64.deb
+COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/mycnf.txt /root/.my.cnf
+COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/probo.cnf .my.cnf
+COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
+RUN service mysql start \
+  && mysql -uroot < /mysql-setup.sql \
+  && rm -rf /tmp/* /mysql-setup.sql
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
 # COPY files/mysql-setup.sql /mysql-setup.sql
