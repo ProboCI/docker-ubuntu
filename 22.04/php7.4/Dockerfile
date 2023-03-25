@@ -89,6 +89,7 @@ RUN add-apt-repository ppa:ondrej/php \
   php7.4-common \
   php7.4-curl \
   php7.4-dba \
+  php7.4-dev \
   php7.4-gd \
   php7.4-intl \
   php7.4-json \
