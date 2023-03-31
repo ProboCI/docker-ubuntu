@@ -246,8 +246,6 @@ RUN cd /root && \
   chmod -R 755 /root/bee/bee.php && \
   cd
 
-RUN sed -i 's/GPCS/EGPCS/g' /etc/php/8.1/apache/php.ini
-
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
