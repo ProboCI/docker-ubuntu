@@ -55,11 +55,14 @@ RUN apt-get update && apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-g
   lsof \
   rsync \
   pv \
-  lsb-core
+  lsb-core \
+  postgresql \
+  postgresql-contrib \
+  mariadb-server \
+  mariadb-client
 
 # Install apt packages for LAMP, npm, ruby, and all other tools available from apt.
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/mycnf.txt /root/.my.cnf
+
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   #&& wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
@@ -87,22 +90,19 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   php5.6-pgsql \
   libapache2-mod-php5.6 \
   imagemagick \
-  postgresql \
-  postgresql-contrib \
   apache2 \
   apache2-utils \
-  mariadb-server \
-  mariadb-client \
   libreadline-dev \
   zlib1g-dev \
   ruby-dev \
   libsqlite3-dev \
   varnish/xenial 
 
+COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/mycnf.txt /root/.my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
 RUN service mysql start \
   && mysql -uroot < /mysql-setup.sql \
-  && service mysql stop \
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 

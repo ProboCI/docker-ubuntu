@@ -58,7 +58,11 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   rsync \
   pv \
   lsb-core \
-  sqlite3
+  sqlite3 \
+  mariadb-client \
+  mariadb-server \
+  postgresql \
+  postgresql-contrib
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.2 \

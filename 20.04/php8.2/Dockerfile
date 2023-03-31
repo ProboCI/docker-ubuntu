@@ -62,7 +62,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   perl \
   psmisc \
   libtinfo5 \
-  sqlite3 && \
   sqlite3 \
   mariadb-server \
   mariadb-client
