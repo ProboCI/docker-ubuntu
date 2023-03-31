@@ -62,17 +62,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   perl \
   psmisc \
   libtinfo5 \
-  sqlite3 && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-server_5.7.41-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server_5.7.41-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-client_5.7.41-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-common_5.7.41-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client_5.7.41-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-common_5.7.41-1ubuntu18.04_amd64.deb && \ 
-  dpkg -i mysql-community-client_5.7.41-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-client_5.7.41-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-community-server_5.7.41-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-server_5.7.41-1ubuntu18.04_amd64.deb
+  sqlite3 \
+  mariadb-server \
+  mariadb-client
+
 COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/mysql-setup.sql /mysql-setup.sql
