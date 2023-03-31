@@ -95,8 +95,8 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   apache2 \
   apache2-utils
 
-RUN apt-get install -y mysql-server \
-  mysql-client \
+RUN apt-get install -y mariadb-server \
+  mariadb-client \
   libreadline-dev \
   zlib1g-dev \
   ruby-dev \
