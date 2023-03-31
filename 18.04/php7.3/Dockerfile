@@ -106,7 +106,6 @@ RUN apt-get install -y mariadb-server \
 COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
 RUN service mysql start \
   && mysql -uroot < /mysql-setup.sql \
-  && service mysql stop \
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 

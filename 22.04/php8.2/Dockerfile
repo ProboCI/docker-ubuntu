@@ -28,26 +28,6 @@ RUN apt-get -y update
 RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo \
   apt-utils wget perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
 
-# Install MySQL 5.7 because we do not yet want to use MySQL 8 on these builds.
-RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \ 
-  dpkg -i mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-server_5.7.39-1ubuntu18.04_amd64.deb
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/mycnf.txt /root/.my.cnf
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/probo.cnf .my.cnf
-COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
-RUN service mysql start \
-  && mysql -uroot < /mysql-setup.sql \
-  && rm -rf /tmp/* /mysql-setup.sql
-
 # Prepare to use NodeJS 16.
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 
@@ -78,7 +58,11 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   rsync \
   pv \
   lsb-core \
-  sqlite3
+  sqlite3 \
+  mariadb-client \
+  mariadb-server \
+  postgresql \
+  postgresql-contrib
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.2 \
@@ -105,11 +89,18 @@ RUN add-apt-repository ppa:ondrej/php \
   libapache2-mod-php8.2 \
   php-pear \
   imagemagick \
-  postgresql \
-  postgresql-contrib \
   apache2 \
   apache2-utils \
   libjemalloc2
+
+COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/mycnf.txt /root/.my.cnf
+COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/probo.cnf .my.cnf
+COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
+RUN service mysql start \
+  && mysql -uroot < /mysql-setup.sql \
+  && rm -rf /tmp/* /mysql-setup.sql
 
 RUN apt-get install -y \
   libreadline-dev \

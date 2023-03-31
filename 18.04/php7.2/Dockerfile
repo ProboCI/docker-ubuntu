@@ -105,7 +105,6 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
 COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
 RUN service mysql start \
   && mysql -uroot < /mysql-setup.sql \
-  && service mysql stop \
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 
