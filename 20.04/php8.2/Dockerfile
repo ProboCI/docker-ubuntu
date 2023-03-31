@@ -69,7 +69,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
-COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/probo.cnf .my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
 RUN service mysql start \
@@ -77,8 +76,6 @@ RUN service mysql start \
   && rm -rf /tmp/* /mysql-setup.sql
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
-# COPY files/mysql-setup.sql /mysql-setup.sql
-# COPY files/mycnf.txt /root/.my.cnf
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
   #&& wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
@@ -115,15 +112,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   apache2-utils \
   libjemalloc2
 
-# Start and configure our MySQL Server
 RUN apt-get update -y
-# COPY files/mysql-setup.sql /mysql-setup.sql
-# COPY files/probo.cnf .my.cnf
-# COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
-# RUN service mysql start \
-#   && mysql -uroot < /mysql-setup.sql \
-#   && rm -rf /tmp/* /mysql-setup.sql
-
 RUN apt-get install -y \
   libreadline-dev \
   zlib1g-dev \

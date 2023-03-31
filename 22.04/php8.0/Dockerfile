@@ -29,26 +29,6 @@ RUN apt-get -y update
 RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo \
   apt-utils wget perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
 
-# Install MySQL 5.7 because we do not yet want to use MySQL 8 on these builds.
-RUN wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \
-  wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-common_5.7.39-1ubuntu18.04_amd64.deb && \ 
-  dpkg -i mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-client_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb && \
-  dpkg -i mysql-server_5.7.39-1ubuntu18.04_amd64.deb
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/mycnf.txt /root/.my.cnf
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/probo.cnf .my.cnf
-COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
-RUN service mysql start \
-  && mysql -uroot < /mysql-setup.sql \
-  && rm -rf /tmp/* /mysql-setup.sql
-
 # Prepare to use NodeJS 16.
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 
@@ -109,9 +89,19 @@ RUN add-apt-repository ppa:ondrej/php \
   imagemagick \
   postgresql \
   postgresql-contrib \
+  mariadb-server \
+  mariadb-client \
   apache2 \
   apache2-utils \
   libjemalloc2
+
+COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/mycnf.txt /root/.my.cnf
+COPY files/probo.cnf .my.cnf
+COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
+RUN service mysql start \
+  && mysql -uroot < /mysql-setup.sql \
+  && rm -rf /tmp/* /mysql-setup.sql
 
 RUN apt-get install -y \
   libreadline-dev \
@@ -259,9 +249,8 @@ RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
   search_api_solr-4.2.10.tar.gz \
-  search_api_solr-7.x-1.15.tar.gz solr-7.3.1.tgz \
-  mysql-server_5.7.39-1ubuntu18.04_amd64.deb \
-  mysql-community-server_5.7.39-1ubuntu18.04_amd64.deb \
-  mysql-client_5.7.39-1ubuntu18.04_amd64.deb \
-  mysql-common_5.7.39-1ubuntu18.04_amd64.deb \ 
-  mysql-community-client_5.7.39-1ubuntu18.04_amd64.deb
+  search_api_solr-7.x-1.15.tar.gz \
+  solr-7.3.1.tgz \
+  default-content-value.zip \
+  search_api_solr-4.2.10.tar.gz
+

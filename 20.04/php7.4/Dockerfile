@@ -68,7 +68,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
-COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/probo.cnf .my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
 RUN service mysql start \
@@ -76,12 +75,8 @@ RUN service mysql start \
   && rm -rf /tmp/* /mysql-setup.sql
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
-# COPY files/mysql-setup.sql /mysql-setup.sql
-# COPY files/mycnf.txt /root/.my.cnf
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
-  #&& wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
-  #&& echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.4 \
   php7.4-bcmath \
@@ -116,13 +111,6 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   libjemalloc2
 
 RUN apt-get update -y
-# COPY files/mysql-setup.sql /mysql-setup.sql
-# COPY files/probo.cnf .my.cnf
-# COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
-# RUN service mysql start \
-#   && mysql -uroot < /mysql-setup.sql \
-#   && rm -rf /tmp/* /mysql-setup.sql
-
 RUN apt-get install -y \
   libreadline-dev \
   zlib1g-dev \
@@ -269,4 +257,5 @@ RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
   search_api_solr-4.2.10.tar.gz \
-  search_api_solr-7.x-1.15.tar.gz solr-7.3.1.tgz
+  search_api_solr-7.x-1.15.tar.gz \
+  solr-7.3.1.tgz
