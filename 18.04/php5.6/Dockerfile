@@ -96,19 +96,16 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   zlib1g-dev \
   ruby-dev \
   libsqlite3-dev \
-  varnish/xenial 
+  varnish
 
 COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
+COPY files/probo.cnf .my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
 RUN service mysql start \
   && mysql -uroot < /mysql-setup.sql \
   && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
-
-# RUN wget -N https://chromedriver.storage.googleapis.com/99.0.4844.51/chromedriver_linux64.zip && \
-#   unzip chromedriver_linux64.zip && \
-#   mv chromedriver /usr/local/bin/.
 
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \

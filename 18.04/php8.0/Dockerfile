@@ -57,12 +57,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   lsb-core
 
 # Install apt packages for LAMP, varnish, npm, ruby, and all other tools available from apt.
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/mycnf.txt /root/.my.cnf
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn apt-key add - \
-  #&& wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-  #&& sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
   && LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
   php8.0-bcmath \
@@ -103,10 +99,12 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   libxi6 \
   libgconf-2-4 
 
+COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/mycnf.txt /root/.my.cnf
+COPY files/probo.cnf .my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
 RUN service mysql start \
   && mysql -uroot < /mysql-setup.sql \
-  && service varnish stop \
   && rm -rf /tmp/* /mysql-setup.sql
 
 RUN cd /root && \
