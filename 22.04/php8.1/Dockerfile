@@ -144,7 +144,7 @@ COPY files/valid-user.sh /bin/valid
 RUN chmod 755 /bin/valid /bin/versionizer
 RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
 RUN chmod +x /usr/local/src/drush-launcher/drush
-RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
+RUN echo "\n\ndrush() {\n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /etc/bash.bashrc
 
 # Add our ability to pull from AWS S3
 COPY s3/aws-retrieval /usr/local/src/aws
