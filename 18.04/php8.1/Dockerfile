@@ -102,7 +102,7 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
 COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/probo.cnf .my.cnf
-COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
+COPY files/probo-mysql.cnf /etc/mysql/mariadb.conf.d/probo.cnf
 RUN service mysql start \
   && mysql -uroot < /mysql-setup.sql \
   && service varnish stop \
