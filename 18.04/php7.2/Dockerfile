@@ -57,11 +57,16 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   pv \
   lsb-core
 
+RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 && \
+  add-apt-repository 'deb [arch=amd64] http://mirrors.accretive-networks.net/mariadb/repo/10.3/ubuntu bionic main' && \
+  apt-get -y update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  mariadb-server \
+  mariadb-client
+
 # Install apt packages for LAMP, npm, ruby, and all other tools available from apt.
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
-RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 && \
-  add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mirrors.accretive-networks.net/mariadb/repo/10.3/ubuntu bionic main' && \
-  curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
+RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
   && add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.2 \
   php7.2-bcmath \
@@ -92,8 +97,6 @@ RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24
   postgresql-contrib \
   apache2 \
   apache2-utils \
-  mariadb-server \
-  mariadb-client \
   libreadline-dev \
   zlib1g-dev \
   ruby-dev \
@@ -101,13 +104,13 @@ RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24
   varnish
 
 COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/mycnf.txt /root/.my.cnf
-COPY files/probo.cnf .my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/mysql.conf.d/probo-mysql.cnf
-RUN service mysql start \
-  && mysql -uroot < /mysql-setup.sql \
-  && service varnish stop \
-  && rm -rf /tmp/* /mysql-setup.sql
+RUN service mysql start && \
+  mysql -uroot < /mysql-setup.sql
+RUN service varnish stop
+RUN rm -rf /tmp/* /mysql-setup.sql
+COPY files/mycnf.txt /root/.my.cnf
+# COPY files/probo.cnf .my.cnf
 
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
