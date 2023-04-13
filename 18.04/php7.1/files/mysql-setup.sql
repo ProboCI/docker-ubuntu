@@ -1,7 +1,6 @@
-DROP USER 'root'@'localhost';
-CREATE USER 'root'@'localhost' IDENTIFIED BY 'strongpassword';
-CREATE USER 'root'@'127.0.0.1' IDENTIFIED BY 'strongpassword';
-CREATE USER 'root'@'::1' IDENTIFIED BY 'strongpassword';
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'strongpassword';
+ALTER USER 'root'@'127.0.0.1' IDENTIFIED BY 'strongpassword';
+ALTER USER 'root'@'::1' IDENTIFIED BY 'strongpassword';
 GRANT ALL PRIVILEGES ON * . * TO 'root'@'localhost' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON * . * TO 'root'@'127.0.0.1' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON * . * TO 'root'@'::1' WITH GRANT OPTION;
