@@ -91,7 +91,6 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   php7.3-redis \
   php7.3-imagick \
   libapache2-mod-php7.3 \
-  php-pear \
   imagemagick \
   postgresql \
   postgresql-contrib \
