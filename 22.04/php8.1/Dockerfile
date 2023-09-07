@@ -28,8 +28,12 @@ RUN apt-get -y update
 RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo \
   apt-utils wget perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
 
-# Prepare to use NodeJS 16.
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+# Update to NodeJS 16 and install nvm for supporting other versions.
+RUN apt-get update && apt-get -y upgrade
+RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils wget skopeo gnupg && \
+  mkdir -p /etc/apt/keyrings && \
+  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
 # Update apt repos and install base apt packages.
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -117,6 +121,7 @@ RUN service mariadb start \
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
   wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
+  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
   unzip chromedriver_linux64.zip && \
   mv chromedriver /usr/local/bin/. && \
   apt install -y ./google-chrome-stable_current_amd64.deb
