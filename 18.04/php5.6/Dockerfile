@@ -55,9 +55,7 @@ RUN apt-get update && apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-g
   lsof \
   rsync \
   pv \
-  lsb-core \
-  postgresql \
-  postgresql-contrib
+  lsb-core-
 
 RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 && \
   add-apt-repository 'deb [arch=amd64] http://mirrors.accretive-networks.net/mariadb/repo/10.3/ubuntu bionic main' && \
@@ -94,6 +92,8 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   imagemagick \
   apache2 \
   apache2-utils \
+  postgresql \
+  postgresql-contrib \
   libreadline-dev \
   zlib1g-dev \
   ruby-dev \

@@ -91,7 +91,6 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key
   php7.2-redis \
   php7.2-imagick \
   libapache2-mod-php7.2 \
-  php-pear \
   imagemagick \
   postgresql \
   postgresql-contrib \
@@ -110,7 +109,6 @@ RUN service mysql start && \
 RUN service varnish stop
 RUN rm -rf /tmp/* /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
-# COPY files/probo.cnf .my.cnf
 
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \

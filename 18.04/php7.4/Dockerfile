@@ -92,14 +92,11 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   php7.4-redis \
   php7.4-imagick \
   libapache2-mod-php7.4 \
-  php-pear \
   imagemagick \
   postgresql \
   postgresql-contrib \
   apache2 \
   apache2-utils \
-  mariadb-server \
-  mariadb-client \
   libreadline-dev \
   zlib1g-dev \
   ruby-dev \
