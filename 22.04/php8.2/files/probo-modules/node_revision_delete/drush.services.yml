@@ -1,0 +1,9 @@
+services:
+  node_revision_delete.commands:
+    class: Drupal\node_revision_delete\Commands\QueueContent
+    arguments:
+      - '@entity_type.manager'
+      - '@plugin.manager.node_revision_delete'
+      - '@queue'
+    tags:
+      - { name: drush.command }

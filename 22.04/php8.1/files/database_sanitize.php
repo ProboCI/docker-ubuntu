@@ -1,0 +1,25 @@
+<?php 
+#!/usr/bin/env drush
+
+use Drush\Drush;
+
+// Initialize the database
+$db = \Drupal::database();
+
+$query = $db->query("
+  SELECT 
+      table_schema as `database`, 
+      table_name AS `table`, 
+      round(((data_length + index_length) / 1024 / 1024), 2) `size` 
+  FROM information_schema.TABLES
+  WHERE table_name LIKE '%watchdog%'
+    OR table_name LIKE '%search_index%'
+  ORDER BY (data_length + index_length) DESC
+");
+
+$tables = $query->fetchAll();
+$count = 0;
+foreach ($tables as $table) {
+  print $table->table . ': ' . $table->size . "\n";
+  $db->query('TRUNCATE TABLE ' . $table->table);
+}

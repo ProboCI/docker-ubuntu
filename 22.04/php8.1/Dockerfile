@@ -222,6 +222,13 @@ COPY files/wordpress-default.vcl /etc/varnish/wordpress-default.vcl
 COPY files/drupal-default.vcl /etc/varnish/drupal-default.vcl
 COPY files/secret /etc/varnish/secret
 
+# Fly in our Drush script for sanitizing the database which removes
+# a lot of revision, cache, watchdog, and search data.
+COPY files/database_sanitize.php /opt/database_sanitize.php
+
+# Take any modules we want specifically for probo and put them here.
+COPY files/probo-modules /opt/probo-modules
+
 # Create .ssh dir and add SSH config file.
 # TODO: There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
 RUN mkdir /root/.ssh \
@@ -232,10 +239,11 @@ RUN mkdir /root/.ssh \
   && echo "StrictHostKeyChecking no" >> /root/.ssh/config
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
-RUN mkdir ~/terminus && cd ~/terminus \
+RUN cd /opt \
   && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.1.4/terminus.phar --output terminus \
   && chmod +x terminus \
-  && ln -s ~/terminus/terminus /usr/local/bin/terminus
+  && ln -s /opt/terminus /usr/local/bin/terminus \
+  && cd
 
 # Install WP-CLI Wordpress command line tool, https://wp-cli.org/.
 RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
@@ -246,13 +254,13 @@ RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
   && chmod +x acli.phar \
   && mv acli.phar /usr/local/bin/acli
 
-RUN cd /root && \
+RUN cd /opt && \
   wget https://github.com/ElusiveMind/bee/archive/refs/heads/bugfix/default-context-value.zip && \
   unzip default-context-value.zip && \
   mv bee-bugfix-default-context-value bee && \
   cd /usr/local/bin && \
-  ln -s /root/bee/bee.php bee && \
-  chmod -R 755 /root/bee/bee.php && \
+  ln -s /opt/bee/bee.php bee && \
+  chmod -R 755 /opt/bee/bee.php && \
   cd
 
 RUN rm -rf chromedriver_linux64.zip \
@@ -261,5 +269,5 @@ RUN rm -rf chromedriver_linux64.zip \
   search_api_solr-4.2.10.tar.gz \
   search_api_solr-7.x-1.15.tar.gz \
   solr-7.3.1.tgz \
-  default-content-value.zip \
+  default-context-value.zip \
   search_api_solr-4.2.10.tar.gz

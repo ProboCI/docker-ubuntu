@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * @file
+ * Contains node_revision_delete.module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\SubformState;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+use Drupal\node\NodeTypeInterface;
+
+/**
+ * Implements hook_help().
+ */
+function node_revision_delete_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+
+    case 'help.page.node_revision_delete':
+
+      $output = '';
+      $output .= '<h3>' . t('Introduction') . '</h3>';
+      $output .= '<p>' . t('The Node Revision Delete module lets you track and prune old revisions of content types.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Configuring the module') . '</dt>';
+      $output .= '<dd>' . t('You can manage the module settings via the <a href=":config-page">configuration page</a>. You can configure how many revisions you want to keep per content type and configure how long revision should be kept. When saving the configuration you can optionally start a batch job to queue all content to delete revisions that are allowed to be deleted. For this you need the <em>Administer Node Revision Delete</em> permission.', [':config-page' => Url::fromRoute('node_revision_delete.admin_settings')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Configuring content types') . '</dt>';
+      $output .= '<dd>' . t('You can override the default settings of the module for each content type. Under the Publishing options tab of the content type, configure how many revisions you want to keep for the content type and how long revision should be kept.') . '</dd>';
+      $output .= '</dl>';
+
+      return $output;
+
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function node_revision_delete_form_node_type_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\node_revision_delete\Plugin\NodeRevisionDeletePluginManager $plugin_manager */
+  $plugin_manager = \Drupal::service('plugin.manager.node_revision_delete');
+  $plugin_definitions = $plugin_manager->getDefinitions();
+
+  // Getting the content type entity.
+  /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
+  $form_object = $form_state->getFormObject();
+  $content_type = $form_object->getEntity();
+
+  // Getting the content type settings.
+  $content_type_settings = $content_type->isNew() ? [] : $plugin_manager->getSettingsNodeType($content_type->id())['plugin'];
+
+  foreach ($plugin_definitions as $plugin_id => $plugin_definition) {
+    /** @var \Drupal\node_revision_delete\Plugin\NodeRevisionDeleteInterface $plugin */
+    $plugin = $plugin_manager->getPlugin($plugin_id, $content_type_settings[$plugin_id]['settings'] ?? []);
+    $form['workflow']['section'][$plugin_id] = [
+      '#type' => 'details',
+      '#title' => $plugin_definition['label'],
+      '#open' => TRUE,
+      // We need the #tree key for subforms to work.
+      // @see https://www.drupal.org/project/drupal/issues/3053890
+      '#tree' => TRUE,
+    ];
+    $form['workflow']['section'][$plugin_id]['status'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Enabled'),
+      '#default_value' => $content_type_settings[$plugin_id]['status'] ?? 0,
+    ];
+    $form['workflow']['section'][$plugin_id]['settings'] = [
+      '#type' => 'fieldgroup',
+      '#states' => [
+        'visible' => [
+          ':input[name="' . $plugin_id . '[status]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+    $plugin_form_state = SubformState::createForSubform($form['workflow']['section'][$plugin_id]['settings'], $form, $form_state);
+    $form['workflow']['section'][$plugin_id]['settings'] = $plugin->buildConfigurationForm($form['workflow']['section'][$plugin_id]['settings'] ?? [], $plugin_form_state);
+  }
+
+  $form['#entity_builders'][] = 'node_revision_delete_form_node_type_form_builder';
+}
+
+/**
+ * Custom form builder to save the configuration variables.
+ *
+ * @param string $entity_type
+ *   The entity type.
+ * @param Drupal\node\NodeTypeInterface $type
+ *   The entity type object.
+ * @param array $form
+ *   The form element.
+ * @param Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function node_revision_delete_form_node_type_form_builder(string $entity_type, NodeTypeInterface $type, array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\node_revision_delete\Plugin\NodeRevisionDeletePluginManager $plugin_manager */
+  $plugin_manager = \Drupal::service('plugin.manager.node_revision_delete');
+  $plugin_definitions = $plugin_manager->getDefinitions();
+  foreach ($plugin_definitions as $plugin_id => $plugin_definition) {
+    $plugin_form_state = SubformState::createForSubform($form['workflow']['section'][$plugin_id], $form, $form_state);
+    $content_type_values = $plugin_form_state->getValues();
+    if ($content_type_values !== $plugin_manager->getDefaultPluginSettings($plugin_id)) {
+      $type->setThirdPartySetting('node_revision_delete', $plugin_id, $plugin_form_state->getValues());
+    }
+    else {
+      $type->unsetThirdPartySetting('node_revision_delete', $plugin_id);
+    }
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function node_revision_delete_node_update(NodeInterface $node) {
+  // Add updated nodes to the queue to determine if any revisions are ready to
+  // be deleted.
+  \Drupal::queue('node_revision_delete')->createItem($node->id());
+}
