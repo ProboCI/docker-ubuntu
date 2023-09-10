@@ -19,12 +19,12 @@ The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tree
 | proboci/ubuntu:18.04-php8.0  | [18.04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/18.04/php8.0) |
 | proboci/ubuntu:18.04-php8.1  | [18.04-php8.1](https://github.com/ProboCI/docker-ubuntu/tree/master/18.04/php8.1) |
 | proboci/ubuntu:20.04-php7.4  | [20.04-php7.4](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php7.4) |
-| proboci/ubuntu:20-04-php8.0  | [20-04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.0) |
-| proboci/ubuntu:20-04-php8.1  | [20-04-php8.1](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.1) |
+| proboci/ubuntu:20.04-php8.0  | [20.04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.0) |
+| proboci/ubuntu:20.04-php8.1  | [20.04-php8.1](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.1) |
 | proboci/ubuntu:20.04-php8.2  | [20.04-php8.2](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.2) |
 | proboci/ubuntu:22.04-php7.4  | [22.04-php7.4](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php7.4) |
-| proboci/ubuntu:22-04-php8.0  | [22-04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.0) |
-| proboci/ubuntu:22-04-php8.1  | [22-04-php8.1](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.1) |
+| proboci/ubuntu:22.04-php8.0  | [22.04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.0) |
+| proboci/ubuntu:22.04-php8.1  | [22.04-php8.1](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.1) |
 | proboci/ubuntu:22.04-php8.2  | [22.04-php8.2](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.2) |
 
 ## Getting The Current Versions
