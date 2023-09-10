@@ -12,8 +12,13 @@ $query = $db->query("
       table_name AS `table`, 
       round(((data_length + index_length) / 1024 / 1024), 2) `size` 
   FROM information_schema.TABLES
-  WHERE table_name LIKE '%watchdog%'
+  WHERE (table_name LIKE '%watchdog%'
     OR table_name LIKE '%search_index%'
+    OR table_name LIKE 'node_revision_%'
+    OR table_name LIKE 'paragraph_revision_%'
+    OR table_name LIKE '%cache_%'
+    OR table_name LIKE 'cachetags')
+    AND `table_schema`='drupal'
   ORDER BY (data_length + index_length) DESC
 ");
 

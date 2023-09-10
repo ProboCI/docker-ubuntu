@@ -226,9 +226,6 @@ COPY files/secret /etc/varnish/secret
 # a lot of revision, cache, watchdog, and search data.
 COPY files/database_sanitize.php /opt/database_sanitize.php
 
-# Take any modules we want specifically for probo and put them here.
-COPY files/probo-modules /opt/probo-modules
-
 # Create .ssh dir and add SSH config file.
 # TODO: There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
 RUN mkdir /root/.ssh \
