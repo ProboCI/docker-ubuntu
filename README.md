@@ -1,10 +1,14 @@
 # Probo.CI Docker Ubuntu
 
-This repository is used to store the latest Ubuntu LTS (18.04 & 20.04) installations and configuration settings. The Docker images built from this repository are developed specifically to be used as Docker images that run the build containers for [Probo.CI](https://probo.ci).
+This repository is used to store the latest Ubuntu LTS (18.04, 20.04 and 22.04) installations and configuration settings. The Docker images built from this repository are developed specifically to be used as Docker images that run the build containers for [Probo.CI](https://probo.ci).  
 
-The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tree](https://hub.docker.com/r/proboci/ubuntu/tree/master) currently are built off of a corresponding Git branch in this repository as detailed below.
+Note that now that Ubuntu 18.04 is End of Life, it is no longer being updated as of June, 2023. It is kept for support purposes.  
 
-| Docker Image Tag  | Git Branch |
+Note that all future updates are happening to PHP 8.1 and PHP 8.2 containers of Ubuntu 22.04.  
+
+The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tree](https://hub.docker.com/r/proboci/ubuntu/tree/master) currently are built off of a corresponding Git branch in this repository as detailed below.  
+
+| Docker Image Tag  | Git Directory |
 | ------------- | ------------- |
 | proboci/ubuntu:18.04-php5.6  | [18.04-php5.6](https://github.com/ProboCI/docker-ubuntu/tree/master/18.04/php5.6) |
 | proboci/ubuntu:18.04-php7.0  | [18.04-php7.0](https://github.com/ProboCI/docker-ubuntu/tree/master/18.04/php7.0) |
@@ -13,9 +17,15 @@ The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tree
 | proboci/ubuntu:18.04-php7.3  | [18.04-php7.3](https://github.com/ProboCI/docker-ubuntu/tree/master/18.04/php7.3) |
 | proboci/ubuntu:18.04-php7.4  | [18.04-php7.4](https://github.com/ProboCI/docker-ubuntu/tree/master/18.04/php7.4) |
 | proboci/ubuntu:18.04-php8.0  | [18.04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/18.04/php8.0) |
+| proboci/ubuntu:18.04-php8.1  | [18.04-php8.1](https://github.com/ProboCI/docker-ubuntu/tree/master/18.04/php8.1) |
 | proboci/ubuntu:20.04-php7.4  | [20.04-php7.4](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php7.4) |
 | proboci/ubuntu:20-04-php8.0  | [20-04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.0) |
 | proboci/ubuntu:20-04-php8.1  | [20-04-php8.1](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.1) |
+| proboci/ubuntu:20.04-php8.2  | [20.04-php8.2](https://github.com/ProboCI/docker-ubuntu/tree/master/20.04/php8.2) |
+| proboci/ubuntu:22.04-php7.4  | [22.04-php7.4](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php7.4) |
+| proboci/ubuntu:22-04-php8.0  | [22-04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.0) |
+| proboci/ubuntu:22-04-php8.1  | [22-04-php8.1](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.1) |
+| proboci/ubuntu:22.04-php8.2  | [22.04-php8.2](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.2) |
 
 ## Getting The Current Versions
 
@@ -36,3 +46,4 @@ Node: v12.22.4
 WordPress CLI: WP-CLI 2.5.0
 Pantheon Terminus 2.6.1
 ```
++
