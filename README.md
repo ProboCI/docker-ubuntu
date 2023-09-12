@@ -46,4 +46,3 @@ Node: v12.22.4
 WordPress CLI: WP-CLI 2.5.0
 Pantheon Terminus 2.6.1
 ```
-+

@@ -209,6 +209,10 @@ RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --
 RUN apt-get update -y && \
   apt-get install varnish
 
+# Fly in our Drush script for sanitizing the database which removes
+# a lot of revision, cache, watchdog, and search data.
+COPY files/database_sanitize.php /opt/database_sanitize.php
+
 # Install varnish default configs.
 COPY files/wordpress-default-4.vcl /etc/varnish/wordpress-default.vcl
 COPY files/drupal-default-4.vcl /etc/varnish/drupal-default.vcl
