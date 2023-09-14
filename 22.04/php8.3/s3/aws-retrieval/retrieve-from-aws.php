@@ -8,13 +8,15 @@ use Aws\S3\ObjectUploader;
 use Aws\S3\ListObjects;
 use Aws\S3\DeleteObject;;
 
-ini_set('memory_limit', '2G');
-
 $output = $argv[1];
 
 $aws_key = getenv('AWS_KEY');
 $aws_secret = getenv('AWS_SECRET');
 $aws_bucket = getenv('AWS_BUCKET');
+$aws_subfolder = getenv('AWS_SUBFOLDER');
+$aws_site = getenv('AWS_SITE');
+
+$aws_subfolder = (!empty($aws_subfolder)) ? $aws_subfolder . '/' : NULL;
 
 if (!empty($aws_key) && !empty($aws_secret)) {
   $s3 = new S3Client([
@@ -41,10 +43,13 @@ try {
 } catch (S3Exception $e) {
   echo $e->getMessage();
 }
+print_r($results);
 if (!empty($results)) {
   foreach ($results as $result) {
     foreach ($result['Contents'] as $key => $content) {
-      $files[] = $content['Key'];
+      if (strpos($content['Key'], $aws_site) !== FALSE) {
+        $files[] =  $content['Key'];
+      }
     }
   }
 }

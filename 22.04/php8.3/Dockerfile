@@ -22,6 +22,7 @@ LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
 
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/src/aws
 ENV TERM xterm
 
 RUN apt-get -y update
