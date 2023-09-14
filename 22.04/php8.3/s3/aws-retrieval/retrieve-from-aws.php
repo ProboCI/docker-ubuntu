@@ -43,11 +43,13 @@ try {
 } catch (S3Exception $e) {
   echo $e->getMessage();
 }
-print_r($results);
 if (!empty($results)) {
   foreach ($results as $result) {
     foreach ($result['Contents'] as $key => $content) {
-      if (strpos($content['Key'], $aws_site) !== FALSE) {
+      if ((!empty($aws_site) && strpos($content['Key'], $aws_site)) !== FALSE) {
+        $files[] =  $content['Key'];
+      }
+      else {
         $files[] =  $content['Key'];
       }
     }
