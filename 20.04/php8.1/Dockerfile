@@ -228,6 +228,10 @@ COPY files/default-4.vcl /etc/varnish/default.vcl
 COPY files/varnish /etc/default/varnish
 COPY files/secret /etc/varnish/secret
 
+# Fly in our Drush script for sanitizing the database which removes
+# a lot of revision, cache, watchdog, and search data.
+COPY files/database_sanitize.php /opt/database_sanitize.php
+
 # Create .ssh dir and add SSH config file.
 # TODO: There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
 RUN mkdir /root/.ssh \
