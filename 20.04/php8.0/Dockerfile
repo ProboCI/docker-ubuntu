@@ -133,33 +133,33 @@ RUN cd /root && \
   mv chromedriver /usr/local/bin/. && \
   apt install -y ./google-chrome-stable_current_amd64.deb
 
-# Install composer and drush.
-RUN mkdir /usr/local/src/drush9
-RUN mkdir /usr/local/src/drush8
-RUN mkdir /usr/local/src/drush-launcher
-RUN curl -sS https://getcomposer.org/installer | php -- \
-  --install-dir=/usr/local/bin \
-  --filename=composer \
-  && composer \
-  --working-dir=/usr/local/src/drush9 \
-  global \
-  require \
-  drush/drush:9.* \
-  && composer \
-  --working-dir=/usr/local/src/drush8 \
-  global \
-  require \
-  drush/drush:8.* \
-  && mkdir /etc/drush \
-  && mkdir /etc/drush/conf.d
-COPY files/drush-environment.php /etc/drush/conf.d/environment.php
-COPY files/drushrc.php /etc/drush/drushrc.php
-COPY files/versionizer.php /bin/versionizer
-COPY files/valid-user.sh /bin/valid
-RUN chmod 755 /bin/valid /bin/versionizer
-RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
-RUN chmod +x /usr/local/src/drush-launcher/drush
-RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
+# # Install composer and drush.
+# RUN mkdir /usr/local/src/drush9
+# RUN mkdir /usr/local/src/drush8
+# RUN mkdir /usr/local/src/drush-launcher
+# RUN curl -sS https://getcomposer.org/installer | php -- \
+#   --install-dir=/usr/local/bin \
+#   --filename=composer \
+#   && composer \
+#   --working-dir=/usr/local/src/drush9 \
+#   global \
+#   require \
+#   drush/drush:9.* \
+#   && composer \
+#   --working-dir=/usr/local/src/drush8 \
+#   global \
+#   require \
+#   drush/drush:8.* \
+#   && mkdir /etc/drush \
+#   && mkdir /etc/drush/conf.d
+# COPY files/drush-environment.php /etc/drush/conf.d/environment.php
+# COPY files/drushrc.php /etc/drush/drushrc.php
+# COPY files/versionizer.php /bin/versionizer
+# COPY files/valid-user.sh /bin/valid
+# RUN chmod 755 /bin/valid /bin/versionizer
+# RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
+# RUN chmod +x /usr/local/src/drush-launcher/drush
+# RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
 
 # Add our ability to pull from AWS S3
 COPY s3/aws-retrieval /usr/local/src/aws

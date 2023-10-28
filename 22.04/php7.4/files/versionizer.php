@@ -21,12 +21,12 @@ $acli_version = `acli --version`;
 $terminus_version = `terminus --version`;
 // $bee_version = `bee version`;
 
-if (file_exists('/usr/local/bin/drush')) {
-  $drush_version = `drush --version`;
-}
-else {
-  $drush_version = "Drush: Not a Drupal install - Drush not available\n";
-}
+// if (file_exists('/usr/local/bin/drush')) {
+//   $drush_version = `drush --version`;
+// }
+// else {
+//   $drush_version = "Drush: Not a Drupal install - Drush not available\n";
+// }
 
 print "\e[1;33m------------------------------------------\n";
 print "Probo.CI - Software Versions Report:\n";
@@ -41,7 +41,7 @@ print "Kernel: " . $linux_kernel;
 print $linux_distribution . "\n";
 print "SOLR: " . $solr_version;
 print $composer_version;
-print $drush_version;
+// print $drush_version;
 print "Node: " . $node_version;
 print "WordPress CLI: " . $wp_cli_version;
 print "Pantheon " . $terminus_version;
