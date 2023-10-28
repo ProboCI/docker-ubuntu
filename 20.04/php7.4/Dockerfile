@@ -161,6 +161,11 @@ RUN cd /root && \
 # RUN chmod +x /usr/local/src/drush-launcher/drush
 # RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
 
+# Software version checker and valid user checker
+COPY files/versionizer.php /bin/versionizer
+COPY files/valid-user.sh /bin/valid
+RUN chmod 755 /bin/valid /bin/versionizer
+
 # Download Drupal Console and install it in our standard path.
 RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
   && mv /drupal.phar /bin/drupal \
