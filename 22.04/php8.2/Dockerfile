@@ -158,6 +158,11 @@ RUN cd /root && \
 # RUN chmod +x /usr/local/src/drush-launcher/drush
 # RUN echo "\n\ndrush() {\n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /etc/bash.bashrc
 
+# Install Composer.
+RUN curl -sS https://getcomposer.org/installer | php -- \
+  --install-dir=/usr/local/bin \
+  --filename=composer
+
 # Software version checker and valid user checker
 COPY files/versionizer.php /bin/versionizer
 COPY files/valid-user.sh /bin/valid
