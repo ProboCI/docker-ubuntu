@@ -154,6 +154,11 @@ RUN cd /root && \
 # RUN chmod +x /usr/local/src/drush-launcher/drush
 # RUN echo "\n\ndrush() {\n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /etc/bash.bashrc
 
+# Software version checker and valid user checker
+COPY files/versionizer.php /bin/versionizer
+COPY files/valid-user.sh /bin/valid
+RUN chmod 755 /bin/valid /bin/versionizer
+
 # Add our ability to pull from AWS S3
 COPY s3/aws-retrieval /usr/local/src/aws
 RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
