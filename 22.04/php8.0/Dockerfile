@@ -25,12 +25,17 @@ WORKDIR /root
 
 ENV TERM xterm
 
-RUN apt-get -y update
-RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo \
-  apt-utils wget perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
 
-# Prepare to use NodeJS 16.
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+# Update to NodeJS 16 and install nvm for supporting other versions.
+RUN apt-get update && apt-get -y upgrade
+RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils wget gnupg && \
+  mkdir -p /etc/apt/keyrings && \
+  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+
+RUN apt-get -y update
+RUN apt-get -y install perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
 
 # Update apt repos and install base apt packages.
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -147,10 +152,9 @@ RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/dru
 RUN chmod +x /usr/local/src/drush-launcher/drush
 RUN echo "\n\ndrush() {\n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /etc/bash.bashrc
 
-# Download Drupal Console and install it in our standard path.
-RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
-  && mv /drupal.phar /bin/drupal \
-  && chmod 755 /bin/drupal
+# Add our ability to pull from AWS S3
+COPY s3/aws-retrieval /usr/local/src/aws
+RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
 
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
