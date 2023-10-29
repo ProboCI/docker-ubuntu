@@ -133,34 +133,6 @@ RUN cd /root && \
   mv chromedriver /usr/local/bin/. && \
   apt install -y ./google-chrome-stable_current_amd64.deb
 
-# # Install composer and drush.
-# RUN mkdir /usr/local/src/drush9
-# RUN mkdir /usr/local/src/drush8
-# RUN mkdir /usr/local/src/drush-launcher
-# RUN curl -sS https://getcomposer.org/installer | php -- \
-#   --install-dir=/usr/local/bin \
-#   --filename=composer \
-#   && composer \
-#   --working-dir=/usr/local/src/drush9 \
-#   global \
-#   require \
-#   drush/drush:9.* \
-#   && composer \
-#   --working-dir=/usr/local/src/drush8 \
-#   global \
-#   require \
-#   drush/drush:8.* \
-#   && mkdir /etc/drush \
-#   && mkdir /etc/drush/conf.d
-# COPY files/drush-environment.php /etc/drush/conf.d/environment.php
-# COPY files/drushrc.php /etc/drush/drushrc.php
-# COPY files/versionizer.php /bin/versionizer
-# COPY files/valid-user.sh /bin/valid
-# RUN chmod 755 /bin/valid /bin/versionizer
-# RUN wget -O /usr/local/src/drush-launcher/drush https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar
-# RUN chmod +x /usr/local/src/drush-launcher/drush
-# RUN echo "\n\ndrush() { \n/usr/local/bin/drush -r /var/www/html \$@ \n }" >> /root/.bashrc
-
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
@@ -221,9 +193,9 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
   && tar xzf search_api_solr-7.x-1.15.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.2.10.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.0.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.2.10.tar.gz \
+  && tar xzf search_api_solr-4.3.0.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
@@ -245,10 +217,11 @@ RUN mkdir /root/.ssh \
   && echo "StrictHostKeyChecking no" >> /root/.ssh/config
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
-RUN mkdir ~/terminus && cd ~/terminus \
-  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.0.6/terminus.phar --output terminus \
+RUN cd /opt \
+  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.2.2/terminus.phar --output terminus \
   && chmod +x terminus \
-  && ln -s ~/terminus/terminus /usr/local/bin/terminus
+  && ln -s /opt/terminus /usr/local/bin/terminus \
+  && cd
 
 # Install WP-CLI Wordpress command line tool, https://wp-cli.org/.
 RUN curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
@@ -271,6 +244,7 @@ RUN cd /root && \
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
-  search_api_solr-4.2.10.tar.gz \
+  search_api_solr-4.3.0.tar.gz \
   search_api_solr-7.x-1.15.tar.gz \
-  solr-7.3.1.tgz
+  solr-7.3.1.tgz \
+  default-context-value.zip

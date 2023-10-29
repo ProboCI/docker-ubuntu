@@ -64,6 +64,10 @@ echo "Backing up 22.04-php8.2"
 docker save proboci/ubuntu:22.04-php8.2 > image-backups/22.04-php8.2-$(date +%Y-%m-%d).tar
 gzip image-backups/22.04-php8.2-$(date +%Y-%m-%d).tar
 
+echo "Backing up 22.04-php8.3"
+docker save proboci/ubuntu:22.04-php8.3 > image-backups/22.04-php8.3-$(date +%Y-%m-%d).tar
+gzip image-backups/22.04-php8.3-$(date +%Y-%m-%d).tar
+
 echo "Backing up Alpine PHP 7.4"
 docker save proboci/alpine:php7.4 > image-backups/alpine-php7.4-$(date +%Y-%m-%d).tar
 gzip image-backups/alpine-php7.4-$(date +%Y-%m-%d).tar

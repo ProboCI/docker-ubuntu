@@ -1,11 +1,12 @@
 #!/bin/bash
 
-echo -n "Ubuntu 22.04 - PHP 7.4 ProboCI Build: "
-
-docker build . -q -t proboci/ubuntu:22.04-php7.4
+echo "---------------------------------------------------------------"
+echo "Ubuntu 22.04 - PHP 7.4 ProboCI Build: "
+echo "---------------------------------------------------------------"
+docker build . -t proboci/ubuntu:22.04-php7.4
 if [[ ${1} = 'production' ]] || [[ ${1} = 'prod' ]]; then
+  echo "---------------------------------------------------------------"
   echo -n "Pushing to DockerHub: "
-  docker push -q proboci/ubuntu:22.04-php7.4
+  docker push proboci/ubuntu:22.04-php7.4
 fi
-
-echo ""
+echo "---------------------------------------------------------------"

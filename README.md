@@ -4,8 +4,6 @@ This repository is used to store the latest Ubuntu LTS (18.04, 20.04 and 22.04) 
 
 Note that now that Ubuntu 18.04 is End of Life, it is no longer being updated as of June, 2023. It is kept for support purposes.  
 
-Note that all future updates are happening to PHP 8.1 and PHP 8.2 containers of Ubuntu 22.04.  
-
 The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tree](https://hub.docker.com/r/proboci/ubuntu/tree/master) currently are built off of a corresponding Git branch in this repository as detailed below.  
 
 | Docker Image Tag  | Git Directory |
@@ -26,6 +24,7 @@ The [proboci/ubuntu](https://hub.docker.com/u/proboci/ubuntu) Docker image [tree
 | proboci/ubuntu:22.04-php8.0  | [22.04-php8.0](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.0) |
 | proboci/ubuntu:22.04-php8.1  | [22.04-php8.1](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.1) |
 | proboci/ubuntu:22.04-php8.2  | [22.04-php8.2](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.2) |
+| proboci/ubuntu:22.04-php8.3  | [22.04-php8.3](https://github.com/ProboCI/docker-ubuntu/tree/master/22.04/php8.3) |
 
 ## Getting The Current Versions
 
@@ -41,7 +40,6 @@ ChromeDriver 92.0.4515.43
 Kernel: 5.4.0-65-generic
 Ubuntu 20.04.2 LTS
 Composer version 2.1.5 2021-07-23 10:35:47
-Drush Commandline Tool 9.7.3
 Node: v12.22.4
 WordPress CLI: WP-CLI 2.5.0
 Pantheon Terminus 2.6.1
