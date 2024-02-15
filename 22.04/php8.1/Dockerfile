@@ -99,7 +99,8 @@ RUN add-apt-repository ppa:ondrej/php \
   mariadb-client \
   apache2 \
   apache2-utils \
-  libjemalloc2
+  libjemalloc2 && \
+  cp -rf /etc/php/8.1/cli /etc/php/8.1/apache2
 
 RUN apt-get install -y \
   libreadline-dev \
