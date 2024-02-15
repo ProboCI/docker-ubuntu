@@ -239,6 +239,8 @@ RUN cd /opt && \
   chmod -R 755 /opt/bee/bee.php && \
   cd
 
+RUN env | grep _ >> /etc/environment
+
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
@@ -246,3 +248,5 @@ RUN rm -rf chromedriver_linux64.zip \
   search_api_solr-7.x-1.15.tar.gz \
   solr-7.3.1.tgz \
   default-context-value.zip
+
+CMD ["env | grep _ >> /etc/environment"]
