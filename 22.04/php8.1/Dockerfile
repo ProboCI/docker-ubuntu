@@ -239,8 +239,6 @@ RUN cd /opt && \
   chmod -R 755 /opt/bee/bee.php && \
   cd
 
-RUN env | grep _ >> /etc/environment
-
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
