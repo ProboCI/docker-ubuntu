@@ -92,7 +92,6 @@ RUN add-apt-repository ppa:ondrej/php \
   php7.4-imagick \
   php7.4-sqlite3 \
   libapache2-mod-php7.4 \
-  php-pear \
   imagemagick \
   postgresql \
   postgresql-contrib \

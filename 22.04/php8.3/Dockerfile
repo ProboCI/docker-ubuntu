@@ -91,10 +91,9 @@ RUN add-apt-repository ppa:ondrej/php \
   php8.3-zip \
   php8.3-pgsql \
   php8.3-sqlite3 \
-  php-memcache \
-  php-redis \
+  php8.3-memcache \
+  php8.3-redis \
   libapache2-mod-php8.3 \
-  php-pear \
   imagemagick \
   postgresql \
   postgresql-contrib \

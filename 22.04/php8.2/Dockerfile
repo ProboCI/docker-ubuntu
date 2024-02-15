@@ -83,18 +83,17 @@ RUN add-apt-repository ppa:ondrej/php \
   php8.2-intl \
   php8.2-ldap \
   php8.2-mbstring \
+  php8.2-memcache \
   php8.2-mysql \
   php8.2-opcache \
+  php8.2-redis \
   php8.2-readline \
   php8.2-soap \
   php8.2-xml \
   php8.2-zip \
   php8.2-pgsql \
   php8.2-sqlite3 \
-  php-memcache \
-  php-redis \
   libapache2-mod-php8.2 \
-  php-pear \
   imagemagick \
   postgresql \
   postgresql-contrib \
