@@ -100,8 +100,6 @@ RUN add-apt-repository ppa:ondrej/php \
   imagemagick \
   postgresql \
   postgresql-contrib \
-  mariadb-server \
-  mariadb-client \
   apache2 \
   apache2-utils \
   libjemalloc2
