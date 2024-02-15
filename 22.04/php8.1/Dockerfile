@@ -65,6 +65,9 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   lsb-core \
   sqlite3
 
+RUN rm /usr/bin/vi && \
+  ln -s /usr/bin/vim /usr/bin/vi
+
 RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
 RUN add-apt-repository ppa:ondrej/php \

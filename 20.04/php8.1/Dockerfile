@@ -71,6 +71,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   mariadb-server \
   mariadb-client
 
+RUN rm /usr/bin/vi && \
+  ln -s /usr/bin/vim /usr/bin/vi
+
+
 COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/probo.cnf .my.cnf

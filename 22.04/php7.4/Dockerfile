@@ -66,6 +66,9 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   lsb-core \
   sqlite3
 
+RUN rm /usr/bin/vi && \
+  ln -s /usr/bin/vim /usr/bin/vi
+
 RUN add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.4 \
   php7.4-bcmath \
