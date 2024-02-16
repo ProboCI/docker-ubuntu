@@ -64,8 +64,6 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   pv \
   lsb-core \
   sqlite3 \
-  mariadb-client \
-  mariadb-server \
   postgresql \
   postgresql-contrib
 
@@ -98,10 +96,6 @@ RUN add-apt-repository ppa:ondrej/php \
   php8.3-redis \
   libapache2-mod-php8.3 \
   imagemagick \
-  postgresql \
-  postgresql-contrib \
-  mariadb-server \
-  mariadb-client \
   apache2 \
   apache2-utils \
   libjemalloc2
@@ -110,9 +104,9 @@ COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/probo.cnf .my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/mariadb.conf.d/probo.cnf
-COPY files/mysql /etc/init.d/mysql
-RUN chmod 755 /etc/init.d/mysql
-RUN service mariadb start \
+
+RUN apt-get install -y mariadb-client mariadb-server && \
+  service mysql start \
   && mysql -uroot < /mysql-setup.sql \
   && rm -rf /tmp/* /mysql-setup.sql
 

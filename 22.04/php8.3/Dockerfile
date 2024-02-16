@@ -64,8 +64,6 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   pv \
   lsb-core \
   sqlite3 \
-  mariadb-client \
-  mariadb-server \
   postgresql \
   postgresql-contrib
 
@@ -110,7 +108,8 @@ COPY files/probo.cnf .my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/mariadb.conf.d/probo.cnf
 COPY files/mysql /etc/init.d/mysql
 RUN chmod 755 /etc/init.d/mysql
-RUN service mariadb start \
+RUN apt-get install -y mariadb-client mariadb-server && \
+  service mariadb start \
   && mysql -uroot < /mysql-setup.sql \
   && rm -rf /tmp/* /mysql-setup.sql
 
