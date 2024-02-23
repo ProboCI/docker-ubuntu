@@ -63,7 +63,8 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   rsync \
   pv \
   lsb-core \
-  sqlite3
+  sqlite3 \
+  errno
 
 RUN rm /usr/bin/vi && \
   ln -s /usr/bin/vim /usr/bin/vi
@@ -112,6 +113,11 @@ RUN apt-get install -y \
   xvfb \
   libgconf-2-4
 
+COPY files/envvars /envvars
+COPY files/envvars-swap.sh /envvars-swap.sh
+
+RUN rm /etc/apache2/envvars && \
+  ln -s /envvars /etc/apache2/envvars
 COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/probo.cnf .my.cnf

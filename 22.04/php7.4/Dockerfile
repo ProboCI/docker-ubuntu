@@ -64,7 +64,8 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   rsync \
   pv \
   lsb-core \
-  sqlite3
+  sqlite3 \
+  errno
 
 RUN rm /usr/bin/vi && \
   ln -s /usr/bin/vim /usr/bin/vi
@@ -103,6 +104,9 @@ RUN add-apt-repository ppa:ondrej/php \
   apache2 \
   apache2-utils \
   libjemalloc2
+
+COPY files/envvars /envvars
+COPY files/envvars-swap.sh /envvars-swap.sh
 
 COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
