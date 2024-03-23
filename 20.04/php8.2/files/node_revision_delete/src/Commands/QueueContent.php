@@ -116,7 +116,7 @@ class QueueContent extends DrushCommands {
     foreach ($content_types as $content_type) {
       // Check whether at least one plugin is enabled for this content type.
       $has_enabled_plugins = $this->nodeRevisionDelete->contentTypeHasEnabledPlugins($content_type->id());
-      if ($has_enabled_plugins) {
+      if (1) {
         // Create a queue for all nodes in this content type.
         $this->createQueue($content_type->id());
       }
