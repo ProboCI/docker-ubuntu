@@ -113,8 +113,8 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   libapache2-mod-php8.2 \
   php-pear \
   imagemagick \
-  # postgresql \
-  # postgresql-contrib \
+  postgresql \
+  postgresql-contrib \
   apache2 \
   apache2-utils \
   libjemalloc2
