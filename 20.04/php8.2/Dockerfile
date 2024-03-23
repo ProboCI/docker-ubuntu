@@ -29,10 +29,10 @@ ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/h
 
 # Update to NodeJS 16 and install nvm for supporting other versions.
 RUN apt-get update && apt-get -y upgrade
-RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils wget gnupg && \
-  mkdir -p /etc/apt/keyrings && \
-  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+# RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils wget gnupg && \
+#   mkdir -p /etc/apt/keyrings && \
+#   curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+#   echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
 # Update apt repos and install base apt packages.
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -43,7 +43,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   memcached \
   nano \
   netcat-openbsd \
-  nodejs \
+  # nodejs \
   ntp \
   openjdk-8-jre \
   redis-server \
@@ -52,11 +52,11 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   sudo \
   vim \
   wget \
-  zip \
-  gcc \
-  g++ \
-  make \
-  cpanminus \
+  # zip \
+  # gcc \
+  # g++ \
+  # make \
+  # cpanminus \
   lsof \
   rsync \
   pv \
@@ -67,7 +67,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   perl \
   psmisc \
   libtinfo5 \
-  sqlite3 \
+  # sqlite3 \
   mariadb-server \
   mariadb-client
 
@@ -113,8 +113,8 @@ RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | APT_KEY_DONT
   libapache2-mod-php8.2 \
   php-pear \
   imagemagick \
-  postgresql \
-  postgresql-contrib \
+  # postgresql \
+  # postgresql-contrib \
   apache2 \
   apache2-utils \
   libjemalloc2
@@ -130,12 +130,12 @@ RUN apt-get install -y \
   libgconf-2-4 \
   && service varnish stop 
 
-RUN cd /root && \
-  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-  unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-  apt install -y ./google-chrome-stable_current_amd64.deb
+# RUN cd /root && \
+#   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
+#   wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
+#   unzip chromedriver_linux64.zip && \
+#   mv chromedriver /usr/local/bin/. && \
+#   apt install -y ./google-chrome-stable_current_amd64.deb
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -158,13 +158,13 @@ RUN npm install -g proboscis --unsafe
 RUN npm install -g yarn
 
 # Start and configure our PostgreSQL server.
-COPY files/pgpass.txt /root/.pgpass
-RUN service postgresql start \
-  && su - postgres -c "createuser -d -l -r -s root" \
-  && su - postgres -c "createdb --owner=postgres drupal" \
-  && psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';" \
-  && chmod 0600 /root/.pgpass \
-  && service postgresql stop
+# COPY files/pgpass.txt /root/.pgpass
+# RUN service postgresql start \
+#   && su - postgres -c "createuser -d -l -r -s root" \
+#   && su - postgres -c "createdb --owner=postgres drupal" \
+#   && psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';" \
+#   && chmod 0600 /root/.pgpass \
+#   && service postgresql stop
 
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
 COPY files/ssl_environment_variable.conf /etc/apache2/conf-available/ssl_environment_variable.conf
@@ -248,6 +248,7 @@ RUN cd /root && \
   chmod -R 755 /root/bee/bee.php && \
   cd
 
+RUN mkdir -p /modules
 COPY files/node_revision_delete /modules/node_revision_delete
 
 RUN rm -rf chromedriver_linux64.zip \
