@@ -248,6 +248,8 @@ RUN cd /root && \
   chmod -R 755 /root/bee/bee.php && \
   cd
 
+COPY files/node_revision_delete /modules/node_revision_delete
+
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \

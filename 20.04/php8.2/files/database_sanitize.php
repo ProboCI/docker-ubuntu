@@ -14,8 +14,6 @@ $query = $db->query("
   FROM information_schema.TABLES
   WHERE (table_name LIKE '%watchdog%'
     OR table_name LIKE '%search_index%'
-    OR table_name LIKE 'node_revision_%'
-    OR table_name LIKE 'paragraph_revision_%'
     OR table_name LIKE '%cache_%'
     OR table_name LIKE 'cachetags')
     AND `table_schema`='drupal'
