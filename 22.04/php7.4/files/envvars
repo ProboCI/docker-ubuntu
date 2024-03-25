@@ -36,6 +36,8 @@ export LANG
 ## This will produce a verbose output on package installations of web server modules and web application
 ## installations which interact with Apache
 #export APACHE2_MAINTSCRIPT_DEBUG=1
+
+export PROBO_VARIABLES=$PROBO_VARIABLES
 export BUILD_DOMAIN=$BUILD_DOMAIN
 export BRANCH_LINK=$BRANCH_LINK
 export PROBO_ENVIRONMENT=TRUE
