@@ -126,17 +126,24 @@ RUN apt-get install -y \
   xvfb \
   libgconf-2-4
 
-RUN cd /root && \
-  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-  unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-  apt install -y ./google-chrome-stable_current_amd64.deb
+# RUN cd /root && \
+#   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
+#   wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
+#   unzip chromedriver_linux64.zip && \
+#   mv chromedriver /usr/local/bin/. && \
+#   apt install -y ./google-chrome-stable_current_amd64.deb
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
-  --filename=composer
+  --filename=composer \
+  --version=1.10.27
+
+RUN composer \
+  --working-dir=/usr/local/bin \
+  global \
+  require \
+  drush/drush:8.*
 
 # Software version checker and valid user checker
 COPY files/versionizer.php /bin/versionizer
