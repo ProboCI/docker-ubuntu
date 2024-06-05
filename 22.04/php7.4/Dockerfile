@@ -140,10 +140,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   --version=1.10.27
 
 RUN composer \
-  --working-dir=/usr/local/bin \
+  --working-dir=/usr/local/src/ \
   global \
   require \
-  drush/drush:8.*
+  drush/drush:^8 && \
+  ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
 
 # Software version checker and valid user checker
 COPY files/versionizer.php /bin/versionizer
