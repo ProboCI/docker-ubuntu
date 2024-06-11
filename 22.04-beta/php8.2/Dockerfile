@@ -3,20 +3,20 @@
 # These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
-# Tag: 24.04-php8.2
+# Tag: 22.04-php8.2
 # 
 # The default Node.js version on this build is 20
 #
-# Build the proboci/ubuntu:24.04 image:tag with the following command from inside the src/ubuntu/24.04 directory where the Dockerfile lives:
-# docker build . -t proboci/ubuntu:24.04-php8.2
-# docker push proboci/ubuntu:24.04-php8.2
+# Build the proboci/ubuntu:22.04 image:tag with the following command from inside the src/ubuntu/22.04 directory where the Dockerfile lives:
+# docker build . -t proboci/ubuntu:22.04-php8.2
+# docker push proboci/ubuntu:22.04-php8.2
 
 # Set our our meta data for this container.
 
 FROM ubuntu:22.04
 
-LABEL name="Ubuntu 24.04 LTS PHP 8.2 Probo.CI Image"
-LABEL description="An Ubuntu 24.04 based PHP 8.2 image developed specifically for docker containers running Probo.CI Builds."
+LABEL name="Ubuntu 22.04 LTS PHP 8.2 Probo.CI Image"
+LABEL description="An Ubuntu 22.04 based PHP 8.2 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
@@ -33,7 +33,11 @@ RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certifica
   curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
   echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
-#RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash
+COPY files/mysql-setup.sql /mysql-setup.sql
+RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=mariadb-10.6 && \
+  apt -y -qq install mariadb-server mariadb-client mariadb-backup && \
+  service mariadb start && \
+  mysql -uroot < /mysql-setup.sql
 
 RUN apt-get -y update
 RUN apt-get -y install perl psmisc libmecab2 libnuma1
@@ -116,7 +120,7 @@ RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s 
 
 RUN rm /etc/apache2/envvars && \
   ln -s /envvars /etc/apache2/envvars
-COPY files/mysql-setup.sql /mysql-setup.sql
+
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/probo.cnf .my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf

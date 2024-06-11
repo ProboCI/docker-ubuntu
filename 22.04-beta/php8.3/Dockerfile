@@ -3,20 +3,20 @@
 # These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
-# Tag: 24.04-php8.3
+# Tag: 22.04-php8.3
 # 
 # The default Node.js version on this build is 20
 #
-# Build the proboci/ubuntu:24.04 image:tag with the following command from inside the src/ubuntu/24.04 directory where the Dockerfile lives:
-# docker build . -t proboci/ubuntu:24.04-php8.3
-# docker push proboci/ubuntu:24.04-php8.3
+# Build the proboci/ubuntu:22.04 image:tag with the following command from inside the src/ubuntu/22.04 directory where the Dockerfile lives:
+# docker build . -t proboci/ubuntu:22.04-php8.3
+# docker push proboci/ubuntu:22.04-php8.3
 
 # Set our our meta data for this container.
 
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 
-LABEL name="Ubuntu 24.04 LTS PHP 8.3 Probo.CI Image"
-LABEL description="An Ubuntu 24.04 based PHP 8.3 image developed specifically for docker containers running Probo.CI Builds."
+LABEL name="Ubuntu 22.04 LTS PHP 8.3 Probo.CI Image"
+LABEL description="An Ubuntu 22.04 based PHP 8.3 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
