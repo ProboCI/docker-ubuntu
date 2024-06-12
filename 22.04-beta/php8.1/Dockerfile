@@ -33,8 +33,6 @@ RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certifica
   curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
   echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
-#RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash
-
 RUN apt-get -y update
 RUN apt-get -y install perl psmisc libmecab2 libnuma1
 
@@ -111,6 +109,15 @@ RUN apt-get install -y \
 COPY files/envvars /envvars
 COPY files/envvars-swap.sh /envvars-swap.sh
 
+RUN apt remove -y mysql-server mysql-client
+
+COPY files/mysql-setup.sql /mysql-setup.sql
+RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=mariadb-10.6 && \
+  apt -y -qq install mariadb-server mariadb-client mariadb-backup
+
+RUN service mariadb start && \
+  mysql -uroot < /mysql-setup.sql
+
 RUN rm /etc/apache2/envvars && \
   ln -s /envvars /etc/apache2/envvars
 COPY files/mysql-setup.sql /mysql-setup.sql
@@ -119,9 +126,9 @@ COPY files/probo.cnf .my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf
 # COPY files/mysql /etc/init.d/mysql
 # RUN chmod 755 /etc/init.d/mysql
-RUN service mysql start \
-  && mysql -uroot < /mysql-setup.sql \
-  && rm -rf /tmp/* /mysql-setup.sql
+# RUN service mysql start \
+#   && mysql -uroot < /mysql-setup.sql \
+#   && rm -rf /tmp/* /mysql-setup.sql
 
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
@@ -209,7 +216,8 @@ COPY files/database_sanitize.php /opt/database_sanitize.php
 
 # Create .ssh dir and add SSH config file.
 # TODO: There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
-RUN chmod 700 /root/.ssh \
+RUN mkdir /root/.ssh \
+  && chmod 700 /root/.ssh \
   && touch /root/.ssh/config \
   && chmod 0700 /root/.ssh/config \
   && echo "Host *" >> /root/.ssh/config \

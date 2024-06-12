@@ -33,12 +33,6 @@ RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certifica
   curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
   echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
-COPY files/mysql-setup.sql /mysql-setup.sql
-RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=mariadb-10.6 && \
-  apt -y -qq install mariadb-server mariadb-client mariadb-backup && \
-  service mariadb start && \
-  mysql -uroot < /mysql-setup.sql
-
 RUN apt-get -y update
 RUN apt-get -y install perl psmisc libmecab2 libnuma1
 
@@ -71,8 +65,8 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   sqlite3 \
   errno
 
-# RUN rm /usr/bin/vi && \
-#   ln -s /usr/bin/vim /usr/bin/vi
+RUN rm /usr/bin/vi && \
+  ln -s /usr/bin/vim /usr/bin/vi
 
 RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
@@ -115,18 +109,24 @@ COPY files/envvars /envvars
 COPY files/envvars-swap.sh /envvars-swap.sh
 
 RUN apt remove -y mysql-server mysql-client
-RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version="mariadb-10.6" && \
-  apt install -y mariadb-server mariadb-client mariadb-backup
+
+# COPY files/mysql-setup.sql /mysql-setup.sql
+RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=mariadb-10.6 && \
+  apt -y -qq install mariadb-server mariadb-client mariadb-backup
+
+# RUN service mariadb start
+#  && \
+#   mysql -uroot < /mysql-setup.sql
 
 RUN rm /etc/apache2/envvars && \
   ln -s /envvars /etc/apache2/envvars
 
-COPY files/mycnf.txt /root/.my.cnf
-COPY files/probo.cnf .my.cnf
-COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf
+# COPY files/mycnf.txt /root/.my.cnf
+# COPY files/probo.cnf .my.cnf
+# COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf
 # COPY files/mysql /etc/init.d/mariadb
 # RUN chmod 755 /etc/init.d/mariadb
-RUN service mariadb start
+# RUN service mariadb start
 #   && mysql -uroot < /mysql-setup.sql \
 #   && rm -rf /tmp/* /mysql-setup.sql
 
