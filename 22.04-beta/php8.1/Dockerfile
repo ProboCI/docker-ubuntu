@@ -122,11 +122,13 @@ COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/probo.cnf .my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf
-COPY files/mysql /etc/init.d/mysql
-RUN chmod 755 /etc/init.d/mysql
-RUN service mysql start \
-  && mysql -uroot < /mysql-setup.sql \
-  && rm -rf /tmp/* /mysql-setup.sql
+# COPY files/mysql /etc/init.d/mysql
+# RUN chmod 755 /etc/init.d/mysql
+
+RUN service mariadb start \
+  && mariadb -uroot < /mysql-setup.sql \
+  && rm -rf /tmp/* /mysql-setup.sql && \
+  ln -s /etc/init.d/mariadb /etc/init.d/mysql
 
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
