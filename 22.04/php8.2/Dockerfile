@@ -154,6 +154,9 @@ RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
 
+# Install gulp for processing scss
+RUN npm install -g gulp
+
 # Start and configure our PostgreSQL server.
 COPY files/pgpass.txt /root/.pgpass
 RUN service postgresql start \
