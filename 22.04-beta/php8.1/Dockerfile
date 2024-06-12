@@ -58,10 +58,8 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   gcc \
   g++ \
   make \
-  cpanminus \
   lsof \
   rsync \
-  pv \
   sqlite3 \
   errno
 
@@ -112,11 +110,11 @@ COPY files/envvars-swap.sh /envvars-swap.sh
 RUN apt remove -y mysql-server mysql-client
 
 COPY files/mysql-setup.sql /mysql-setup.sql
-RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=mariadb-10.6 && \
+RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=mariadb-11.0 && \
   apt -y -qq install mariadb-server mariadb-client mariadb-backup
 
-RUN service mariadb start && \
-  mysql -uroot < /mysql-setup.sql
+# RUN service mariadb start && \
+#   mysql -uroot < /mysql-setup.sql
 
 RUN rm /etc/apache2/envvars && \
   ln -s /envvars /etc/apache2/envvars
@@ -124,11 +122,11 @@ COPY files/mysql-setup.sql /mysql-setup.sql
 COPY files/mycnf.txt /root/.my.cnf
 COPY files/probo.cnf .my.cnf
 COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf
-# COPY files/mysql /etc/init.d/mysql
-# RUN chmod 755 /etc/init.d/mysql
-# RUN service mysql start \
-#   && mysql -uroot < /mysql-setup.sql \
-#   && rm -rf /tmp/* /mysql-setup.sql
+COPY files/mysql /etc/init.d/mysql
+RUN chmod 755 /etc/init.d/mysql
+RUN service mysql start \
+  && mysql -uroot < /mysql-setup.sql \
+  && rm -rf /tmp/* /mysql-setup.sql
 
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
@@ -154,6 +152,7 @@ RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
 
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
+RUN npm install -g gulp
 
 # Start and configure our PostgreSQL server.
 # COPY files/pgpass.txt /root/.pgpass
@@ -187,7 +186,8 @@ COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-def
 COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 COPY files/apache2.conf /etc/apache2/apache2.conf
 COPY files/other-vhosts-access-log.conf /etc/apache2/conf-available/other-vhosts-access-log.conf
-COPY files/probo-php.ini /etc/php/8.1/apache2/conf.d 
+COPY files/probo-php.ini /etc/php/8.1/apache2/conf.d
+
 # Install solr with default search cores.
 RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
   && tar xzf solr-9.6.1.tgz solr-9.6.1/bin/install_solr_service.sh --strip-components=2 \
