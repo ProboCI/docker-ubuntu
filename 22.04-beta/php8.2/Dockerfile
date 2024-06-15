@@ -111,16 +111,12 @@ COPY files/envvars-swap.sh /envvars-swap.sh
 RUN apt remove -y mysql-server mysql-client
 
 # COPY files/mysql-setup.sql /mysql-setup.sql
-RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=mariadb-10.6 && \
+RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version="mariadb-10.11" && \
   apt -y -qq install mariadb-server mariadb-client mariadb-backup
 
 # RUN service mariadb start
 #  && \
 #   mysql -uroot < /mysql-setup.sql
-
-RUN rm /etc/apache2/envvars && \
-  ln -s /envvars /etc/apache2/envvars
-
 # COPY files/mycnf.txt /root/.my.cnf
 # COPY files/probo.cnf .my.cnf
 # COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf
@@ -130,7 +126,8 @@ RUN rm /etc/apache2/envvars && \
 #   && mysql -uroot < /mysql-setup.sql \
 #   && rm -rf /tmp/* /mysql-setup.sql
 
-RUN npm install -g gulp
+RUN rm /etc/apache2/envvars && \
+  ln -s /envvars /etc/apache2/envvars
 
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
@@ -156,6 +153,9 @@ RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
 
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
+
+# Install Gulp
+RUN npm install -g gulp
 
 # Start and configure our PostgreSQL server.
 # COPY files/pgpass.txt /root/.pgpass
@@ -189,7 +189,8 @@ COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-def
 COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 COPY files/apache2.conf /etc/apache2/apache2.conf
 COPY files/other-vhosts-access-log.conf /etc/apache2/conf-available/other-vhosts-access-log.conf
-COPY files/probo-php.ini /etc/php/8.2/apache2/conf.d 
+COPY files/probo-php.ini /etc/php/8.2/apache2/conf.d
+
 # Install solr with default search cores.
 RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
   && tar xzf solr-9.6.1.tgz solr-9.6.1/bin/install_solr_service.sh --strip-components=2 \
@@ -208,9 +209,9 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
 #   apt-get install varnish
 
 # Install varnish default configs.
-COPY files/wordpress-default.vcl /etc/varnish/wordpress-default.vcl
-COPY files/drupal-default.vcl /etc/varnish/drupal-default.vcl
-COPY files/secret /etc/varnish/secret
+# COPY files/wordpress-default.vcl /etc/varnish/wordpress-default.vcl
+# COPY files/drupal-default.vcl /etc/varnish/drupal-default.vcl
+# COPY files/secret /etc/varnish/secret
 
 # Fly in our Drush script for sanitizing the database which removes
 # a lot of revision, cache, watchdog, and search data.
@@ -253,8 +254,7 @@ RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
-  search_api_solr-4.3.0.tar.gz \
-  solr-9.6.1.tgz \
-  default-context-value.zip
+  search_api_solr-4.3.3.tar.gz \
+  solr-9.6.1.tgz
 
 CMD ["env | grep _ >> /etc/environment"]

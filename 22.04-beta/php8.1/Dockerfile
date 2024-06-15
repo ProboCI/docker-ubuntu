@@ -107,28 +107,28 @@ RUN apt-get install -y \
 COPY files/envvars /envvars
 COPY files/envvars-swap.sh /envvars-swap.sh
 
-RUN apt remove -y mysql-server mysql-client
+RUN apt remove -y mysql-server mysql-client mariadb-client mariadb-server mariadb-backup
 
 COPY files/mysql-setup.sql /mysql-setup.sql
-RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=mariadb-11.0 && \
+RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version="mariadb-10.11" && \
   apt -y -qq install mariadb-server mariadb-client mariadb-backup
 
+# COPY files/mysql-setup.sql /mysql-setup.sql
+# COPY files/mycnf.txt /root/.my.cnf
+# COPY files/probo.cnf .my.cnf
+# COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf
+# COPY files/mysql /etc/init.d/mysql
+# RUN chmod 755 /etc/init.d/mysql
 # RUN service mariadb start && \
 #   mysql -uroot < /mysql-setup.sql
 
 RUN rm /etc/apache2/envvars && \
   ln -s /envvars /etc/apache2/envvars
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/mycnf.txt /root/.my.cnf
-COPY files/probo.cnf .my.cnf
-COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf
-# COPY files/mysql /etc/init.d/mysql
-# RUN chmod 755 /etc/init.d/mysql
 
-RUN service mariadb start \
-  && mariadb -uroot < /mysql-setup.sql \
-  && rm -rf /tmp/* /mysql-setup.sql && \
-  ln -s /etc/init.d/mariadb /etc/init.d/mysql
+# RUN service mariadb start \
+#   && mariadb -uroot < /mysql-setup.sql \
+#   && rm -rf /tmp/* /mysql-setup.sql && \
+#   ln -s /etc/init.d/mariadb /etc/init.d/mysql
 
 RUN cd /root && \
   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
@@ -154,6 +154,8 @@ RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
 
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
+
+# Install Gulp
 RUN npm install -g gulp
 
 # Start and configure our PostgreSQL server.
@@ -253,8 +255,7 @@ RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
-  search_api_solr-4.3.0.tar.gz \
-  solr-9.6.1.tgz \
-  default-context-value.zip
+  search_api_solr-4.3.3.tar.gz \
+  solr-9.6.1.tgz
 
 CMD ["env | grep _ >> /etc/environment"]
