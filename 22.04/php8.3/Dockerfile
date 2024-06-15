@@ -47,7 +47,7 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   netcat-openbsd \
   nodejs \
   ntp \
-  openjdk-8-jre \
+  openjdk-11-jre \
   redis-server \
   nullmailer \
   software-properties-common \

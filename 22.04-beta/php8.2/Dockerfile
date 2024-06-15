@@ -55,10 +55,6 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   vim \
   wget \
   zip \
-  gcc \
-  g++ \
-  make \
-  cpanminus \
   lsof \
   rsync \
   pv \
@@ -112,7 +108,8 @@ RUN apt remove -y mysql-server mysql-client
 
 # COPY files/mysql-setup.sql /mysql-setup.sql
 RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version="mariadb-10.11" && \
-  apt -y -qq install mariadb-server mariadb-client mariadb-backup
+  apt -y -qq install mariadb-server mariadb-client mariadb-backup && \
+  ln -s /etc/init.d/mariadb /etc/init.d/mysql
 
 # RUN service mariadb start
 #  && \
@@ -129,13 +126,13 @@ RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s 
 RUN rm /etc/apache2/envvars && \
   ln -s /envvars /etc/apache2/envvars
 
-RUN cd /root && \
-  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-  unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-  apt install -y ./google-chrome-stable_current_amd64.deb
+# RUN cd /root && \
+#   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
+#   wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
+#   wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+#   unzip chromedriver_linux64.zip && \
+#   mv chromedriver /usr/local/bin/. && \
+#   apt install -y ./google-chrome-stable_current_amd64.deb
 
 # Install Composer.
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -251,9 +248,13 @@ RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
 #   chmod -R 755 /opt/bee/bee.php && \
 #   cd
 
-RUN rm -rf chromedriver_linux64.zip \
-  google-chrome-stable_current_amd64.deb \
-  install_solr_service.sh \
+# RUN rm -rf chromedriver_linux64.zip \
+#   google-chrome-stable_current_amd64.deb \
+#   install_solr_service.sh \
+#   search_api_solr-4.3.3.tar.gz \
+#   solr-9.6.1.tgz
+
+RUN rm -rf install_solr_service.sh \
   search_api_solr-4.3.3.tar.gz \
   solr-9.6.1.tgz
 

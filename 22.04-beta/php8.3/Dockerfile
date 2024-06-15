@@ -55,9 +55,6 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   vim \
   wget \
   zip \
-  gcc \
-  g++ \
-  make \
   lsof \
   rsync \
   pv \
@@ -67,7 +64,7 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 RUN rm /usr/bin/vi && \
   ln -s /usr/bin/vim /usr/bin/vi
 
-RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
+# RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.3 \
@@ -87,7 +84,6 @@ RUN add-apt-repository ppa:ondrej/php \
   php8.3-soap \
   php8.3-xml \
   php8.3-zip \
-  php8.3-pgsql \
   php8.3-memcache \
   php8.3-redis \
   php8.3-imagick \
@@ -112,31 +108,41 @@ COPY files/envvars-swap.sh /envvars-swap.sh
 
 RUN apt remove -y mysql-server mysql-client
 
-COPY files/mysql-setup.sql /mysql-setup.sql
-RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=mariadb-10.6 && \
-  apt -y -qq install mariadb-server mariadb-client mariadb-backup
+# COPY files/mysql-setup.sql /mysql-setup.sql
+RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version="mariadb-10.11" && \
+  apt -y -qq install mariadb-server mariadb-client mariadb-backup && \
+  ln -s /etc/init.d/mariadb /etc/init.d/mysql
 
-RUN service mariadb start && \
-  mysql -uroot < /mysql-setup.sql
+# RUN service mariadb start
+#  && \
+#   mysql -uroot < /mysql-setup.sql
+# COPY files/mycnf.txt /root/.my.cnf
+# COPY files/probo.cnf .my.cnf
+# COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf
+# COPY files/mysql /etc/init.d/mariadb
+# RUN chmod 755 /etc/init.d/mariadb
+# RUN service mariadb start
+#   && mysql -uroot < /mysql-setup.sql \
+#   && rm -rf /tmp/* /mysql-setup.sql
 
 RUN rm /etc/apache2/envvars && \
   ln -s /envvars /etc/apache2/envvars
-COPY files/mysql-setup.sql /mysql-setup.sql
-COPY files/mycnf.txt /root/.my.cnf
-COPY files/probo.cnf .my.cnf
-COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf
+# COPY files/mysql-setup.sql /mysql-setup.sql
+# COPY files/mycnf.txt /root/.my.cnf
+# COPY files/probo.cnf .my.cnf
+# COPY files/probo-mysql.cnf /etc/mysql/conf.d/probo.cnf
 # COPY files/mysql /etc/init.d/mysql
 # RUN chmod 755 /etc/init.d/mysql
 # RUN service mariadb start \
 #   && mysql -uroot < /mysql-setup.sql
 
-RUN cd /root && \
-  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-  unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-  apt install -y ./google-chrome-stable_current_amd64.deb
+# RUN cd /root && \
+#   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
+#   wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
+#   wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+#   unzip chromedriver_linux64.zip && \
+#   mv chromedriver /usr/local/bin/. && \
+#   apt install -y ./google-chrome-stable_current_amd64.deb
 
 # Install Composer.
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -154,6 +160,9 @@ RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
 
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
+
+# Install Gulp
+RUN npm install -g gulp
 
 # Start and configure our PostgreSQL server.
 # COPY files/pgpass.txt /root/.pgpass
@@ -207,9 +216,9 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
 #   apt-get install varnish
 
 # Install varnish default configs.
-COPY files/wordpress-default.vcl /etc/varnish/wordpress-default.vcl
-COPY files/drupal-default.vcl /etc/varnish/drupal-default.vcl
-COPY files/secret /etc/varnish/secret
+# COPY files/wordpress-default.vcl /etc/varnish/wordpress-default.vcl
+# COPY files/drupal-default.vcl /etc/varnish/drupal-default.vcl
+# COPY files/secret /etc/varnish/secret
 
 # Fly in our Drush script for sanitizing the database which removes
 # a lot of revision, cache, watchdog, and search data.
@@ -249,11 +258,14 @@ RUN curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar \
 #   chmod -R 755 /opt/bee/bee.php && \
 #   cd
 
-RUN rm -rf chromedriver_linux64.zip \
-  google-chrome-stable_current_amd64.deb \
-  install_solr_service.sh \
-  search_api_solr-4.3.0.tar.gz \
-  solr-9.6.1.tgz \
-  default-context-value.zip
+# RUN rm -rf chromedriver_linux64.zip \
+#   google-chrome-stable_current_amd64.deb \
+#   install_solr_service.sh \
+#   search_api_solr-4.3.3.tar.gz \
+#   solr-9.6.1.tgz
+
+RUN rm -rf install_solr_service.sh \
+  search_api_solr-4.3.3.tar.gz \
+  solr-9.6.1.tgz
 
 CMD ["env | grep _ >> /etc/environment"]
