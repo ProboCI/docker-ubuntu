@@ -191,6 +191,7 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
   && tar xzf search_api_solr-4.3.3.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
   && service solr stop
 
 RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/varnish.gpg && \

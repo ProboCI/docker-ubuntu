@@ -108,7 +108,7 @@ COPY files/envvars-swap.sh /envvars-swap.sh
 
 RUN apt remove -y mysql-server mysql-client
 
-# COPY files/mysql-setup.sql /mysql-setup.sql
+COPY files/mysql-setup.sql /mysql-setup.sql
 RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version="mariadb-10.11" && \
   apt -y -qq install mariadb-server mariadb-client mariadb-backup && \
   ln -s /etc/init.d/mariadb /etc/init.d/mysql
