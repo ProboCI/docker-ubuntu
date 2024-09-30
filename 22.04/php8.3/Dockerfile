@@ -186,9 +186,9 @@ COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
   && tar xzf solr-9.6.1.tgz solr-9.6.1/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-9.6.1.tgz \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.3.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.5.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.3.3.tar.gz \
+  && tar xzf search_api_solr-4.3.5.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
@@ -220,7 +220,7 @@ RUN mkdir /root/.ssh \
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
 RUN cd /opt \
-  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.2.2/terminus.phar --output terminus \
+  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.5.2/terminus.phar --output terminus \
   && chmod +x terminus \
   && ln -s /opt/terminus /usr/local/bin/terminus \
   && cd
@@ -246,7 +246,7 @@ RUN cd /opt && \
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
-  search_api_solr-4.3.0.tar.gz \
+  search_api_solr-4.3.5.tar.gz \
   search_api_solr-7.x-1.16.tar.gz \
   solr-7.3.1.tgz \
   default-context-value.zip

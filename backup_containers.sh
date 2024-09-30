@@ -91,3 +91,7 @@ gzip image-backups/alpine-php8.1-$(date +%Y-%m-%d).tar
 echo "Backing up Alpine PHP 8.2"
 docker save proboci/alpine:php8.2 > image-backups/alpine-php8.2-$(date +%Y-%m-%d).tar
 gzip image-backups/alpine-php8.2-$(date +%Y-%m-%d).tar
+
+echo "Backing up Alpine PHP 8.3"
+docker save proboci/alpine:php8.3 > image-backups/alpine-php8.3-$(date +%Y-%m-%d).tar
+gzip image-backups/alpine-php8.3-$(date +%Y-%m-%d).tar
