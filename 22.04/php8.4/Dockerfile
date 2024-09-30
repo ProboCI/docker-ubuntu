@@ -3,28 +3,28 @@
 # These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
-# Tag: 22.04-php8.3
+# Tag: 22.04-php8.4
 # 
 # The default Node.js version on this build is 16
 #
 # Build the proboci/ubuntu:22.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
-# docker build . -t proboci/ubuntu:22.04-php8.3
-# docker push proboci/ubuntu:22.04-php8.3
+# docker build . -t proboci/ubuntu:22.04-php8.4
+# docker push proboci/ubuntu:22.04-php8.4
 
 # Set our our meta data for this container.
 
 FROM ubuntu:22.04
 
-LABEL name="Ubuntu 22.04 LTS PHP 8.3 Probo.CI Image"
-LABEL description="An Ubuntu 22.04 based PHP 8.3 image developed specifically for docker containers running Probo.CI Builds."
+LABEL name="Ubuntu 22.04 LTS PHP 8.4 Probo.CI Image"
+LABEL description="An Ubuntu 22.04 based PHP 8.4 image developed specifically for docker containers running Probo.CI Builds."
 LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
 LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
 
-ENV TERM xterm
+ENV TERM=xterm
 
-ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
 
 # Update to NodeJS 16 and install nvm for supporting other versions.
 RUN apt-get update && apt-get -y upgrade
@@ -74,28 +74,28 @@ RUN rm /usr/bin/vi && \
 RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
 RUN add-apt-repository ppa:ondrej/php \
-  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.3 \
-  php8.3-bcmath \
-  php8.3-bz2 \
-  php8.3-cli \
-  php8.3-common \
-  php8.3-curl \
-  php8.3-dba \
-  php8.3-gd \
-  php8.3-intl \
-  php8.3-ldap \
-  php8.3-mbstring \
-  php8.3-mysql \
-  php8.3-opcache \
-  php8.3-readline \
-  php8.3-soap \
-  php8.3-xml \
-  php8.3-zip \
-  php8.3-pgsql \
-  php8.3-sqlite3 \
-  php8.3-memcache \
-  php8.3-redis \
-  libapache2-mod-php8.3 \
+  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.4 \
+  php8.4-bcmath \
+  php8.4-bz2 \
+  php8.4-cli \
+  php8.4-common \
+  php8.4-curl \
+  php8.4-dba \
+  php8.4-gd \
+  php8.4-intl \
+  php8.4-ldap \
+  php8.4-mbstring \
+  php8.4-mysql \
+  php8.4-opcache \
+  php8.4-readline \
+  php8.4-soap \
+  php8.4-xml \
+  php8.4-zip \
+  php8.4-pgsql \
+  php8.4-sqlite3 \
+  php8.4-memcache \
+  php8.4-redis \
+  libapache2-mod-php8.4 \
   imagemagick \
   postgresql \
   postgresql-contrib \
