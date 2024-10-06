@@ -28,10 +28,11 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/h
 
 # Update to NodeJS 20 and install nvm for supporting other versions.
 RUN apt-get update && apt-get -y upgrade
-RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils wget gnupg && \
-  mkdir -p /etc/apt/keyrings && \
-  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils wget gnupg
+
+# RUN mkdir -p /etc/apt/keyrings && \
+#   curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+#   echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
 RUN apt-get -y update
 RUN apt-get -y install perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
@@ -45,9 +46,9 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   memcached \
   nano \
   netcat-openbsd \
-  nodejs \
+  # nodejs \
   ntp \
-  openjdk-11-jre \
+  # openjdk-11-jre \
   redis-server \
   nullmailer \
   software-properties-common \
@@ -181,16 +182,16 @@ COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-def
 COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install solr with default search cores.
-RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
-  && tar xzf solr-9.6.1.tgz solr-9.6.1/bin/install_solr_service.sh --strip-components=2 \
-  && ./install_solr_service.sh solr-9.6.1.tgz \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.5.tar.gz \
-  && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.3.5.tar.gz \
-  && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
-  && service solr stop
+# RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
+#   && tar xzf solr-9.6.1.tgz solr-9.6.1/bin/install_solr_service.sh --strip-components=2 \
+#   && ./install_solr_service.sh solr-9.6.1.tgz \
+#   && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.5.tar.gz \
+#   && rm -rf /opt/solr/search_api_solr \
+#   && tar xzf search_api_solr-4.3.5.tar.gz \
+#   && mv search_api_solr /opt/solr/. \
+#   && sudo -u solr -- /opt/solr/bin/solr create -c drupal -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
+#   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
+#   && service solr stop
 
 # RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/varnish.gpg && \
 #   echo "deb https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" > /etc/apt/sources.list.d/varnishcache_varnish70.list && \
