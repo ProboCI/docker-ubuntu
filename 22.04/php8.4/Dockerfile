@@ -62,15 +62,15 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   lsof \
   rsync \
   lsb-core \
-  sqlite3 \
+  sqlite3
   # postgresql \
   # postgresql-contrib \
-  errno
+  # errno
 
 RUN rm /usr/bin/vi && \
   ln -s /usr/bin/vim /usr/bin/vi
 
-RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
+# RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
 RUN apt install -y apt-utils && add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.4 \
