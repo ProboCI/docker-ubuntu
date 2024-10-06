@@ -90,14 +90,14 @@ RUN apt install -y apt-utils && add-apt-repository ppa:ondrej/php \
   php8.4-soap \
   php8.4-xml \
   php8.4-zip \
-  php8.4-pgsql \
+  # php8.4-pgsql \
   php8.4-sqlite3 \
   #php8.4-memcache \
   #php8.4-redis \
   libapache2-mod-php8.4 \
   imagemagick \
-  postgresql \
-  postgresql-contrib \
+  # postgresql \
+  # postgresql-contrib \
   apache2 \
   apache2-utils \
   libjemalloc2
