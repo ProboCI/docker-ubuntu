@@ -30,9 +30,9 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/h
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils wget gnupg
 
-# RUN mkdir -p /etc/apt/keyrings && \
-#   curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-#   echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN mkdir -p /etc/apt/keyrings && \
+  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
 RUN apt-get -y update
 RUN apt-get -y install perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
@@ -46,7 +46,7 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   memcached \
   nano \
   netcat-openbsd \
-  # nodejs \
+  nodejs \
   ntp \
   # openjdk-11-jre \
   redis-server \
@@ -119,9 +119,9 @@ RUN apt-get install -y mariadb-client mariadb-server && \
 RUN apt-get install -y \
   libreadline-dev \
   zlib1g-dev \
-  ruby-dev \
+  # ruby-dev \
   libsqlite3-dev \
-  xvfb \
+  # xvfb \
   libgconf-2-4
 
 # RUN cd /root && \
