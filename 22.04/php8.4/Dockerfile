@@ -56,9 +56,9 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   vim \
   wget \
   zip \
-  gcc \
-  g++ \
-  make \
+  # gcc \
+  # g++ \
+  # make \
   lsof \
   rsync \
   lsb-core \
@@ -144,8 +144,8 @@ COPY files/valid-user.sh /bin/valid
 RUN chmod 755 /bin/valid /bin/versionizer
 
 # Add our ability to pull from AWS S3
-COPY s3/aws-retrieval /usr/local/src/aws
-RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
+# COPY s3/aws-retrieval /usr/local/src/aws
+# RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
 
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
@@ -178,8 +178,8 @@ RUN rm -rf /var/www/html \
   && service apache2 stop
 COPY files/apache-default-host.conf /etc/apache2/sites-available/000-default.conf
 COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
-COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-default-varnish.conf
-COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
+# COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-default-varnish.conf
+# COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install solr with default search cores.
 # RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
@@ -206,7 +206,7 @@ COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Fly in our Drush script for sanitizing the database which removes
 # a lot of revision, cache, watchdog, and search data.
-COPY files/database_sanitize.php /opt/database_sanitize.php
+# COPY files/database_sanitize.php /opt/database_sanitize.php
 
 # Create .ssh dir and add SSH config file.
 # TODO: There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
@@ -242,6 +242,4 @@ RUN cd /opt && \
   chmod -R 755 /opt/bee/bee.php && \
   cd
 
-RUN rm -rf install_solr_service.sh \
-  search_api_solr-4.3.5.tar.gz \
-  /opt/default-context-value.zip
+RUN rm -rf /opt/default-context-value.zip
