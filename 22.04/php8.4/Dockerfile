@@ -26,12 +26,12 @@ ENV TERM=xterm
 
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
 
-# Update to NodeJS 16 and install nvm for supporting other versions.
+# Update to NodeJS 20 and install nvm for supporting other versions.
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates sudo apt-utils wget gnupg && \
   mkdir -p /etc/apt/keyrings && \
   curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
 RUN apt-get -y update
 RUN apt-get -y install perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
@@ -58,14 +58,12 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   gcc \
   g++ \
   make \
-  cpanminus \
   lsof \
   rsync \
-  pv \
   lsb-core \
   sqlite3 \
-  postgresql \
-  postgresql-contrib \
+  # postgresql \
+  # postgresql-contrib \
   errno
 
 RUN rm /usr/bin/vi && \
@@ -73,7 +71,7 @@ RUN rm /usr/bin/vi && \
 
 RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
-RUN add-apt-repository ppa:ondrej/php \
+RUN apt install -y apt-utils && add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.4 \
   php8.4-bcmath \
   php8.4-bz2 \
@@ -125,14 +123,14 @@ RUN apt-get install -y \
   xvfb \
   libgconf-2-4
 
-RUN cd /root && \
-  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-  unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-  apt install -y ./google-chrome-stable_current_amd64.deb && \
-  apt update -y
+# RUN cd /root && \
+#   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
+#   wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
+#   wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+#   unzip chromedriver_linux64.zip && \
+#   mv chromedriver /usr/local/bin/. && \
+#   apt install -y ./google-chrome-stable_current_amd64.deb && \
+#   apt update -y
 
 # Install Composer.
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -151,14 +149,14 @@ RUN chmod +x /usr/local/src/aws/retrieve-from-aws.php
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
 
-# Start and configure our PostgreSQL server.
-COPY files/pgpass.txt /root/.pgpass
-RUN service postgresql start \
-  && su - postgres -c "createuser -d -l -r -s root" \
-  && su - postgres -c "createdb --owner=postgres drupal" \
-  && psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';" \
-  && chmod 0600 /root/.pgpass \
-  && service postgresql stop
+# # Start and configure our PostgreSQL server.
+# COPY files/pgpass.txt /root/.pgpass
+# RUN service postgresql start \
+#   && su - postgres -c "createuser -d -l -r -s root" \
+#   && su - postgres -c "createdb --owner=postgres drupal" \
+#   && psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';" \
+#   && chmod 0600 /root/.pgpass \
+#   && service postgresql stop
 
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
 COPY files/ssl_environment_variable.conf /etc/apache2/conf-available/ssl_environment_variable.conf
@@ -194,16 +192,16 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
   && service solr stop
 
-RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/varnish.gpg && \
-  echo "deb https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" > /etc/apt/sources.list.d/varnishcache_varnish70.list && \
-  echo "deb-src https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" >> /etc/apt/sources.list.d/varnishcache_varnish70.list
-RUN apt-get update -y && \
-  apt-get install varnish
+# RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/varnish.gpg && \
+#   echo "deb https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" > /etc/apt/sources.list.d/varnishcache_varnish70.list && \
+#   echo "deb-src https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" >> /etc/apt/sources.list.d/varnishcache_varnish70.list
+# RUN apt-get update -y && \
+#   apt-get install varnish
 
 # Install varnish default configs.
-COPY files/wordpress-default.vcl /etc/varnish/wordpress-default.vcl
-COPY files/drupal-default.vcl /etc/varnish/drupal-default.vcl
-COPY files/secret /etc/varnish/secret
+# COPY files/wordpress-default.vcl /etc/varnish/wordpress-default.vcl
+# COPY files/drupal-default.vcl /etc/varnish/drupal-default.vcl
+# COPY files/secret /etc/varnish/secret
 
 # Fly in our Drush script for sanitizing the database which removes
 # a lot of revision, cache, watchdog, and search data.
@@ -243,10 +241,6 @@ RUN cd /opt && \
   chmod -R 755 /opt/bee/bee.php && \
   cd
 
-RUN rm -rf chromedriver_linux64.zip \
-  google-chrome-stable_current_amd64.deb \
-  install_solr_service.sh \
+RUN rm -rf install_solr_service.sh \
   search_api_solr-4.3.5.tar.gz \
-  search_api_solr-7.x-1.16.tar.gz \
-  solr-7.3.1.tgz \
-  default-context-value.zip
+  /opt/default-context-value.zip
