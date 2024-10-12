@@ -3,7 +3,7 @@
 echo "---------------------------------------------------------------"
 echo "Ubuntu 20.04 - PHP 8.3 ProboCI Build: "
 echo "---------------------------------------------------------------"
-docker build . -t proboci/ubuntu:20.04-php8.3
+docker build . -t proboci/ubuntu:20.04-php8.3 ${2}
 if [[ ${1} = 'production' ]] || [[ ${1} = 'prod' ]]; then
   echo "---------------------------------------------------------------"
   echo "Pushing to DockerHub: "
