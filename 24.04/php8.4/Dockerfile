@@ -13,7 +13,7 @@
 
 # Set our our meta data for this container.
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 LABEL name="Ubuntu 22.04 LTS PHP 8.4 Probo.CI Image"
 LABEL description="An Ubuntu 22.04 based PHP 8.4 image developed specifically for docker containers running Probo.CI Builds."
@@ -35,19 +35,19 @@ RUN mkdir -p /etc/apt/keyrings && \
   echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
 RUN apt-get -y update
-RUN apt-get -y install perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
+#RUN apt-get -y install perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
 
 # Update apt repos and install base apt packages.
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   build-essential \
-  git \
+#   git \
   gnupg \
   libnss3 \
   memcached \
   nano \
-  netcat-openbsd \
+#   netcat-openbsd \
   nodejs \
-  ntp \
+#  ntp \
   openjdk-11-jre \
   redis-server \
   nullmailer \
@@ -61,7 +61,7 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   # make \
   lsof \
   rsync \
-  lsb-core \
+  #lsb-core \
   sqlite3
   # postgresql \
   # postgresql-contrib \
@@ -120,9 +120,9 @@ RUN apt-get install -y \
   libreadline-dev \
   zlib1g-dev \
   # ruby-dev \
-  libsqlite3-dev \
+  libsqlite3-dev
   # xvfb \
-  libgconf-2-4
+  #libgconf-2-4
 
 # RUN cd /root && \
 #   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
@@ -216,8 +216,7 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
 
 # Create .ssh dir and add SSH config file.
 # TODO: There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
-RUN mkdir /root/.ssh \
-  && chmod 700 /root/.ssh \
+RUN chmod 700 /root/.ssh \
   && touch /root/.ssh/config \
   && chmod 0700 /root/.ssh/config \
   && echo "Host *" >> /root/.ssh/config \
