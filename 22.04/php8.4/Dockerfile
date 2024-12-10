@@ -56,16 +56,10 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   vim \
   wget \
   zip \
-  # gcc \
-  # g++ \
-  # make \
   lsof \
   rsync \
   lsb-core \
   sqlite3
-  # postgresql \
-  # postgresql-contrib \
-  # errno
 
 RUN rm /usr/bin/vi && \
   ln -s /usr/bin/vim /usr/bin/vi
@@ -90,14 +84,11 @@ RUN apt install -y apt-utils && add-apt-repository ppa:ondrej/php \
   php8.4-soap \
   php8.4-xml \
   php8.4-zip \
-  # php8.4-pgsql \
   php8.4-sqlite3 \
   php8.4-memcache \
   php8.4-redis \
   libapache2-mod-php8.4 \
   imagemagick \
-  # postgresql \
-  # postgresql-contrib \
   apache2 \
   apache2-utils \
   libjemalloc2
@@ -119,19 +110,19 @@ RUN apt-get install -y mariadb-client mariadb-server && \
 RUN apt-get install -y \
   libreadline-dev \
   zlib1g-dev \
-  # ruby-dev \
+  ruby-dev \
   libsqlite3-dev \
-  # xvfb \
+  xvfb \
   libgconf-2-4
 
-# RUN cd /root && \
-#   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-#   wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-#   wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-#   unzip chromedriver_linux64.zip && \
-#   mv chromedriver /usr/local/bin/. && \
-#   apt install -y ./google-chrome-stable_current_amd64.deb && \
-#   apt update -y
+RUN cd /root && \
+  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
+  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
+  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+  unzip chromedriver_linux64.zip && \
+  mv chromedriver /usr/local/bin/. && \
+  apt install -y ./google-chrome-stable_current_amd64.deb && \
+  apt update -y
 
 # Install Composer.
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -198,7 +189,6 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
   && rm solr-9.6.1.tgz \
   && rm search_api_solr-4.3.5.tar.gz
 
-
 # RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/varnish.gpg && \
 #   echo "deb https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" > /etc/apt/sources.list.d/varnishcache_varnish70.list && \
 #   echo "deb-src https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" >> /etc/apt/sources.list.d/varnishcache_varnish70.list
@@ -225,7 +215,7 @@ RUN mkdir /root/.ssh \
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
 RUN cd /opt \
-  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.5.2/terminus.phar --output terminus \
+  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.6.0/terminus.phar --output terminus \
   && chmod +x terminus \
   && ln -s /opt/terminus /usr/local/bin/terminus \
   && cd
