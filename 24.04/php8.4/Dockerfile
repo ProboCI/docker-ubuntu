@@ -3,14 +3,13 @@
 # These images are built using Dockerfile inheritance to build the images used for Probo.CI.
 #
 # Image: proboci/ubuntu
-# Tag: 22.04-php8.4
+# Tag: 24.04-php8.4
 # 
 # The default Node.js version on this build is 16
 #
-# Build the proboci/ubuntu:22.04 image:tag with the following command from inside the src/ubuntu/18.04 directory where the Dockerfile lives:
-# docker build . -t proboci/ubuntu:22.04-php8.4
-# docker push proboci/ubuntu:22.04-php8.4
-
+# Build the proboci/ubuntu:24.04 image:tag with the following command from inside the directory where this Dockerfile lives:
+# docker build . -t proboci/ubuntu:24.04-php8.4
+# docker push proboci/ubuntu:24.04-php8.4
 # Set our our meta data for this container.
 
 FROM ubuntu:24.04
@@ -40,14 +39,12 @@ RUN apt-get -y update
 # Update apt repos and install base apt packages.
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   build-essential \
-#   git \
+  #   git \
   gnupg \
   libnss3 \
   memcached \
   nano \
-#   netcat-openbsd \
   nodejs \
-#  ntp \
   openjdk-11-jre \
   redis-server \
   nullmailer \
@@ -56,16 +53,9 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   vim \
   wget \
   zip \
-  # gcc \
-  # g++ \
-  # make \
   lsof \
   rsync \
-  #lsb-core \
   sqlite3
-  # postgresql \
-  # postgresql-contrib \
-  # errno
 
 RUN rm /usr/bin/vi && \
   ln -s /usr/bin/vim /usr/bin/vi
@@ -90,14 +80,11 @@ RUN apt install -y apt-utils && add-apt-repository ppa:ondrej/php \
   php8.4-soap \
   php8.4-xml \
   php8.4-zip \
-  # php8.4-pgsql \
   php8.4-sqlite3 \
   php8.4-memcache \
   php8.4-redis \
   libapache2-mod-php8.4 \
   imagemagick \
-  # postgresql \
-  # postgresql-contrib \
   apache2 \
   apache2-utils \
   libjemalloc2
@@ -119,19 +106,7 @@ RUN apt-get install -y mariadb-client mariadb-server && \
 RUN apt-get install -y \
   libreadline-dev \
   zlib1g-dev \
-  # ruby-dev \
   libsqlite3-dev
-  # xvfb \
-  #libgconf-2-4
-
-# RUN cd /root && \
-#   wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-#   wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-#   wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-#   unzip chromedriver_linux64.zip && \
-#   mv chromedriver /usr/local/bin/. && \
-#   apt install -y ./google-chrome-stable_current_amd64.deb && \
-#   apt update -y
 
 # Install Composer.
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -153,15 +128,6 @@ RUN npm install -g proboscis --unsafe
 # Install gulp for processing scss
 RUN npm install -g gulp
 
-# # Start and configure our PostgreSQL server.
-# COPY files/pgpass.txt /root/.pgpass
-# RUN service postgresql start \
-#   && su - postgres -c "createuser -d -l -r -s root" \
-#   && su - postgres -c "createdb --owner=postgres drupal" \
-#   && psql --username=root --dbname=drupal -c "ALTER USER root WITH PASSWORD 'strongpassword';" \
-#   && chmod 0600 /root/.pgpass \
-#   && service postgresql stop
-
 # Configure Apache. Be sure to enable apache mods or you're going to have a bad time.
 COPY files/ssl_environment_variable.conf /etc/apache2/conf-available/ssl_environment_variable.conf
 RUN rm -rf /var/www/html \
@@ -181,38 +147,24 @@ RUN rm -rf /var/www/html \
   && service apache2 stop
 COPY files/apache-default-host.conf /etc/apache2/sites-available/000-default.conf
 COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
-# COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-default-varnish.conf
-# COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install solr with default search cores.
 RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
   && tar xzf solr-9.6.1.tgz solr-9.6.1/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-9.6.1.tgz \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.5.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.7.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.3.5.tar.gz \
+  && tar xzf search_api_solr-4.3.7.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
   && service solr stop \
   && rm solr-9.6.1.tgz \
-  && rm search_api_solr-4.3.5.tar.gz
-
-
-# RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/varnish.gpg && \
-#   echo "deb https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" > /etc/apt/sources.list.d/varnishcache_varnish70.list && \
-#   echo "deb-src https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" >> /etc/apt/sources.list.d/varnishcache_varnish70.list
-# RUN apt-get update -y && \
-#   apt-get install varnish
-
-# Install varnish default configs.
-# COPY files/wordpress-default.vcl /etc/varnish/wordpress-default.vcl
-# COPY files/drupal-default.vcl /etc/varnish/drupal-default.vcl
-# COPY files/secret /etc/varnish/secret
+  && rm search_api_solr-4.3.7.tar.gz
 
 # Fly in our Drush script for sanitizing the database which removes
 # a lot of revision, cache, watchdog, and search data.
-# COPY files/database_sanitize.php /opt/database_sanitize.php
+COPY files/database_sanitize.php /opt/database_sanitize.php
 
 # Create .ssh dir and add SSH config file.
 # TODO: There's got to be a better way to setup the /root/.ssh/config file. Using old method for now.
