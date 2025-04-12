@@ -33,9 +33,6 @@ RUN mkdir -p /etc/apt/keyrings && \
   curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
   echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
-RUN apt-get -y update
-#RUN apt-get -y install perl psmisc libaio1 libmecab2 libnuma1 libtinfo5
-
 # Update apt repos and install base apt packages.
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   build-essential \
@@ -59,8 +56,6 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 RUN rm /usr/bin/vi && \
   ln -s /usr/bin/vim /usr/bin/vi
-
-# RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
 RUN apt install -y apt-utils && add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.4 \
@@ -176,7 +171,7 @@ RUN chmod 700 /root/.ssh \
 
 # Install Terminus Pantheon command line tool, https://pantheon.io/docs/terminus.
 RUN cd /opt \
-  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.5.2/terminus.phar --output terminus \
+  && curl -L https://github.com/pantheon-systems/terminus/releases/download/3.6.1/terminus.phar --output terminus \
   && chmod +x terminus \
   && ln -s /opt/terminus /usr/local/bin/terminus \
   && cd
