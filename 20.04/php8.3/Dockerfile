@@ -22,9 +22,9 @@ LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
 
-ENV TERM xterm
+ENV TERM=xterm
 
-ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
 
 # Update to NodeJS 16 and install nvm for supporting other versions.
 RUN apt-get update && apt-get -y upgrade
@@ -179,13 +179,13 @@ COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 RUN wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
   && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-7.3.1.tgz \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.16.tar.gz \
-  && tar xzf search_api_solr-7.x-1.16.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.17.tar.gz \
+  && tar xzf search_api_solr-7.x-1.17.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.5.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.8.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.3.5.tar.gz \
+  && tar xzf search_api_solr-4.3.8.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr7/config-set" \
   && service solr stop
@@ -242,7 +242,7 @@ RUN cd /opt && \
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
-  search_api_solr-4.3.5.tar.gz \
-  search_api_solr-7.x-1.16.tar.gz \
+  search_api_solr-4.3.8.tar.gz \
+  search_api_solr-7.x-1.17.tar.gz \
   solr-7.3.1.tgz \
   default-context-value.zip

@@ -179,15 +179,15 @@ COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
 RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
   && tar xzf solr-9.6.1.tgz solr-9.6.1/bin/install_solr_service.sh --strip-components=2 \
   && ./install_solr_service.sh solr-9.6.1.tgz \
-  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.7.tar.gz \
+  && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.8.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
-  && tar xzf search_api_solr-4.3.7.tar.gz \
+  && tar xzf search_api_solr-4.3.8.tar.gz \
   && mv search_api_solr /opt/solr/. \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
   && service solr stop \
   && rm solr-9.6.1.tgz \
-  && rm search_api_solr-4.3.7.tar.gz
+  && rm search_api_solr-4.3.8.tar.gz
 
 # RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/varnish.gpg && \
 #   echo "deb https://packagecloud.io/varnishcache/varnish70/ubuntu/ focal main" > /etc/apt/sources.list.d/varnishcache_varnish70.list && \
@@ -238,4 +238,10 @@ RUN cd /opt && \
   chmod -R 755 /opt/bee/bee.php && \
   cd
 
-RUN rm -rf /opt/default-context-value.zip
+RUN rm -rf chromedriver_linux64.zip \
+  google-chrome-stable_current_amd64.deb \
+  install_solr_service.sh \
+  search_api_solr-4.3.7.tar.gz \
+  search_api_solr-7.x-1.16.tar.gz \
+  solr-7.3.1.tgz \
+  default-context-value.zip
