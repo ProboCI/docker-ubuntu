@@ -18,14 +18,14 @@ FROM ubuntu:22.04
 
 LABEL name="Ubuntu 22.04 LTS PHP 8.0 Probo.CI Image"
 LABEL description="An Ubuntu 22.04 based PHP 8.0 image developed specifically for docker containers running Probo.CI Builds."
-LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
+LABEL author="Michael R. Bagnall <michael@bagnall.io>"
 LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
 
-ENV TERM xterm
+ENV TERM=xterm
 
-ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
 
 # Update to NodeJS 16 and install nvm for supporting other versions.
 RUN apt-get update && apt-get -y upgrade
@@ -123,13 +123,6 @@ RUN apt-get install -y \
   libsqlite3-dev \
   xvfb \
   libgconf-2-4
-
-RUN cd /root && \
-  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-  unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-  apt install -y ./google-chrome-stable_current_amd64.deb
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -244,9 +237,7 @@ RUN cd /root && \
   chmod -R 755 /root/bee/bee.php && \
   cd
 
-RUN rm -rf chromedriver_linux64.zip \
-  google-chrome-stable_current_amd64.deb \
-  install_solr_service.sh \
+RUN rm -rf install_solr_service.sh \
   search_api_solr-4.3.5.tar.gz \
   search_api_solr-7.x-1.17.tar.gz \
   solr-7.3.1.tgz \

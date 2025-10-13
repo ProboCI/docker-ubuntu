@@ -18,14 +18,14 @@ FROM ubuntu:20.04
 
 LABEL name="Ubuntu 20.04 LTS PHP 7.4 Probo.CI Image"
 LABEL description="An Ubuntu 20.04 based PHP 7.4 image developed specifically for docker containers running Probo.CI Builds."
-LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
+LABEL author="Michael R. Bagnall <michael@bagnall.io>"
 LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
 
-ENV TERM xterm
+ENV TERM=xterm
 
-ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
 
 # Update to NodeJS 16 and install nvm for supporting other versions.
 RUN apt-get update && apt-get -y upgrade
@@ -129,18 +129,10 @@ RUN apt-get install -y \
   libgconf-2-4 \
   && service varnish stop 
 
-RUN cd /root && \
-  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-  unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-  apt install -y ./google-chrome-stable_current_amd64.deb
-
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
-  --filename=composer \
-  --version=1.10.27
+  --filename=composer
 
 RUN composer \
   --working-dir=/usr/local/src/ \
@@ -153,11 +145,6 @@ RUN composer \
 COPY files/versionizer.php /bin/versionizer
 COPY files/valid-user.sh /bin/valid
 RUN chmod 755 /bin/valid /bin/versionizer
-
-# Download Drupal Console and install it in our standard path.
-RUN curl https://drupalconsole.com/installer -L -o /drupal.phar \
-  && mv /drupal.phar /bin/drupal \
-  && chmod 755 /bin/drupal
 
 # Install Proboscis
 RUN npm install -g proboscis --unsafe
@@ -203,7 +190,7 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.17.tar.gz \
   && tar xzf search_api_solr-7.x-1.17.tar.gz \
   && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal7 -d "/opt/solr/search_api_solr/solr-conf/7.x" \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal -d "/opt/solr/search_api_solr/solr-conf/7.x" \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.8.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
   && tar xzf search_api_solr-4.3.8.tar.gz \

@@ -17,7 +17,7 @@ FROM ubuntu:22.04
 
 LABEL name="Ubuntu 22.04 LTS PHP 8.4 Probo.CI Image"
 LABEL description="An Ubuntu 22.04 based PHP 8.4 image developed specifically for docker containers running Probo.CI Builds."
-LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
+LABEL author="Michael R. Bagnall <michael@bagnall.io>"
 LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
@@ -115,15 +115,6 @@ RUN apt-get install -y \
   xvfb \
   libgconf-2-4
 
-RUN cd /root && \
-  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-  unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-  apt install -y ./google-chrome-stable_current_amd64.deb && \
-  apt update -y
-
 # Install Composer.
 RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
@@ -183,8 +174,8 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
   && rm -rf /opt/solr/search_api_solr \
   && tar xzf search_api_solr-4.3.8.tar.gz \
   && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal -n "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -n "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
   && service solr stop \
   && rm solr-9.6.1.tgz \
   && rm search_api_solr-4.3.8.tar.gz
@@ -238,9 +229,7 @@ RUN cd /opt && \
   chmod -R 755 /opt/bee/bee.php && \
   cd
 
-RUN rm -rf chromedriver_linux64.zip \
-  google-chrome-stable_current_amd64.deb \
-  install_solr_service.sh \
+RUN rm -rf install_solr_service.sh \
   search_api_solr-4.3.7.tar.gz \
   search_api_solr-7.x-1.16.tar.gz \
   solr-7.3.1.tgz \

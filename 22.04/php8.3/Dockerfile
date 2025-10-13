@@ -17,14 +17,14 @@ FROM ubuntu:22.04
 
 LABEL name="Ubuntu 22.04 LTS PHP 8.3 Probo.CI Image"
 LABEL description="An Ubuntu 22.04 based PHP 8.3 image developed specifically for docker containers running Probo.CI Builds."
-LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
+LABEL author="Michael R. Bagnall <michael@bagnall.io>"
 LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
 
-ENV TERM xterm
+ENV TERM=xterm
 
-ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
 
 # Update to NodeJS 16 and install nvm for supporting other versions.
 RUN apt-get update && apt-get -y upgrade
@@ -71,7 +71,7 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 RUN rm /usr/bin/vi && \
   ln -s /usr/bin/vim /usr/bin/vi
 
-RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
+# RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.3 \
@@ -122,15 +122,6 @@ RUN apt-get install -y \
   libsqlite3-dev \
   xvfb \
   libgconf-2-4
-
-RUN cd /root && \
-  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-  unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-  apt install -y ./google-chrome-stable_current_amd64.deb && \
-  apt update -y
 
 # Install Composer.
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -191,8 +182,8 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
   && rm -rf /opt/solr/search_api_solr \
   && tar xzf search_api_solr-4.3.8.tar.gz \
   && mv search_api_solr /opt/solr/. \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
-  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -d "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal -n "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
+  && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -n "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
   && service solr stop
 
 RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/varnish.gpg && \

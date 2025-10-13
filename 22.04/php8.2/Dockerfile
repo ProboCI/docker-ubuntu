@@ -17,7 +17,7 @@ FROM ubuntu:22.04
 
 LABEL name="Ubuntu 22.04 LTS PHP 8.2 Probo.CI Image"
 LABEL description="An Ubuntu 22.04 based PHP 8.2 image developed specifically for docker containers running Probo.CI Builds."
-LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
+LABEL author="Michael R. Bagnall <michael@bagnall.io>"
 LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
@@ -73,7 +73,7 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 RUN rm /usr/bin/vi && \
   ln -s /usr/bin/vim /usr/bin/vi
 
-RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
+# RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
 RUN add-apt-repository ppa:ondrej/php \
   && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.2 \
@@ -127,15 +127,6 @@ RUN apt-get install -y \
   libsqlite3-dev \
   xvfb \
   libgconf-2-4
-
-RUN cd /root && \
-  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-  unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-  apt install -y ./google-chrome-stable_current_amd64.deb && \
-  apt update -y
 
 # Install Composer.
 RUN curl -sS https://getcomposer.org/installer | php -- \

@@ -18,7 +18,7 @@ FROM ubuntu:18.04
 
 LABEL name="Ubuntu 18.04 LTS PHP 5.6 Probo.CI Image"
 LABEL description="An Ubuntu 18.04 based PHP 5.6 image developed specifically for docker containers running Probo.CI Builds."
-LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
+LABEL author="Michael R. Bagnall <michael@bagnall.io>"
 LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root

@@ -18,12 +18,14 @@ FROM ubuntu:20.04
 
 LABEL name="Ubuntu 20.04 LTS PHP 8.0 Probo.CI Image"
 LABEL description="An Ubuntu 20.04 based PHP 8.0 image developed specifically for docker containers running Probo.CI Builds."
-LABEL author="Michael R. Bagnall <mbagnall@zivtech.com>"
+LABEL author="Michael R. Bagnall <michael@bagnall.io>"
 LABEL vendor="ProboCI, LLC."
 
 WORKDIR /root
 
-ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
+ENV TERM=xterm
+
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/drush/drush:vendor/drush/drush:/var/www/html/drush/drush:/var/www/html/docroot/vendor/drush/drush:/src/vendor/drush/drush:/usr/local/src/aws
 
 # Update to NodeJS 16 and install nvm for supporting other versions.
 RUN apt-get update && apt-get -y upgrade
@@ -128,13 +130,6 @@ RUN apt-get install -y \
   xvfb \
   libgconf-2-4 \
   && service varnish stop 
-
-RUN cd /root && \
-  wget https://proofroom.s3.amazonaws.com/google-chrome-stable_current_amd64.deb && \
-  wget https://proofroom.s3.amazonaws.com/chromedriver_linux64.zip && \
-  unzip chromedriver_linux64.zip && \
-  mv chromedriver /usr/local/bin/. && \
-  apt install -y ./google-chrome-stable_current_amd64.deb
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
