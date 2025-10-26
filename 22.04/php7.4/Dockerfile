@@ -182,9 +182,9 @@ COPY files/apache-default-varnish-host.conf /etc/apache2/sites-available/000-def
 COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install solr with default search cores.
-RUN wget https://proofroom.s3.amazonaws.com/solr-7.3.1.tgz \
-  && tar xzf solr-7.3.1.tgz solr-7.3.1/bin/install_solr_service.sh --strip-components=2 \
-  && ./install_solr_service.sh solr-7.3.1.tgz \
+RUN wget https://probosupportfiles.blob.core.windows.net/solr/solr-7.7.3.tgz \
+  && tar xzf solr-7.7.3.tgz solr-7.7.3/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-7.7.3.tgz \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-7.x-1.16.tar.gz \
   && tar xzf search_api_solr-7.x-1.16.tar.gz \
   && mv search_api_solr /opt/solr/. \
@@ -249,5 +249,5 @@ RUN cd /root && \
 RUN rm -rf install_solr_service.sh \
   search_api_solr-4.3.5.tar.gz \
   search_api_solr-7.x-1.16.tar.gz \
-  solr-7.3.1.tgz \
+  solr-7.7.3.tgz \
   default-context-value.zip

@@ -167,9 +167,9 @@ COPY files/apache-default-host.conf /etc/apache2/sites-enabled/000-default.conf
 # COPY files/listen_8080.conf /etc/apache2/conf-available/listen_8080.conf
 
 # Install solr with default search cores.
-RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
-  && tar xzf solr-9.6.1.tgz solr-9.6.1/bin/install_solr_service.sh --strip-components=2 \
-  && ./install_solr_service.sh solr-9.6.1.tgz \
+RUN wget https://probosupportfiles.blob.core.windows.net/solr/solr-9.9.0.tgz \
+  && tar xzf solr-9.9.0.tgz solr-9.9.0/bin/install_solr_service.sh --strip-components=2 \
+  && ./install_solr_service.sh solr-9.9.0.tgz \
   && wget https://ftp.drupal.org/files/projects/search_api_solr-4.3.8.tar.gz \
   && rm -rf /opt/solr/search_api_solr \
   && tar xzf search_api_solr-4.3.8.tar.gz \
@@ -177,7 +177,7 @@ RUN wget https://proofroom.s3.amazonaws.com/solr-9.6.1.tgz \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal -n "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
   && sudo -u solr -- /opt/solr/bin/solr create -c drupal8 -n "/opt/solr/search_api_solr/jump-start/solr9/config-set" \
   && service solr stop \
-  && rm solr-9.6.1.tgz \
+  && rm solr-9.9.0.tgz \
   && rm search_api_solr-4.3.8.tar.gz
 
 # RUN curl -fsSL https://packagecloud.io/varnishcache/varnish70/gpgkey|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/varnish.gpg && \
@@ -230,7 +230,7 @@ RUN cd /opt && \
   cd
 
 RUN rm -rf install_solr_service.sh \
-  search_api_solr-4.3.7.tar.gz \
+  search_api_solr-4.3.8z.tar.gz \
   search_api_solr-7.x-1.16.tar.gz \
-  solr-7.3.1.tgz \
+  solr-9.9.0.tgz \
   default-context-value.zip
