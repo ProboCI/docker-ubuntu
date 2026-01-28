@@ -230,7 +230,7 @@ RUN cd /opt && \
   cd
 
 RUN rm -rf install_solr_service.sh \
-  search_api_solr-4.3.8z.tar.gz \
+  search_api_solr-4.3.8.tar.gz \
   search_api_solr-7.x-1.16.tar.gz \
   solr-9.9.0.tgz \
   default-context-value.zip
