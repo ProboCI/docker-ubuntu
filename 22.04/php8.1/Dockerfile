@@ -169,6 +169,7 @@ RUN rm -rf /var/www/html \
   && a2enmod setenvif \
   && a2enmod proxy \
   && a2enmod proxy_http \
+  && a2enmod ssl \
   && a2enconf ssl_environment_variable \
   && service apache2 stop
 COPY files/apache-default-host.conf /etc/apache2/sites-available/000-default.conf
@@ -241,6 +242,9 @@ RUN cd /opt && \
   ln -s /opt/bee/bee.php bee && \
   chmod -R 755 /opt/bee/bee.php && \
   cd
+
+COPY files/ssl/localhost.key /etc/ssl/private/localhost.key
+COPY files/ssl/localhost.crt /etc/ssl/certs/localhost.crt
 
 RUN rm -rf install_solr_service.sh \
   search_api_solr-4.3.5.tar.gz \
