@@ -1,3 +1,5 @@
 #!/bin/bash
 
-envsubst < "/envvars" | sponge "/envvars"
+envsubst < "/envvars" > /etc/apache2/envvars
+env | grep _ >> /etc/environment
+source /etc/environment

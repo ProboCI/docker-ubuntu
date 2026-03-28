@@ -1,8 +1,6 @@
 <?php 
 #!/usr/bin/env drush
 
-return;
-
 use Drush\Drush;
 
 // Initialize the database
