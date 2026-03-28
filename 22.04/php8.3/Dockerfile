@@ -235,6 +235,9 @@ RUN cd /opt && \
   chmod -R 755 /opt/bee/bee.php && \
   cd
 
+COPY files/ssl/localhost.key /etc/ssl/private/localhost.key
+COPY files/ssl/localhost.crt /etc/ssl/certs/localhost.crt
+
 RUN rm -rf chromedriver_linux64.zip \
   google-chrome-stable_current_amd64.deb \
   install_solr_service.sh \
