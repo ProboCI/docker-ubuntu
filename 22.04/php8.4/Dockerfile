@@ -58,6 +58,7 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   zip \
   lsof \
   rsync \
+  pv \
   lsb-core \
   sqlite3
 
