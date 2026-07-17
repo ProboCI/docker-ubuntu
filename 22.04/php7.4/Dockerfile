@@ -131,13 +131,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
   --install-dir=/usr/local/bin \
   --filename=composer
 
-RUN composer \
-  --working-dir=/usr/local/src/ \
-  global \
-  require \
-  drush/drush:^8 && \
-  ln -s /usr/local/src/vendor/bin/drush /usr/bin/drush
-
 # Software version checker and valid user checker
 COPY files/versionizer.php /bin/versionizer
 COPY files/valid-user.sh /bin/valid
