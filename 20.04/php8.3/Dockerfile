@@ -73,7 +73,7 @@ RUN rm /usr/bin/vi && \
 # RUN apt install -y wkhtmltopdf && strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
 RUN add-apt-repository ppa:ondrej/php \
-  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.3 \
+  && apt-get update --allow-releaseinfo-change && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.3 \
   php8.3-bcmath \
   php8.3-bz2 \
   php8.3-cli \

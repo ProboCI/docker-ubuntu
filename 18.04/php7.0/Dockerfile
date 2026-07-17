@@ -68,7 +68,7 @@ RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24
 COPY files/varnishcache_varnish41.list /etc/apt/sources.list.d/varnishcache_varnish41.list
 RUN curl -L https://packagecloud.io/varnishcache/varnish41/gpgkey | sudo apt-key add - \
   && add-apt-repository ppa:ondrej/php \
-  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.0 \
+  && apt-get update --allow-releaseinfo-change && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.0 \
   php7.0-bcmath \
   php7.0-bz2 \
   php7.0-cli \

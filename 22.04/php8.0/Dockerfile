@@ -71,7 +71,7 @@ RUN rm /usr/bin/vi && \
   ln -s /usr/bin/vim /usr/bin/vi
 
 RUN add-apt-repository ppa:ondrej/php \
-  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
+  && apt-get update --allow-releaseinfo-change && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php8.0 \
   php8.0-bcmath \
   php8.0-bz2 \
   php8.0-cli \

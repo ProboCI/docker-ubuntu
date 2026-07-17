@@ -71,7 +71,7 @@ RUN rm /usr/bin/vi && \
   ln -s /usr/bin/vim /usr/bin/vi
 
 RUN add-apt-repository ppa:ondrej/php \
-  && apt-get update && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.4 \
+  && apt-get update --allow-releaseinfo-change && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.4 \
   php7.4-bcmath \
   php7.4-bz2 \
   php7.4-cli \
